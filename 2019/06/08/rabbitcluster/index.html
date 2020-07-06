@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    RabbitMQ Cluster |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-rabbitcluster"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  RabbitMQ Cluster
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/06/08/rabbitcluster/" class="article-date">
+  <time datetime="2019-06-08T09:31:43.000Z" itemprop="datePublished">2019-06-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.9k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">13 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>正所谓万物皆可集群。。</p>
+<h1 id="RabbitMQ集群架构模式"><a href="#RabbitMQ集群架构模式" class="headerlink" title="RabbitMQ集群架构模式"></a>RabbitMQ集群架构模式</h1><h2 id="主备模式-Warren"><a href="#主备模式-Warren" class="headerlink" title="主备模式(Warren)"></a>主备模式(Warren)</h2><p>适合并发或数据量不高的情况下，简单易用</p>
+<p>主节点挂掉，从节点替补（可能多个从节点）</p>
+<p><img src="/2019/06/08/rabbitcluster/c1.jpg" alt="c1"></p>
+<p><img src="/2019/06/08/rabbitcluster/c2.jpg" alt="c2"></p>
+<p>每五秒做一次检查，两次正常可用，两次失败不可用</p>
+<h2 id="远程模式-Shovel"><a href="#远程模式-Shovel" class="headerlink" title="远程模式(Shovel)"></a>远程模式(Shovel)</h2><p>双活模式，将消息移动到不同数据中心，分摊压力</p>
+<p>可以跨地域使两个MQ互联</p>
+<p>近端同步确认，远端异步确认</p>
+<p><img src="/2019/06/08/rabbitcluster/c3.jpg" alt="c3"></p>
+<h2 id="镜像模式-Mirror"><a href="#镜像模式-Mirror" class="headerlink" title="镜像模式(Mirror)"></a>镜像模式(Mirror)</h2><p>使用镜像队列，使用2-3个节点实现数据同步</p>
+<p><img src="/2019/06/08/rabbitcluster/c4.jpg" alt="c4"></p>
+<h2 id="多活模式"><a href="#多活模式" class="headerlink" title="多活模式"></a>多活模式</h2><p>在两个或多个MQ集群中实现数据同步</p>
+<p><img src="/2019/06/08/rabbitcluster/c5.jpg" alt="c5"></p>
+<p><img src="/2019/06/08/rabbitcluster/c6.jpg" alt="c6"></p>
+<p>federation exchange：</p>
+<p><img src="/2019/06/08/rabbitcluster/c7.jpg" alt="c7"></p>
+<p><img src="/2019/06/08/rabbitcluster/c8.jpg" alt="c8"></p>
+<h1 id="镜像模型的构建"><a href="#镜像模型的构建" class="headerlink" title="镜像模型的构建"></a>镜像模型的构建</h1><p>实验说明</p>
+<p><img src="/2019/06/08/rabbitcluster/c9.jpg" alt="c9"></p>
+<h2 id="节点安装"><a href="#节点安装" class="headerlink" title="节点安装"></a>节点安装</h2><ul>
+<li>安装依赖</li>
+</ul>
+<pre><code>yum install build-essential openssl openssl-devel unixODBC unixODBC-devel make gcc gcc-c++ kernel-devel m4 ncurses-devel tk tc xz
+</code></pre><ul>
+<li>下载安装包</li>
+</ul>
+<pre><code>wget www.rabbitmq.com/releases/erlang/erlang-18.3-1.el7.centos.x86_64.rpm
+wget http://repo.iotti.biz/CentOS/7/x86_64/socat-1.7.3.2-5.el7.lux.x86_64.rpm
+wget www.rabbitmq.com/releases/rabbitmq-server/v3.6.5/rabbitmq-server-3.6.5-1.noarch.rpm
+</code></pre><ul>
+<li>安装服务命令</li>
+</ul>
+<pre><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm 
+rpm -ivh socat-1.7.3.2-5.el7.lux.x86_64.rpm
+rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
+</code></pre><ul>
+<li>修改集群用户与连接心跳检测</li>
+</ul>
+<pre><code>注意修改vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.5/ebin/rabbit.app文件
+修改：loopback_users 中的 &lt;&lt;&quot;guest&quot;&gt;&gt;,只保留guest
+修改：heartbeat 为1
+</code></pre><ul>
+<li>安装管理插件</li>
+</ul>
+<pre><code>//首先启动服务
+/etc/init.d/rabbitmq-server start stop status restart
+//查看服务有没有启动： lsof -i:5672
+rabbitmq-plugins enable rabbitmq_management
+//可查看管理端口有没有启动： lsof -i:15672 或者 netstat -tnlp|grep 15672
+</code></pre><ul>
+<li>服务指令</li>
+</ul>
+<pre><code>/etc/init.d/rabbitmq-server start stop status restart
+验证单个节点是否安装成功：http://192.168.11.71:15672/
+1．  Ps：以上操作三个节点（71、72、73）同时进行操作
+</code></pre><h2 id="文件同步"><a href="#文件同步" class="headerlink" title="文件同步"></a>文件同步</h2><p>选择76、77、78任意一个节点为Master（这里选择76为Master），也就是说我们需要把76的Cookie文件同步到77、78节点上去，进入/var/lib/rabbitmq目录下，把/var/lib/rabbitmq/.erlang.cookie文件的权限修改为777，原来是400；然后把.erlang.cookie文件copy到各个节点下；最后把所有cookie文件权限还原为400即可。</p>
+<pre><code>/etc/init.d/rabbitmq-server stop 
+//进入目录修改权限；远程copy77、78节点，比如：
+scp /var/lib/rabbitmq/.erlang.cookie 到192.168.11.77和192.168.11.78中
+</code></pre><h2 id="组成集群"><a href="#组成集群" class="headerlink" title="组成集群"></a>组成集群</h2><ul>
+<li>停止MQ服务</li>
+</ul>
+<pre><code>rabbitmqctl stop
+</code></pre><ul>
+<li><p>组成集群</p>
+<p>接下来我们就可以使用集群命令，配置76、77、78为集群模式，3个节点（76、77、78）执行启动命令，后续启动集群使用此命令即可。</p>
+</li>
+</ul>
+<pre><code>rabbitmq-server -detached
+</code></pre><ul>
+<li>slave加入集群</li>
+</ul>
+<pre><code class="bash">//注意做这个步骤的时候：需要配置/etc/hosts 必须相互能够寻址到
+bhz77：rabbitmqctl stop_app
+bhz77：rabbitmqctl join_cluster --ram rabbit@bhz76
+bhz77：rabbitmqctl start_app
+bhz78：rabbitmqctl stop_app
+bhz78：rabbitmqctl join_cluster rabbit@bhz76
+bhz78：rabbitmqctl start_app
+//在另外其他节点上操作要移除的集群节点
+rabbitmqctl forget_cluster_node rabbit@bhz24
+</code></pre>
+<ul>
+<li>修改集群名称</li>
+</ul>
+<pre><code class="bash">rabbitmqctl set_cluster_name rabbitmq_cluster1
+</code></pre>
+<ul>
+<li>查看集群状态</li>
+</ul>
+<pre><code class="bash">rabbitmqctl cluster_status
+</code></pre>
+<ul>
+<li><p>管控台界面</p>
+<p>访问任意一个管控台节点：<a href="http://192.168.11.71:15672" target="_blank" rel="noopener">http://192.168.11.71:15672</a> </p>
+</li>
+</ul>
+<p><img src="/2019/06/08/rabbitcluster/c10.jpg" alt="c10"></p>
+<ul>
+<li><p>配置镜像队列</p>
+<p>将所有队列设置为镜像队列，即队列会被复制到各个节点，各个节点状态一致，RabbitMQ高可用集群就已经搭建好了,我们可以重启服务，查看其队列是否在从节点同步</p>
+</li>
+</ul>
+<pre><code class="bash">rabbitmqctl set_policy ha-all &quot;^&quot; &#39;{&quot;ha-mode&quot;:&quot;all&quot;}&#39;
+</code></pre>
+<h2 id="Ha-Proxy"><a href="#Ha-Proxy" class="headerlink" title="Ha-Proxy"></a>Ha-Proxy</h2><p>HAProxy是一款提供高可用性、负载均衡以及基于TCP和HTTP应用的代理软件，HAProxy是完全免费的、借助HAProxy可以快速并且可靠的提供基于TCP和HTTP应用的代理解决方案。</p>
+<p>HAProxy适用于那些负载较大的web站点，这些站点通常又需要会话保持或七层处理。 </p>
+<p>HAProxy可以支持数以万计的并发连接,并且HAProxy的运行模式使得它可以很简单安全的整合进架构中，同时可以保护web服务器不被暴露到网络上</p>
+<ul>
+<li>Haproxy安装</li>
+</ul>
+<pre><code class="bash">//下载依赖包
+yum install gcc vim wget
+//下载haproxy
+wget http://www.haproxy.org/download/1.6/src/haproxy-1.6.5.tar.gz
+//解压
+tar -zxvf haproxy-1.6.5.tar.gz -C /usr/local
+//进入目录、进行编译、安装
+cd /usr/local/haproxy-1.6.5
+make TARGET=linux31 PREFIX=/usr/local/haproxy
+make install PREFIX=/usr/local/haproxy
+mkdir /etc/haproxy
+//赋权
+groupadd -r -g 149 haproxy
+useradd -g haproxy -r -s /sbin/nologin -u 149 haproxy
+//创建haproxy配置文件
+touch /etc/haproxy/haproxy.cfg
+</code></pre>
+<ul>
+<li>Haproxy配置</li>
+</ul>
+<pre><code>vim /etc/haproxy/haproxy.cfg
+
+#logging options
+global
+    log 127.0.0.1 local0 info
+    maxconn 5120
+    chroot /usr/local/haproxy
+    uid 99
+    gid 99
+    daemon
+    quiet
+    nbproc 20
+    pidfile /var/run/haproxy.pid
+
+defaults
+    log global
+    #使用4层代理模式，”mode http”为7层代理模式
+    mode tcp
+    #if you set mode to tcp,then you nust change tcplog into httplog
+    option tcplog
+    option dontlognull
+    retries 3
+    option redispatch
+    maxconn 2000
+    contimeout 5s
+     ##客户端空闲超时时间为 60秒 则HA 发起重连机制
+     clitimeout 60s
+     ##服务器端链接超时时间为 15秒 则HA 发起重连机制
+     srvtimeout 15s    
+#front-end IP for consumers and producters
+
+listen rabbitmq_cluster
+    bind 0.0.0.0:5672
+    #配置TCP模式
+    mode tcp
+    #balance url_param userid
+    #balance url_param session_id check_post 64
+    #balance hdr(User-Agent)
+    #balance hdr(host)
+    #balance hdr(Host) use_domain_only
+    #balance rdp-cookie
+    #balance leastconn
+    #balance source //ip
+    #简单的轮询
+    balance roundrobin
+    #rabbitmq集群节点配置 #inter 每隔五秒对mq集群做健康检查， 2次正确证明服务器可用，2次失败证明服务器不可用，并且配置主备机制
+        server bhz76 192.168.11.76:5672 check inter 5000 rise 2 fall 2
+        server bhz77 192.168.11.77:5672 check inter 5000 rise 2 fall 2
+        server bhz78 192.168.11.78:5672 check inter 5000 rise 2 fall 2
+#配置haproxy web监控，查看统计信息
+listen stats
+    bind 192.168.11.79:8100
+    mode http
+    option httplog
+    stats enable
+    #设置haproxy监控地址为http://localhost:8100/rabbitmq-stats
+    stats uri /rabbitmq-stats
+    stats refresh 5s
+
+</code></pre><ul>
+<li>启动haproxy</li>
+</ul>
+<pre><code>/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+//查看haproxy进程状态
+ps -ef | grep haproxy
+</code></pre><ul>
+<li><p>访问haproxy</p>
+<p>访问如下地址可以对rmq节点进行监控：<a href="http://192.168.1.27:8100/rabbitmq-stats" target="_blank" rel="noopener">http://192.168.1.27:8100/rabbitmq-stats</a></p>
+</li>
+</ul>
+<p><img src="/2019/06/08/rabbitcluster/c11.jpg" alt="c11"></p>
+<ul>
+<li>关闭haproxy</li>
+</ul>
+<pre><code>killall haproxy
+ps -ef | grep haproxy
+</code></pre><h2 id="KeepAlived"><a href="#KeepAlived" class="headerlink" title="KeepAlived"></a>KeepAlived</h2><p>Keepalived，它是一个高性能的服务器高可用或热备解决方案，Keepalived主要来防止服务器单点故障的发生问题，可以通过其与Nginx、Haproxy等反向代理的负载均衡服务器配合实现web服务端的高可用。Keepalived以VRRP协议为实现基础，用VRRP协议来实现高可用性（HA）.VRRP（Virtual Router Redundancy Protocol）协议是用于实现路由器冗余的协议，VRRP协议将两台或多台路由器设备虚拟成一个设备，对外提供虚拟路由器IP（一个或多个）。</p>
+<ul>
+<li><p>Keepalived安装</p>
+<p><a href="http://www.keepalived.org/download.html" target="_blank" rel="noopener">http://www.keepalived.org/download.html</a></p>
+</li>
+</ul>
+<pre><code>//安装所需软件包
+yum install -y openssl openssl-devel
+//下载
+wget http://www.keepalived.org/software/keepalived-1.2.18.tar.gz
+//解压、编译、安装
+tar -zxvf keepalived-1.2.18.tar.gz -C /usr/local/
+cd keepalived-1.2.18/ &amp;&amp; ./configure --prefix=/usr/local/keepalived
+make &amp;&amp; make install
+//将keepalived安装成Linux系统服务，因为没有使用keepalived的默认安装路径（默认路径：/usr/local）,安装完成之后，需要做一些修改工作
+//首先创建文件夹，将keepalived配置文件进行复制：
+mkdir /etc/keepalived
+cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/
+//然后复制keepalived脚本文件：
+cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/
+cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/
+ln -s /usr/local/sbin/keepalived /usr/sbin/
+ln -s /usr/local/keepalived/sbin/keepalived /sbin/
+//可以设置开机启动：chkconfig keepalived on，到此我们安装完毕!
+chkconfig keepalived on
+</code></pre><ul>
+<li>Keepalived配置</li>
+</ul>
+<pre><code>vim /etc/keepalived/keepalived.conf
+
+
+! Configuration File for keepalived
+
+global_defs {
+   router_id bhz79  ##标识节点的字符串，通常为hostname
+
+}
+
+vrrp_script chk_haproxy {
+    script &quot;/etc/keepalived/haproxy_check.sh&quot;  ##执行脚本位置
+    interval 2  ##检测时间间隔
+    weight -20  ##如果条件成立则权重减20
+}
+
+vrrp_instance VI_1 {
+    state MASTER  ## 主节点为MASTER，备份节点为BACKUP
+    interface eth0 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eth0）
+    virtual_router_id 79  ## 虚拟路由ID号（主备节点一定要相同）
+    mcast_src_ip 192.168.11.79 ## 本机ip地址
+    priority 100  ##优先级配置（0-254的值）
+    nopreempt
+    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
+authentication {  ## 认证匹配
+        auth_type PASS
+        auth_pass bhz
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    virtual_ipaddress {
+        192.168.11.70  ## 虚拟ip，可以指定多个
+    }
+}
+
+
+
+
+another
+
+! Configuration File for keepalived
+
+global_defs {
+   router_id bhz80  ##标识节点的字符串，通常为hostname
+
+}
+
+vrrp_script chk_haproxy {
+    script &quot;/etc/keepalived/haproxy_check.sh&quot;  ##执行脚本位置
+    interval 2  ##检测时间间隔
+    weight -20  ##如果条件成立则权重减20
+}
+
+vrrp_instance VI_1 {
+    state BACKUP  ## 主节点为MASTER，备份节点为BACKUP
+    interface eno16777736 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eno16777736）
+    virtual_router_id 79  ## 虚拟路由ID号（主备节点一定要相同）
+    mcast_src_ip 192.168.11.80  ## 本机ip地址
+    priority 90  ##优先级配置（0-254的值）
+    nopreempt
+    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
+authentication {  ## 认证匹配
+        auth_type PASS
+        auth_pass bhz
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    virtual_ipaddress {
+        192.168.1.70  ## 虚拟ip，可以指定多个
+    }
+}
+
+</code></pre><ul>
+<li><p>执行脚本编写</p>
+<p>添加文件位置为/etc/keepalived/haproxy_check.sh（79、80两个节点文件内容一致即可）</p>
+</li>
+</ul>
+<pre><code>#!/bin/bash
+COUNT=`ps -C haproxy --no-header |wc -l`
+if [ $COUNT -eq 0 ];then
+    /usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+    sleep 2
+    if [ `ps -C haproxy --no-header |wc -l` -eq 0 ];then
+        killall keepalived
+    fi
+fi
+
+</code></pre><ul>
+<li>执行脚本</li>
+</ul>
+<pre><code>chmod +x /etc/keepalived/haproxy_check.sh
+//启动两台机器的keepalived
+service keepalived start | stop | status | restart
+//查看状态
+ps -ef | grep haproxy
+ps -ef | grep keepalived
+</code></pre><ul>
+<li>高可用测试</li>
+</ul>
+<p>vip在27节点上</p>
+<p><img src="/2019/06/08/rabbitcluster/c12.jpg" alt="c12"></p>
+<p>27节点宕机测试：停掉27的keepalived服务即可。</p>
+<p><img src="/2019/06/08/rabbitcluster/c13.jpg" alt="c13"></p>
+<p>查看28节点状态：我们发现VIP漂移到了28节点上，那么28节点的haproxy可以继续对外提供服务！</p>
+<p><img src="/2019/06/08/rabbitcluster/c14.jpg" alt="c14"></p>
+<h2 id="集群配置文件"><a href="#集群配置文件" class="headerlink" title="集群配置文件"></a>集群配置文件</h2><p>创建如下配置文件位于：/etc/rabbitmq目录下（这个目录需要自己创建）</p>
+<p>环境变量配置文件：rabbitmq-env.conf </p>
+<p>配置信息配置文件：rabbitmq.config（可以不创建和配置，修改）</p>
+<p>rabbitmq-env.conf配置文件：</p>
+<p>关键参数配置:</p>
+<p>RABBITMQ_NODE_IP_ADDRESS=本机IP地址</p>
+<p>RABBITMQ_NODE_PORT=5672</p>
+<p>RABBITMQ_LOG_BASE=/var/lib/rabbitmq/log</p>
+<p>RABBITMQ_MNESIA_BASE=/var/lib/rabbitmq/mnesia</p>
+<p>配置参考参数如下：</p>
+<p>RABBITMQ_NODENAME=FZTEC-240088 节点名称</p>
+<p>RABBITMQ_NODE_IP_ADDRESS=127.0.0.1 监听IP</p>
+<p>RABBITMQ_NODE_PORT=5672 监听端口</p>
+<p>RABBITMQ_LOG_BASE=/data/rabbitmq/log 日志目录</p>
+<p>RABBITMQ_PLUGINS_DIR=/data/rabbitmq/plugins 插件目录</p>
+<p>RABBITMQ_MNESIA_BASE=/data/rabbitmq/mnesia 后端存储目录</p>
+<p>更详细的配置参见： <a href="http://www.rabbitmq.com/configure.html#configuration-file" target="_blank" rel="noopener">http://www.rabbitmq.com/configure.html#configuration-file</a></p>
+<p>配置文件信息修改：</p>
+<p>/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/ebin/rabbit.app和rabbitmq.config配置文件配置任意一个即可，我们进行配置如下：</p>
+<p>vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/ebin/rabbit.app</p>
+<p>关键参数配置</p>
+<p>tcp_listerners 设置rabbimq的监听端口，默认为[5672]。<br>disk_free_limit 磁盘低水位线，若磁盘容量低于指定值则停止接收数据，默认值为{mem_relative, 1.0},即与内存相关联1：1，也可定制为多少byte.<br>vm_memory_high_watermark，设置内存低水位线，若低于该水位线，则开启流控机制，默认值是0.4，即内存总量的40%。<br>hipe_compile 将部分rabbimq代码用High Performance Erlang compiler编译，可提升性能，该参数是实验性，若出现erlang vm segfaults，应关掉。<br>force_fine_statistics， 该参数属于rabbimq_management，若为true则进行精细化的统计，但会影响性能</p>
+<p>更详细的配置参见：<a href="http://www.rabbitmq.com/configure.html" target="_blank" rel="noopener">http://www.rabbitmq.com/configure.html</a></p>
+<h1 id="恢复与故障转移"><a href="#恢复与故障转移" class="headerlink" title="恢复与故障转移"></a>恢复与故障转移</h1><p>镜像队列为例</p>
+<p><img src="/2019/06/08/rabbitcluster/c15.jpg" alt="c15"></p>
+<p><img src="/2019/06/08/rabbitcluster/c16.jpg" alt="c16"></p>
+<p><img src="/2019/06/08/rabbitcluster/c17.jpg" alt="c17"></p>
+<p><img src="/2019/06/08/rabbitcluster/c18.jpg" alt="c18"></p>
+<p><img src="/2019/06/08/rabbitcluster/c19.jpg" alt="c19"></p>
+<p><img src="/2019/06/08/rabbitcluster/c20.jpg" alt="c20"></p>
+<h1 id="延迟插件"><a href="#延迟插件" class="headerlink" title="延迟插件"></a>延迟插件</h1><p>延迟队列可以用于消息的延迟推送，定时任务，削峰限流，降级等机制。</p>
+<ul>
+<li>download the ‘rabbitmq_delayed_message_exchange-0.0.1.ez’ file</li>
+</ul>
+<p><a href="https://github.com/rabbitmq/rabbitmq-delayed-message-exchange" target="_blank" rel="noopener">https://github.com/rabbitmq/rabbitmq-delayed-message-exchange</a></p>
+<p><a href="http://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">http://www.rabbitmq.com/community-plugins.html</a></p>
+<p><a href="https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange/v3.6.x#files/" target="_blank" rel="noopener">https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange/v3.6.x#files/</a></p>
+<ul>
+<li>PUT Directory</li>
+</ul>
+<p>/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/plugins</p>
+<ul>
+<li>Then run the following command</li>
+</ul>
+<p>Start the rabbitmq cluster for command</p>
+<pre><code>rabbitmq-server -detached
+rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+</code></pre><ul>
+<li>访问地址：<a href="http://192.168.1.21:15672/#/exchanges" target="_blank" rel="noopener">http://192.168.1.21:15672/#/exchanges</a>，添加延迟队列</li>
+</ul>
+<p><img src="/2019/06/08/rabbitcluster/c21.jpg" alt="c21"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/06/08/rabbitcluster/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MQ/">MQ</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/06/09/setstruct/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            SET-Architecture
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/06/07/springamqp/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">SpringAMQP &amp; RabbitMQ</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

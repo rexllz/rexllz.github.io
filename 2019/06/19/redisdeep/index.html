@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Redis Study Note |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-redisdeep"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Redis Study Note
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/06/19/redisdeep/" class="article-date">
+  <time datetime="2019-06-19T10:25:18.000Z" itemprop="datePublished">2019-06-19</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="初识Redis"><a href="#初识Redis" class="headerlink" title="初识Redis"></a>初识Redis</h1><ul>
+<li>开源</li>
+<li>基于key-value的存储服务系统</li>
+<li>多种数据结构</li>
+<li>高性能、功能丰富</li>
+</ul>
+<p>拥有五种数据结构：</p>
+<p><img src="/2019/06/19/redisdeep/r0.jpg" alt="r0"></p>
+<p>Redis的典型特性：</p>
+<ul>
+<li>速度快： 10w OPS</li>
+<li>持久化</li>
+<li>多种数据结构</li>
+<li>支持多种语言</li>
+<li>使用简单，单线程</li>
+<li>主从复制</li>
+</ul>
+<p>额外的数据结构：</p>
+<ul>
+<li>Bitmaps：位图</li>
+<li>Htperloglog：超小内存唯一值计数</li>
+<li>GEO：地理信息位置</li>
+</ul>
+<p>支持额外功能：</p>
+<ul>
+<li>Lua脚本</li>
+<li>发布订阅</li>
+<li>事务</li>
+<li>pipeline</li>
+</ul>
+<p>典型场景：</p>
+<ul>
+<li>缓存</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r1.jpg" alt="r1"></p>
+<ul>
+<li>计数器</li>
+<li>消息队列</li>
+<li>排行榜</li>
+<li>社交网络</li>
+<li>实时系统</li>
+</ul>
+<p><strong>常用配置</strong></p>
+<p>daemonize，是否守护进程启动</p>
+<p>port，端口，默认6379</p>
+<p>logfile，redis日志</p>
+<p>dir，工作目录</p>
+<h1 id="常用特性"><a href="#常用特性" class="headerlink" title="常用特性"></a>常用特性</h1><h2 id="通用命令"><a href="#通用命令" class="headerlink" title="通用命令"></a>通用命令</h2><ul>
+<li>keys 计算所有的键</li>
+</ul>
+<blockquote>
+<p>docker exec -it redis redis-cli</p>
+</blockquote>
+<p><img src="/2019/06/19/redisdeep/r2.jpg" alt="r2"></p>
+<p>批量插入mset key1 value1 k2 v2 k3 v3</p>
+<p><img src="/2019/06/19/redisdeep/r3.jpg" alt="r3"></p>
+<p>通配符查找</p>
+<p><img src="/2019/06/19/redisdeep/r4.jpg" alt="r4"></p>
+<p><img src="/2019/06/19/redisdeep/r5.jpg" alt="r5"></p>
+<p>keys命令为o(n)命令，所以生产中尽量不使用，开销大</p>
+<ul>
+<li>dbsize 数据库大小</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r6.jpg" alt="r6"></p>
+<p><img src="/2019/06/19/redisdeep/r7.jpg" alt="r7"></p>
+<p>sadd 增加集合，只有一个key</p>
+<p>内置计数器，不会遍历表，开销很小o(1)</p>
+<ul>
+<li>exists key判断键是否存在</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r8.jpg" alt="r8"></p>
+<p>o(1)复杂，开销小</p>
+<ul>
+<li>del keys 删除key</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r9.jpg" alt="r9"></p>
+<ul>
+<li>expire key seconds 设置key过期时间</li>
+</ul>
+<p>过期指令：expire、ttl、persist</p>
+<p>expire，设置过期时间</p>
+<p>ttl，查询过期时间</p>
+<p>persist，去掉过期时间</p>
+<p><img src="/2019/06/19/redisdeep/r10.jpg" alt="r10"></p>
+<ul>
+<li>type key 查看key数据类型</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r11.jpg" alt="r11"></p>
+<p>type类型：string、hash、list、set、zset、none</p>
+<p>各个命令时间复杂度</p>
+<p><img src="/2019/06/19/redisdeep/r12.jpg" alt="r12"></p>
+<h2 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h2><p><img src="/2019/06/19/redisdeep/r13.jpg" alt="r13"></p>
+<p>一些压缩编码可以节省空间</p>
+<p><strong>RedisObject</strong></p>
+<p><img src="/2019/06/19/redisdeep/r14.jpg" alt="r14"></p>
+<h2 id="单线程"><a href="#单线程" class="headerlink" title="单线程"></a>单线程</h2><p>单线程高速的原因：</p>
+<ul>
+<li>纯内存IO</li>
+<li>非阻塞IO（NIO）</li>
+<li>避免了线程切换和竞态消耗</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r15.jpg" alt="r15"></p>
+<p>带来的问题：【拒绝慢命令】</p>
+<p>keys, flushall, flushdb, slow lua script, mutil/exec, operate big value(collection)</p>
+<p>部分操作会fork其他线程：</p>
+<p>fysnc file descriptor</p>
+<p>close file descriptor</p>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>所有key都是string，string value 至大512mb，可以存储json，xml等，整数和位图也由字符串实现</p>
+<p>incr</p>
+<p>incr key，自增操作+1，如果不存在，get回1、o(1)</p>
+<p>decr key，自减，若不存在get回-1、o(1)</p>
+<p>incrby key k，自增k，若不存在get回k、o(1)</p>
+<p>decrby key k，自减k，若不存在get回-k、o(1)</p>
+<p><img src="/2019/06/19/redisdeep/r16.jpg" alt="r16"></p>
+<p>因为redis是单线程，所以不存在并发问题</p>
+<p><strong>情景</strong></p>
+<ul>
+<li><p>网站访问统计</p>
+<p>incr userid:pageview</p>
+</li>
+<li><p>缓存mysql（eg.video）</p>
+</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r1.jpg" alt="r1"></p>
+<p><img src="/2019/06/19/redisdeep/r17.png" alt="r17"></p>
+<ul>
+<li><p>实现分布式ID生成器</p>
+<p>incr id，利用redis单线程</p>
+</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r18.jpg" alt="r18"></p>
+<p>set</p>
+<p>set key value、无论是否存在，都设置、o(1)</p>
+<p>setnx key value、如果不存在，则设置、o(1)</p>
+<p>set key value xx，如果存在才设置、o(1)</p>
+<p><img src="/2019/06/19/redisdeep/r19.jpg" alt="r19"></p>
+<p>适合实现分布式锁</p>
+<p>mset</p>
+<p>批量设置、获取，原子操作</p>
+<p>mset key1 value1 key2 value2 key3 value3 key4 value4, o(n)</p>
+<p>mget key1 key2 key3 key4, o(n)</p>
+<p>比起n次get操作，减少网络延迟等问题</p>
+<p><img src="/2019/06/19/redisdeep/r20.jpg" alt="r20"></p>
+<p><img src="/2019/06/19/redisdeep/r21.jpg" alt="r21"></p>
+<p>others</p>
+<p>getset key newvalue ，设置新值并返回旧值，o(1)</p>
+<p>append key value，将value追加到旧的value，o(1)</p>
+<p>strlen key，返回字符串value长度（不兼容中文），o(1)</p>
+<p><img src="/2019/06/19/redisdeep/r22.jpg" alt="r22"></p>
+<p>incrbyfloat key 3.5，增加浮点数，o(1)</p>
+<p>getrange key start end，获取指定下标字符，o(1)</p>
+<p>setrange key index value，设置指定下标的值，o(1)</p>
+<p><img src="/2019/06/19/redisdeep/r23.jpg" alt="r23"></p>
+<p><img src="/2019/06/19/redisdeep/r24.jpg" alt="r24"></p>
+<h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><p><img src="/2019/06/19/redisdeep/r25.jpg" alt="r25"></p>
+<p><img src="/2019/06/19/redisdeep/r26.jpg" alt="r26"></p>
+<p>hget、hset、hdel</p>
+<p>hget key field, o(1)</p>
+<p>hset key field value, o(1)</p>
+<p>hdel key field, o(1)</p>
+<p><img src="/2019/06/19/redisdeep/r27.jpg" alt="r27"></p>
+<p>hexists, o(1)，判断属性是否存在</p>
+<p>hlen, o(1), 返回属性数量</p>
+<p>hmget、hmset</p>
+<p><img src="/2019/06/19/redisdeep/r28.jpg" alt="r28"></p>
+<p>统计流量：</p>
+<p>hincrby user:1:info pageview count</p>
+<p>缓存视频信息：</p>
+<p><img src="/2019/06/19/redisdeep/r29.jpg" alt="r29"></p>
+<p><img src="/2019/06/19/redisdeep/r30.jpg" alt="r30"></p>
+<p>谨慎使用o(n)</p>
+<p>hash与string对比</p>
+<p><img src="/2019/06/19/redisdeep/r31.jpg" alt="r31"></p>
+<p>对象的实现方法</p>
+<p>使用json string格式保存，但是修改需要重新序列化</p>
+<p><img src="/2019/06/19/redisdeep/r32.jpg" alt="r32"></p>
+<p>使用多个string储存，但是结构分离</p>
+<p><img src="/2019/06/19/redisdeep/r33.jpg" alt="r33"></p>
+<p>使用hash保存，随时修改</p>
+<p><img src="/2019/06/19/redisdeep/r34.jpg" alt="r34"></p>
+<p><img src="/2019/06/19/redisdeep/r35.jpg" alt="r35"></p>
+<p>其他指令</p>
+<p><img src="/2019/06/19/redisdeep/r36.jpg" alt="r36"></p>
+<p>指令复杂度对比</p>
+<p><img src="/2019/06/19/redisdeep/r37.jpg" alt="r37"></p>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><p>数据结构：有序、可以重复</p>
+<p><img src="/2019/06/19/redisdeep/r38.jpg" alt="r38"></p>
+<p><img src="/2019/06/19/redisdeep/r39.jpg" alt="r39"></p>
+<p><img src="/2019/06/19/redisdeep/r40.jpg" alt="r40"></p>
+<p>lpush相反</p>
+<p><img src="/2019/06/19/redisdeep/r41.jpg" alt="r41"></p>
+<p><img src="/2019/06/19/redisdeep/r42.jpg" alt="r42"></p>
+<p>lpop相反</p>
+<p><img src="/2019/06/19/redisdeep/r43.jpg" alt="r43"></p>
+<p><img src="/2019/06/19/redisdeep/r44.jpg" alt="r44"></p>
+<p><img src="/2019/06/19/redisdeep/r45.jpg" alt="r45"></p>
+<p><img src="/2019/06/19/redisdeep/r46.jpg" alt="r46"></p>
+<p><img src="/2019/06/19/redisdeep/r47.jpg" alt="r47"></p>
+<p><img src="/2019/06/19/redisdeep/r48.jpg" alt="r48"></p>
+<p>可以用list实现timeline列表，eg.好友动态</p>
+<p>其他指令</p>
+<p><img src="/2019/06/19/redisdeep/r49.jpg" alt="r49"></p>
+<p><img src="/2019/06/19/redisdeep/r50.jpg" alt="r50"></p>
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>无序，不重复</p>
+<p><img src="/2019/06/19/redisdeep/r51.jpg" alt="r51"></p>
+<p><img src="/2019/06/19/redisdeep/r52.jpg" alt="r52"></p>
+<p><img src="/2019/06/19/redisdeep/r53.jpg" alt="r53"></p>
+<p>pop后set不再有该元素，rand后元素依旧在集合之中</p>
+<p>smembers可能会造成阻塞，谨慎使用</p>
+<p>可以实现抽奖、点赞等情景、标签等</p>
+<p><img src="/2019/06/19/redisdeep/r54.jpg" alt="r54"></p>
+<h2 id="Zset"><a href="#Zset" class="headerlink" title="Zset"></a>Zset</h2><p>有序集合、不可重复</p>
+<p><img src="/2019/06/19/redisdeep/r55.jpg" alt="r55"></p>
+<p><img src="/2019/06/19/redisdeep/r56.jpg" alt="r56"></p>
+<p><img src="/2019/06/19/redisdeep/r57.jpg" alt="r57"></p>
+<p><img src="/2019/06/19/redisdeep/r58.jpg" alt="r58"></p>
+<p><img src="/2019/06/19/redisdeep/r59.jpg" alt="r59"></p>
+<p>传负数表示减少</p>
+<p><img src="/2019/06/19/redisdeep/r60.jpg" alt="r60"></p>
+<p><img src="/2019/06/19/redisdeep/r61.jpg" alt="r61"></p>
+<p>n，zset中元素的个数，m，排名段内元素的个数（按照排名）</p>
+<p><img src="/2019/06/19/redisdeep/r62.jpg" alt="r62"></p>
+<p>n，zset中元素的个数，m，分数段内元素的个数（按照分数）</p>
+<p><img src="/2019/06/19/redisdeep/r63.jpg" alt="r63"></p>
+<p><img src="/2019/06/19/redisdeep/r64.jpg" alt="r64"></p>
+<p><img src="/2019/06/19/redisdeep/r65.jpg" alt="r65"></p>
+<p>使用情景：排行榜</p>
+<p><img src="/2019/06/19/redisdeep/r66.jpg" alt="r66"></p>
+<h1 id="客户端使用"><a href="#客户端使用" class="headerlink" title="客户端使用"></a>客户端使用</h1><h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>Jedis是redis-cli（shell）的java版本</p>
+<p><img src="/2019/06/19/redisdeep/r67.jpg" alt="r67"></p>
+<p><img src="/2019/06/19/redisdeep/r68.jpg" alt="r68"></p>
+<p><img src="/2019/06/19/redisdeep/r69.jpg" alt="r69"></p>
+<p>Jedis直连，基于tcp连接</p>
+<p><img src="/2019/06/19/redisdeep/r70.jpg" alt="r70"></p>
+<p>Jedis连接池，节省了部分new开销</p>
+<p><img src="/2019/06/19/redisdeep/r71.jpg" alt="r71"></p>
+<p><img src="/2019/06/19/redisdeep/r72.jpg" alt="r72"></p>
+<p><img src="/2019/06/19/redisdeep/r73.jpg" alt="r73"></p>
+<h2 id="Golang"><a href="#Golang" class="headerlink" title="Golang"></a>Golang</h2><p><img src="/2019/06/19/redisdeep/r74.jpg" alt="r74"></p>
+<p>redigo的使用：<br><img src="/2019/06/19/redisdeep/r75.jpg" alt="r75"></p>
+<p><img src="/2019/06/19/redisdeep/r76.jpg" alt="r76"></p>
+<h1 id="其他功能"><a href="#其他功能" class="headerlink" title="其他功能"></a>其他功能</h1><h2 id="慢查询"><a href="#慢查询" class="headerlink" title="慢查询"></a>慢查询</h2><p>生命周期：</p>
+<p><img src="/2019/06/19/redisdeep/r77.jpg" alt="r77"></p>
+<p>如果慢查询，会进入一个先入先出的固定长度队列</p>
+<p><img src="/2019/06/19/redisdeep/r78.jpg" alt="r78"></p>
+<p><img src="/2019/06/19/redisdeep/r79.jpg" alt="r79"></p>
+<p>配置方法</p>
+<p><img src="/2019/06/19/redisdeep/r80.jpg" alt="r80"></p>
+<p>常用指令</p>
+<p><img src="/2019/06/19/redisdeep/r81.jpg" alt="r81"></p>
+<h2 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h2><p>重复命令的网络开销</p>
+<p><img src="/2019/06/19/redisdeep/r82.jpg" alt="r82"></p>
+<p>pipeline实现一次网络开销</p>
+<p>jadis的实现举例</p>
+<p><img src="/2019/06/19/redisdeep/r83.jpg" alt="r83"></p>
+<p><img src="/2019/06/19/redisdeep/r84.jpg" alt="r84"></p>
+<p>与m操作的区别？</p>
+<p>m操作的原子的，pipeline不是原子的</p>
+<p>应当注意每次pipeline的数据量，可以合理拆分</p>
+<p>pipeline只能作用在一个redis节点</p>
+<h2 id="发布订阅"><a href="#发布订阅" class="headerlink" title="发布订阅"></a>发布订阅</h2><p><img src="/2019/06/19/redisdeep/r85.jpg" alt="r85"></p>
+<pre><code class="java">publish channel message
+subscribe [channel]   // one or more
+unsubscribe [channel]   // one or more
+psubscribe [channel pattern]
+punsubscribe [channel pattern]
+pubsub channels // list the channel at least one subscriber
+pubsub numsub [channel] //list the subscriber number
+
+</code></pre>
+<p>实现消息队列</p>
+<p><img src="/2019/06/19/redisdeep/r86.jpg" alt="r86"></p>
+<p>消息只会传达一个消费者</p>
+<h2 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h2><p>直接操作位</p>
+<p><img src="/2019/06/19/redisdeep/r87.jpg" alt="r87"></p>
+<p>getbit、setbit key offset</p>
+<p>bitcount key [start end] 获取全部位为1的个数</p>
+<p><img src="/2019/06/19/redisdeep/r88.jpg" alt="r88"></p>
+<p>BITPOS key bit [start] [end]</p>
+<p>返回字符串里面第一个被设置为1或者0的bit位。</p>
+<p>返回一个位置，把字符串当做一个从左到右的字节数组，第一个符合条件的在位置0，其次在位置8，等等。</p>
+<p>位图可以有效节省空间</p>
+<h2 id="Hyperloglog"><a href="#Hyperloglog" class="headerlink" title="Hyperloglog"></a>Hyperloglog</h2><p>极小空间完成独立数量统计，本质为string</p>
+<p><img src="/2019/06/19/redisdeep/r89.jpg" alt="r89"></p>
+<p><img src="/2019/06/19/redisdeep/r90.jpg" alt="r90"></p>
+<p>可以极大的减少空间开支，但是有错误率0.81%</p>
+<h2 id="GEO"><a href="#GEO" class="headerlink" title="GEO"></a>GEO</h2><p>Redis3.2增加</p>
+<p>存储经纬度，计算两地距离等</p>
+<p>geo key longitude latitude membername</p>
+<p>geopos key member [member…]  //get info</p>
+<p>geodist key member1 member2 [unit]  //calculate the distance </p>
+<h1 id="Redis持久化"><a href="#Redis持久化" class="headerlink" title="Redis持久化"></a>Redis持久化</h1><p>将内存的临时数据保存在硬盘中（异步）</p>
+<p>快照：mysql dump， redis rdb</p>
+<p>日志：mysql binlog，redis aof</p>
+<h2 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h2><p><img src="/2019/06/19/redisdeep/r91.jpg" alt="r91"></p>
+<p>触发机制：</p>
+<ul>
+<li>save（同步）</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r92.jpg" alt="r92"></p>
+<p>但是可能造成阻塞</p>
+<p>文件策略</p>
+<p>如果存在老的快照，则会创建新的快照以替换</p>
+<p>复杂度为o(n)</p>
+<ul>
+<li>bgsave（异步）</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r93.jpg" alt="r93"></p>
+<p><img src="/2019/06/19/redisdeep/r94.jpg" alt="r94"></p>
+<ul>
+<li>自动</li>
+</ul>
+<p>常用配置，任意一条满足都会执行</p>
+<p><img src="/2019/06/19/redisdeep/r95.jpg" alt="r95"></p>
+<p>不可忽略的触发机制：</p>
+<ul>
+<li>全量复制（主从复制）</li>
+<li>debug reload</li>
+<li>shutdown</li>
+</ul>
+<h2 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h2><p>RDB耗时，耗性能（内存dump）</p>
+<p>RDB不可控，可能因为宕机丢失</p>
+<p>AOF基本可以实现实时恢复</p>
+<p>三种策略：</p>
+<ul>
+<li>always</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r96.jpg" alt="r96"></p>
+<ul>
+<li>everysec(default)</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r97.jpg" alt="r97"></p>
+<ul>
+<li>no</li>
+</ul>
+<p><img src="/2019/06/19/redisdeep/r98.jpg" alt="r98"></p>
+<p><img src="/2019/06/19/redisdeep/r99.jpg" alt="r99"></p>
+<p>AOF文件会很巨大，所以需要重写策略，从而减少磁盘占用，并且增加恢复速度</p>
+<p><img src="/2019/06/19/redisdeep/r100.jpg" alt="r100"></p>
+<p>可以使用bgrewriteaof命令显式要求重写</p>
+<p><img src="/2019/06/19/redisdeep/r101.jpg" alt="r101"></p>
+<p>可以在配置文件中设置aof文件尺寸和增长率，同时满足时触发重写</p>
+<p><img src="/2019/06/19/redisdeep/r102.jpg" alt="r102"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/06/19/redisdeep/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Database/">Database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Redis/">Redis</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/06/23/goad/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Golang Advanced Features
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/06/15/golang/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Golang Basic</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

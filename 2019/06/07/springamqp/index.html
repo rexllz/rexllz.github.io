@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    SpringAMQP &amp; RabbitMQ |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-springamqp"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  SpringAMQP &amp; RabbitMQ
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/06/07/springamqp/" class="article-date">
+  <time datetime="2019-06-07T08:19:00.000Z" itemprop="datePublished">2019-06-07</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">5.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">27 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/2019/06/07/springamqp/am1.jpg" alt="am1"></p>
+<h1 id="Spring整合"><a href="#Spring整合" class="headerlink" title="Spring整合"></a>Spring整合</h1><h2 id="RabbitAdmin"><a href="#RabbitAdmin" class="headerlink" title="RabbitAdmin"></a>RabbitAdmin</h2><p>可在spring中直接注入，方便操作rabbitmq</p>
+<p><img src="/2019/06/07/springamqp/am2.jpg" alt="am2"></p>
+<p>前提：autoStartup必须为true，否择spring容器不加载rabbitadmin类</p>
+<p>本质是获取spring容器中exchange，binding，routingkey，queue的@Bean声明</p>
+<p>之后调用RabbitTemplate的execute方法执行一系列（声明，修改，删除）的rabbitmq基本操作</p>
+<p>1、添加依赖</p>
+<pre><code class="xml">        &lt;dependency&gt;
+            &lt;groupId&gt;com.rabbitmq&lt;/groupId&gt;
+            &lt;artifactId&gt;amqp-client&lt;/artifactId&gt;
+            &lt;version&gt;3.6.5&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;
+        &lt;/dependency&gt;    
+</code></pre>
+<p>2、创建config类</p>
+<pre><code class="java">@Configuration
+@ComponentScan({&quot;com.bfxy.spring.*&quot;})
+public class RabbitMQConfig {
+
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setAddresses(&quot;192.168.11.76:5672&quot;);
+        connectionFactory.setUsername(&quot;guest&quot;);
+        connectionFactory.setPassword(&quot;guest&quot;);
+        connectionFactory.setVirtualHost(&quot;/&quot;);
+        return connectionFactory;
+    }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        rabbitAdmin.setAutoStartup(true);
+        return rabbitAdmin;
+    }
+}
+</code></pre>
+<p>3、测试使用</p>
+<pre><code class="java">@RunWith(SpringRunner.class)
+@SpringBootTest
+public class ApplicationTests {
+
+    @Test
+    public void contextLoads() {
+    }
+
+    @Autowired
+    private RabbitAdmin rabbitAdmin;
+
+    @Test
+    public void testAdmin() throws Exception {
+        rabbitAdmin.declareExchange(new DirectExchange(&quot;test.direct&quot;, false, false));
+
+        rabbitAdmin.declareExchange(new TopicExchange(&quot;test.topic&quot;, false, false));
+
+        rabbitAdmin.declareExchange(new FanoutExchange(&quot;test.fanout&quot;, false, false));
+
+        rabbitAdmin.declareQueue(new Queue(&quot;test.direct.queue&quot;, false));
+
+        rabbitAdmin.declareQueue(new Queue(&quot;test.topic.queue&quot;, false));
+
+        rabbitAdmin.declareQueue(new Queue(&quot;test.fanout.queue&quot;, false));
+
+        rabbitAdmin.declareBinding(new Binding(&quot;test.direct.queue&quot;,
+                Binding.DestinationType.QUEUE,
+                &quot;test.direct&quot;, &quot;direct&quot;, new HashMap&lt;&gt;()));
+
+        rabbitAdmin.declareBinding(
+                BindingBuilder
+                .bind(new Queue(&quot;test.topic.queue&quot;, false))        //直接创建队列
+                .to(new TopicExchange(&quot;test.topic&quot;, false, false))    //直接创建交换机 建立关联关系
+                .with(&quot;user.#&quot;));    //指定路由Key
+
+
+        rabbitAdmin.declareBinding(
+                BindingBuilder
+                .bind(new Queue(&quot;test.fanout.queue&quot;, false))        
+                .to(new FanoutExchange(&quot;test.fanout&quot;, false, false)));
+
+        //清空队列数据
+        rabbitAdmin.purgeQueue(&quot;test.topic.queue&quot;, false);
+    }
+</code></pre>
+<h2 id="SpringAMQP声明"><a href="#SpringAMQP声明" class="headerlink" title="SpringAMQP声明"></a>SpringAMQP声明</h2><p>原始rabbitmq api声明：</p>
+<p><img src="/2019/06/07/springamqp/am4.jpg" alt="am4"></p>
+<p>SpringAMQP采用@Bean方式声明</p>
+<pre><code class="java">@Configuration
+@ComponentScan({&quot;com.bfxy.spring.*&quot;})
+public class RabbitMQConfig {
+
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setAddresses(&quot;192.168.11.76:5672&quot;);
+        connectionFactory.setUsername(&quot;guest&quot;);
+        connectionFactory.setPassword(&quot;guest&quot;);
+        connectionFactory.setVirtualHost(&quot;/&quot;);
+        return connectionFactory;
+    }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        rabbitAdmin.setAutoStartup(true);
+        return rabbitAdmin;
+    }
+
+    /**  
+     * 针对消费者配置  
+     * 1. 设置交换机类型  
+     * 2. 将队列绑定到交换机  
+        FanoutExchange: 将消息分发到所有的绑定队列，无routingkey的概念  
+        HeadersExchange ：通过添加属性key-value匹配  
+        DirectExchange:按照routingkey分发到指定队列  
+        TopicExchange:多关键字匹配  
+     */  
+    @Bean  
+    public TopicExchange exchange001() {  
+        return new TopicExchange(&quot;topic001&quot;, true, false);  
+    }  
+
+    @Bean  
+    public Queue queue001() {  
+        return new Queue(&quot;queue001&quot;, true); //队列持久  
+    }  
+
+    @Bean  
+    public Binding binding001() {  
+        return BindingBuilder.bind(queue001()).to(exchange001()).with(&quot;spring.*&quot;);  
+    }  
+
+    @Bean  
+    public TopicExchange exchange002() {  
+        return new TopicExchange(&quot;topic002&quot;, true, false);  
+    }  
+
+    @Bean  
+    public Queue queue002() {  
+        return new Queue(&quot;queue002&quot;, true); //队列持久  
+    }
+
+    @Bean  
+    public Binding binding002() {  
+        return BindingBuilder.bind(queue002()).to(exchange002()).with(&quot;rabbit.*&quot;);  
+    } 
+
+    @Bean  
+    public Queue queue003() {  
+        return new Queue(&quot;queue003&quot;, true); //队列持久  
+    }
+
+    @Bean  
+    public Binding binding003() {  
+        return BindingBuilder.bind(queue003()).to(exchange001()).with(&quot;mq.*&quot;);  
+    } 
+
+    @Bean  
+    public Queue queue_image() {  
+        return new Queue(&quot;image_queue&quot;, true); //队列持久  
+    }
+
+    @Bean  
+    public Queue queue_pdf() {  
+        return new Queue(&quot;pdf_queue&quot;, true); //队列持久  
+    }
+</code></pre>
+<h2 id="RabbitTemplate"><a href="#RabbitTemplate" class="headerlink" title="RabbitTemplate"></a>RabbitTemplate</h2><p>发送消息的关键类，注入到spring容器中直接使用</p>
+<p>包括了可靠性投递消息、回调监听消息ConfirmCallback()、返回值确认接口ReturnCallback()</p>
+<p>在config里注入</p>
+<pre><code class="java">@Configuration
+@ComponentScan({&quot;com.bfxy.spring.*&quot;})
+public class RabbitMQConfig {
+
+    @Bean
+    public ConnectionFactory connectionFactory(){
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setAddresses(&quot;192.168.11.76:5672&quot;);
+        connectionFactory.setUsername(&quot;guest&quot;);
+        connectionFactory.setPassword(&quot;guest&quot;);
+        connectionFactory.setVirtualHost(&quot;/&quot;);
+        return connectionFactory;
+    }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
+        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
+        rabbitAdmin.setAutoStartup(true);
+        return rabbitAdmin;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+        return rabbitTemplate;
+    }
+</code></pre>
+<p>调用template方法</p>
+<pre><code class="java">    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+
+    @Test
+    public void testSendMessage() throws Exception {
+        //1 创建消息
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.getHeaders().put(&quot;desc&quot;, &quot;信息描述..&quot;);
+        messageProperties.getHeaders().put(&quot;type&quot;, &quot;自定义消息类型..&quot;);
+        Message message = new Message(&quot;Hello RabbitMQ&quot;.getBytes(), messageProperties);
+
+        rabbitTemplate.convertAndSend(&quot;topic001&quot;, &quot;spring.amqp&quot;, message, new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                System.err.println(&quot;------添加额外的设置---------&quot;);
+                message.getMessageProperties().getHeaders().put(&quot;desc&quot;, &quot;额外修改的信息描述&quot;);
+                message.getMessageProperties().getHeaders().put(&quot;attr&quot;, &quot;额外新加的属性&quot;);
+                return message;
+            }
+        });
+    }
+</code></pre>
+<p>直接发送消息，不做配置</p>
+<pre><code class="java">@Test
+    public void testSendMessage2() throws Exception {
+        //1 创建消息
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentType(&quot;text/plain&quot;);
+        Message message = new Message(&quot;mq 消息1234&quot;.getBytes(), messageProperties);
+
+        rabbitTemplate.send(&quot;topic001&quot;, &quot;spring.abc&quot;, message);
+
+        rabbitTemplate.convertAndSend(&quot;topic001&quot;, &quot;spring.amqp&quot;, &quot;hello object message send!&quot;);
+        rabbitTemplate.convertAndSend(&quot;topic002&quot;, &quot;rabbit.abc&quot;, &quot;hello object message send!&quot;);
+    }
+</code></pre>
+<h2 id="SimpleMessageListenerContainer"><a href="#SimpleMessageListenerContainer" class="headerlink" title="SimpleMessageListenerContainer"></a>SimpleMessageListenerContainer</h2><p>监听队列的强大类，可以动态设置</p>
+<ul>
+<li>设置事务及其特性</li>
+<li>设置消费者数量、批量消费等</li>
+<li>设置消息确认、自动确认、是否重回队列、异常捕获handler等</li>
+<li>设置消费者标签生成、独占模式消费者属性</li>
+<li>设置具体的监听器、消息转换器</li>
+</ul>
+<p>config中注入</p>
+<pre><code class="java">@Bean
+    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
+
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
+        container.setQueues(queue001(), queue002(), queue003(), queue_image(), queue_pdf());
+        container.setConcurrentConsumers(1);
+        container.setMaxConcurrentConsumers(5);
+        container.setDefaultRequeueRejected(false);
+        container.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        container.setExposeListenerChannel(true);
+        container.setConsumerTagStrategy(new ConsumerTagStrategy() {
+            @Override
+            public String createConsumerTag(String queue) {
+                return queue + &quot;_&quot; + UUID.randomUUID().toString();
+            }
+        });
+
+        container.setMessageListener(new ChannelAwareMessageListener() {
+            @Override
+            public void onMessage(Message message, Channel channel) throws Exception {
+                String msg = new String(message.getBody());
+                System.err.println(&quot;----------消费者: &quot; + msg);
+            }
+        });
+        return container;
+    }
+</code></pre>
+<p><img src="/2019/06/07/springamqp/am5.jpg" alt="am5"></p>
+<p><img src="/2019/06/07/springamqp/mq6.jpg" alt="mq6"></p>
+<h2 id="MessageListenerAdapter"><a href="#MessageListenerAdapter" class="headerlink" title="MessageListenerAdapter"></a>MessageListenerAdapter</h2><p>config中注入</p>
+<pre><code class="java">@Bean
+    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
+
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
+        container.setQueues(queue001(), queue002(), queue003(), queue_image(), queue_pdf());
+        container.setConcurrentConsumers(1);
+        container.setMaxConcurrentConsumers(5);
+        container.setDefaultRequeueRejected(false);
+        container.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        container.setExposeListenerChannel(true);
+        container.setConsumerTagStrategy(new ConsumerTagStrategy() {
+            @Override
+            public String createConsumerTag(String queue) {
+                return queue + &quot;_&quot; + UUID.randomUUID().toString();
+            }
+        });
+        /**
+        container.setMessageListener(new ChannelAwareMessageListener() {
+            @Override
+            public void onMessage(Message message, Channel channel) throws Exception {
+                String msg = new String(message.getBody());
+                System.err.println(&quot;----------消费者: &quot; + msg);
+            }
+        });
+        */
+
+        // 1 适配器方式. 默认是有自己的方法名字的：handleMessage
+            // 可以自己指定一个方法的名字: consumeMessage
+            // 也可以添加一个转换器: 从字节数组转换为String
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setDefaultListenerMethod(&quot;consumeMessage&quot;);
+        adapter.setMessageConverter(new TextMessageConverter());
+        container.setMessageListener(adapter);
+
+        return container;
+    }
+</code></pre>
+<p>创建自己的适配器</p>
+<pre><code class="java">import java.io.File;
+import java.util.Map;
+public class MessageDelegate {
+
+    public void handleMessage(byte[] messageBody) {
+        System.err.println(&quot;默认方法, 消息内容:&quot; + new String(messageBody));
+    }
+
+    /**
+
+    public void consumeMessage(byte[] messageBody) {
+        System.err.println(&quot;字节数组方法, 消息内容:&quot; + new String(messageBody));
+    }
+
+    public void consumeMessage(String messageBody) {
+        System.err.println(&quot;字符串方法, 消息内容:&quot; + messageBody);
+    }
+    */
+}
+</code></pre>
+<p>convert类</p>
+<pre><code class="java">import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.support.converter.MessageConversionException;
+import org.springframework.amqp.support.converter.MessageConverter;
+
+public class TextMessageConverter implements MessageConverter {
+
+    @Override
+    public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
+        return new Message(object.toString().getBytes(), messageProperties);
+    }
+
+    @Override
+    public Object fromMessage(Message message) throws MessageConversionException {
+        String contentType = message.getMessageProperties().getContentType();
+        if(null != contentType &amp;&amp; contentType.contains(&quot;text&quot;)) {
+            return new String(message.getBody());
+        }
+        return message.getBody();
+    }
+}
+</code></pre>
+<p>发送消息</p>
+<pre><code class="java">@Test
+    public void testSendMessage4Text() throws Exception {
+        //1 创建消息
+        MessageProperties messageProperties = new MessageProperties();
+        messageProperties.setContentType(&quot;text/plain&quot;);
+        Message message = new Message(&quot;mq 消息1234&quot;.getBytes(), messageProperties);
+
+        rabbitTemplate.send(&quot;topic001&quot;, &quot;spring.abc&quot;, message);
+        rabbitTemplate.send(&quot;topic002&quot;, &quot;rabbit.abc&quot;, message);
+    }
+</code></pre>
+<p>队列名称和方法名称一一匹配</p>
+<pre><code class="java">/**
+     2 适配器方式: 我们的队列名称 和 方法名称 也可以进行一一的匹配
+         */
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setMessageConverter(new TextMessageConverter());
+        Map&lt;String, String&gt; queueOrTagToMethodName = new HashMap&lt;&gt;();
+        queueOrTagToMethodName.put(&quot;queue001&quot;, &quot;method1&quot;);
+        queueOrTagToMethodName.put(&quot;queue002&quot;, &quot;method2&quot;);
+        adapter.setQueueOrTagToMethodName(queueOrTagToMethodName);
+        container.setMessageListener(adapter);        
+
+</code></pre>
+<p>MessageDelegate</p>
+<pre><code class="java">import java.io.File;
+import java.util.Map;
+public class MessageDelegate {
+
+    public void handleMessage(byte[] messageBody) {
+        System.err.println(&quot;默认方法, 消息内容:&quot; + new String(messageBody));
+    }
+
+    public void method1(String messageBody) {
+        System.err.println(&quot;method1 收到消息内容:&quot; + new String(messageBody));
+    }
+
+    public void method2(String messageBody) {
+        System.err.println(&quot;method2 收到消息内容:&quot; + new String(messageBody));
+    }
+}
+</code></pre>
+<h2 id="MessageConverter"><a href="#MessageConverter" class="headerlink" title="MessageConverter"></a>MessageConverter</h2><p>正常消息为二进制传输，如果需要转换，则使用转换器</p>
+<p>创建转换器，重写方法</p>
+<p>ImageMessageConverter</p>
+<pre><code class="java">import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.UUID;
+
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.support.converter.MessageConversionException;
+import org.springframework.amqp.support.converter.MessageConverter;
+
+public class ImageMessageConverter implements MessageConverter {
+
+    @Override
+    public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
+        throw new MessageConversionException(&quot; convert error ! &quot;);
+    }
+
+    @Override
+    public Object fromMessage(Message message) throws MessageConversionException {
+        System.err.println(&quot;-----------Image MessageConverter----------&quot;);
+
+        Object _extName = message.getMessageProperties().getHeaders().get(&quot;extName&quot;);
+        String extName = _extName == null ? &quot;png&quot; : _extName.toString();
+
+        byte[] body = message.getBody();
+        String fileName = UUID.randomUUID().toString();
+        String path = &quot;d:/010_test/&quot; + fileName + &quot;.&quot; + extName;
+        File f = new File(path);
+        try {
+            Files.copy(new ByteArrayInputStream(body), f.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+}
+</code></pre>
+<p>PDFMessageConverter</p>
+<pre><code class="java">import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.UUID;
+
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.support.converter.MessageConversionException;
+import org.springframework.amqp.support.converter.MessageConverter;
+
+public class PDFMessageConverter implements MessageConverter {
+
+    @Override
+    public Message toMessage(Object object, MessageProperties messageProperties) throws MessageConversionException {
+        throw new MessageConversionException(&quot; convert error ! &quot;);
+    }
+
+    @Override
+    public Object fromMessage(Message message) throws MessageConversionException {
+        System.err.println(&quot;-----------PDF MessageConverter----------&quot;);
+
+        byte[] body = message.getBody();
+        String fileName = UUID.randomUUID().toString();
+        String path = &quot;d:/010_test/&quot; + fileName + &quot;.pdf&quot;;
+        File f = new File(path);
+        try {
+            Files.copy(new ByteArrayInputStream(body), f.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return f;
+    }
+
+}
+</code></pre>
+<p>创建两个实体类</p>
+<pre><code class="java">package com.bfxy.spring.entity;
+
+public class Order {
+
+    private String id;
+
+    private String name;
+
+    private String content;
+
+    public Order() {
+    }
+
+    public Order(String id, String name, String content) {
+        this.id = id;
+        this.name = name;
+        this.content = content;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+}
+</code></pre>
+<pre><code class="java">package com.bfxy.spring.entity;
+
+public class Packaged {
+
+    private String id;
+
+    private String name;
+
+    private String description;
+
+    public Packaged() {
+    }
+
+    public Packaged(String id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+}
+</code></pre>
+<p>config中，使用转换器</p>
+<pre><code class="java">@Bean
+    public SimpleMessageListenerContainer messageContainer(ConnectionFactory connectionFactory) {
+
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
+        container.setQueues(queue001(), queue002(), queue003(), queue_image(), queue_pdf());
+        container.setConcurrentConsumers(1);
+        container.setMaxConcurrentConsumers(5);
+        container.setDefaultRequeueRejected(false);
+        container.setAcknowledgeMode(AcknowledgeMode.AUTO);
+        container.setExposeListenerChannel(true);
+        container.setConsumerTagStrategy(new ConsumerTagStrategy() {
+            @Override
+            public String createConsumerTag(String queue) {
+                return queue + &quot;_&quot; + UUID.randomUUID().toString();
+            }
+        });
+        /**
+         * 1 适配器方式. 默认是有自己的方法名字的：handleMessage
+            // 可以自己指定一个方法的名字: consumeMessage
+            // 也可以添加一个转换器: 从字节数组转换为String
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setDefaultListenerMethod(&quot;consumeMessage&quot;);
+        adapter.setMessageConverter(new TextMessageConverter());
+        container.setMessageListener(adapter);
+        */
+
+        /**
+         * 2 适配器方式: 我们的队列名称 和 方法名称 也可以进行一一的匹配
+         * 
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setMessageConverter(new TextMessageConverter());
+        Map&lt;String, String&gt; queueOrTagToMethodName = new HashMap&lt;&gt;();
+        queueOrTagToMethodName.put(&quot;queue001&quot;, &quot;method1&quot;);
+        queueOrTagToMethodName.put(&quot;queue002&quot;, &quot;method2&quot;);
+        adapter.setQueueOrTagToMethodName(queueOrTagToMethodName);
+        container.setMessageListener(adapter);        
+        */
+
+        // 1.1 支持json格式的转换器
+        /**
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setDefaultListenerMethod(&quot;consumeMessage&quot;);
+
+        Jackson2JsonMessageConverter jackson2JsonMessageConverter = new Jackson2JsonMessageConverter();
+        adapter.setMessageConverter(jackson2JsonMessageConverter);
+
+        container.setMessageListener(adapter);
+        */
+
+
+
+        // 1.2 DefaultJackson2JavaTypeMapper &amp; Jackson2JsonMessageConverter 支持java对象转换
+        /**
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setDefaultListenerMethod(&quot;consumeMessage&quot;);
+
+        Jackson2JsonMessageConverter jackson2JsonMessageConverter = new Jackson2JsonMessageConverter();
+
+        DefaultJackson2JavaTypeMapper javaTypeMapper = new DefaultJackson2JavaTypeMapper();
+        jackson2JsonMessageConverter.setJavaTypeMapper(javaTypeMapper);
+
+        adapter.setMessageConverter(jackson2JsonMessageConverter);
+        container.setMessageListener(adapter);
+        */
+
+
+        //1.3 DefaultJackson2JavaTypeMapper &amp; Jackson2JsonMessageConverter 支持java对象多映射转换
+        /**
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setDefaultListenerMethod(&quot;consumeMessage&quot;);
+        Jackson2JsonMessageConverter jackson2JsonMessageConverter = new Jackson2JsonMessageConverter();
+        DefaultJackson2JavaTypeMapper javaTypeMapper = new DefaultJackson2JavaTypeMapper();
+
+        Map&lt;String, Class&lt;?&gt;&gt; idClassMapping = new HashMap&lt;String, Class&lt;?&gt;&gt;();
+        idClassMapping.put(&quot;order&quot;, com.bfxy.spring.entity.Order.class);
+        idClassMapping.put(&quot;packaged&quot;, com.bfxy.spring.entity.Packaged.class);
+
+        javaTypeMapper.setIdClassMapping(idClassMapping);
+
+        jackson2JsonMessageConverter.setJavaTypeMapper(javaTypeMapper);
+        adapter.setMessageConverter(jackson2JsonMessageConverter);
+        container.setMessageListener(adapter);
+        */
+
+        //1.4 ext convert
+
+        MessageListenerAdapter adapter = new MessageListenerAdapter(new MessageDelegate());
+        adapter.setDefaultListenerMethod(&quot;consumeMessage&quot;);
+
+        //全局的转换器:
+        //集合多种转换器
+        ContentTypeDelegatingMessageConverter convert = new ContentTypeDelegatingMessageConverter();
+
+        TextMessageConverter textConvert = new TextMessageConverter();
+        convert.addDelegate(&quot;text&quot;, textConvert);
+        convert.addDelegate(&quot;html/text&quot;, textConvert);
+        convert.addDelegate(&quot;xml/text&quot;, textConvert);
+        convert.addDelegate(&quot;text/plain&quot;, textConvert);
+
+        Jackson2JsonMessageConverter jsonConvert = new Jackson2JsonMessageConverter();
+        convert.addDelegate(&quot;json&quot;, jsonConvert);
+        convert.addDelegate(&quot;application/json&quot;, jsonConvert);
+
+        ImageMessageConverter imageConverter = new ImageMessageConverter();
+        convert.addDelegate(&quot;image/png&quot;, imageConverter);
+        convert.addDelegate(&quot;image&quot;, imageConverter);
+
+        PDFMessageConverter pdfConverter = new PDFMessageConverter();
+        convert.addDelegate(&quot;application/pdf&quot;, pdfConverter);
+
+
+        adapter.setMessageConverter(convert);
+        container.setMessageListener(adapter);
+
+        return container;
+
+    }
+</code></pre>
+<p>MessageDelegate</p>
+<pre><code class="java">public class MessageDelegate {
+    public void consumeMessage(Map messageBody) {
+        System.err.println(&quot;map方法, 消息内容:&quot; + messageBody);
+    }
+
+
+    public void consumeMessage(Order order) {
+        System.err.println(&quot;order对象, 消息内容, id: &quot; + order.getId() + 
+                &quot;, name: &quot; + order.getName() + 
+                &quot;, content: &quot;+ order.getContent());
+    }
+
+    public void consumeMessage(Packaged pack) {
+        System.err.println(&quot;package对象, 消息内容, id: &quot; + pack.getId() + 
+                &quot;, name: &quot; + pack.getName() + 
+                &quot;, content: &quot;+ pack.getDescription());
+    }
+
+    public void consumeMessage(File file) {
+        System.err.println(&quot;文件对象 方法, 消息内容:&quot; + file.getName());
+    }
+}
+</code></pre>
+<p>测试方法</p>
+<pre><code class="java">@Test
+    public void testSendJsonMessage() throws Exception {
+
+        Order order = new Order();
+        order.setId(&quot;001&quot;);
+        order.setName(&quot;消息订单&quot;);
+        order.setContent(&quot;描述信息&quot;);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(order);
+        System.err.println(&quot;order 4 json: &quot; + json);
+
+        MessageProperties messageProperties = new MessageProperties();
+        //这里注意一定要修改contentType为 application/json
+        messageProperties.setContentType(&quot;application/json&quot;);
+        Message message = new Message(json.getBytes(), messageProperties);
+
+        rabbitTemplate.send(&quot;topic001&quot;, &quot;spring.order&quot;, message);
+    }
+
+    @Test
+    public void testSendJavaMessage() throws Exception {
+
+        Order order = new Order();
+        order.setId(&quot;001&quot;);
+        order.setName(&quot;订单消息&quot;);
+        order.setContent(&quot;订单描述信息&quot;);
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(order);
+        System.err.println(&quot;order 4 json: &quot; + json);
+
+        MessageProperties messageProperties = new MessageProperties();
+        //这里注意一定要修改contentType为 application/json
+        messageProperties.setContentType(&quot;application/json&quot;);
+        messageProperties.getHeaders().put(&quot;__TypeId__&quot;, &quot;com.bfxy.spring.entity.Order&quot;);
+        Message message = new Message(json.getBytes(), messageProperties);
+
+        rabbitTemplate.send(&quot;topic001&quot;, &quot;spring.order&quot;, message);
+    }
+
+    @Test
+    public void testSendMappingMessage() throws Exception {
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        Order order = new Order();
+        order.setId(&quot;001&quot;);
+        order.setName(&quot;订单消息&quot;);
+        order.setContent(&quot;订单描述信息&quot;);
+
+        String json1 = mapper.writeValueAsString(order);
+        System.err.println(&quot;order 4 json: &quot; + json1);
+
+        MessageProperties messageProperties1 = new MessageProperties();
+        //这里注意一定要修改contentType为 application/json
+        messageProperties1.setContentType(&quot;application/json&quot;);
+        messageProperties1.getHeaders().put(&quot;__TypeId__&quot;, &quot;order&quot;);
+        Message message1 = new Message(json1.getBytes(), messageProperties1);
+        rabbitTemplate.send(&quot;topic001&quot;, &quot;spring.order&quot;, message1);
+
+        Packaged pack = new Packaged();
+        pack.setId(&quot;002&quot;);
+        pack.setName(&quot;包裹消息&quot;);
+        pack.setDescription(&quot;包裹描述信息&quot;);
+
+        String json2 = mapper.writeValueAsString(pack);
+        System.err.println(&quot;pack 4 json: &quot; + json2);
+
+        MessageProperties messageProperties2 = new MessageProperties();
+        //这里注意一定要修改contentType为 application/json
+        messageProperties2.setContentType(&quot;application/json&quot;);
+        messageProperties2.getHeaders().put(&quot;__TypeId__&quot;, &quot;packaged&quot;);
+        Message message2 = new Message(json2.getBytes(), messageProperties2);
+        rabbitTemplate.send(&quot;topic001&quot;, &quot;spring.pack&quot;, message2);
+    }
+
+    @Test
+    public void testSendExtConverterMessage() throws Exception {
+//            byte[] body = Files.readAllBytes(Paths.get(&quot;d:/002_books&quot;, &quot;picture.png&quot;));
+//            MessageProperties messageProperties = new MessageProperties();
+//            messageProperties.setContentType(&quot;image/png&quot;);
+//            messageProperties.getHeaders().put(&quot;extName&quot;, &quot;png&quot;);
+        //在header中分类
+//            Message message = new Message(body, messageProperties);
+//            rabbitTemplate.send(&quot;&quot;, &quot;image_queue&quot;, message);
+
+            byte[] body = Files.readAllBytes(Paths.get(&quot;d:/002_books&quot;, &quot;mysql.pdf&quot;));
+            MessageProperties messageProperties = new MessageProperties();
+            messageProperties.setContentType(&quot;application/pdf&quot;);
+            Message message = new Message(body, messageProperties);
+            rabbitTemplate.send(&quot;&quot;, &quot;pdf_queue&quot;, message);
+    }
+</code></pre>
+<h1 id="Springboot整合"><a href="#Springboot整合" class="headerlink" title="Springboot整合"></a>Springboot整合</h1><p><img src="/2019/06/07/springamqp/mq7.jpg" alt="mq7"></p>
+<p>producer</p>
+<pre><code class="java">import java.util.Map;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.core.RabbitTemplate.ConfirmCallback;
+import org.springframework.amqp.rabbit.core.RabbitTemplate.ReturnCallback;
+import org.springframework.amqp.rabbit.support.CorrelationData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Component;
+
+import com.bfxy.springboot.entity.Order;
+
+@Component
+public class RabbitSender {
+
+    //自动注入RabbitTemplate模板类
+    @Autowired
+    private RabbitTemplate rabbitTemplate;  
+
+    //回调函数: confirm确认
+    final ConfirmCallback confirmCallback = new RabbitTemplate.ConfirmCallback() {
+        @Override
+        public void confirm(CorrelationData correlationData, boolean ack, String cause) {
+            System.err.println(&quot;correlationData: &quot; + correlationData);
+            System.err.println(&quot;ack: &quot; + ack);
+            if(!ack){
+                System.err.println(&quot;异常处理....&quot;);
+            }
+        }
+    };
+
+    //回调函数: return返回
+    final ReturnCallback returnCallback = new RabbitTemplate.ReturnCallback() {
+        @Override
+        public void returnedMessage(org.springframework.amqp.core.Message message, int replyCode, String replyText,
+                String exchange, String routingKey) {
+            System.err.println(&quot;return exchange: &quot; + exchange + &quot;, routingKey: &quot; 
+                + routingKey + &quot;, replyCode: &quot; + replyCode + &quot;, replyText: &quot; + replyText);
+        }
+    };
+
+    //发送消息方法调用: 构建Message消息
+    public void send(Object message, Map&lt;String, Object&gt; properties) throws Exception {
+        MessageHeaders mhs = new MessageHeaders(properties);
+        Message msg = MessageBuilder.createMessage(message, mhs);
+        rabbitTemplate.setConfirmCallback(confirmCallback);
+        rabbitTemplate.setReturnCallback(returnCallback);
+        //id + 时间戳 全局唯一 
+        CorrelationData correlationData = new CorrelationData(&quot;1234567890&quot;);
+        rabbitTemplate.convertAndSend(&quot;exchange-1&quot;, &quot;springboot.abc&quot;, msg, correlationData);
+    }
+
+    //发送消息方法调用: 构建自定义对象消息
+    public void sendOrder(Order order) throws Exception {
+        rabbitTemplate.setConfirmCallback(confirmCallback);
+        rabbitTemplate.setReturnCallback(returnCallback);
+        //id + 时间戳 全局唯一 
+        CorrelationData correlationData = new CorrelationData(&quot;0987654321&quot;);
+        rabbitTemplate.convertAndSend(&quot;exchange-2&quot;, &quot;springboot.def&quot;, order, correlationData);
+    }
+
+}
+
+</code></pre>
+<p>consumer</p>
+<pre><code class="java">import java.util.Map;
+
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Headers;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
+
+import com.rabbitmq.client.Channel;
+
+@Component
+public class RabbitReceiver {
+
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = &quot;queue-1&quot;, 
+            durable=&quot;true&quot;),
+            exchange = @Exchange(value = &quot;exchange-1&quot;, 
+            durable=&quot;true&quot;, 
+            type= &quot;topic&quot;, 
+            ignoreDeclarationExceptions = &quot;true&quot;),
+            key = &quot;springboot.*&quot;
+            )
+    )
+    @RabbitHandler
+    public void onMessage(Message message, Channel channel) throws Exception {
+        System.err.println(&quot;--------------------------------------&quot;);
+        System.err.println(&quot;消费端Payload: &quot; + message.getPayload());
+        Long deliveryTag = (Long)message.getHeaders().get(AmqpHeaders.DELIVERY_TAG);
+        //手工ACK
+        channel.basicAck(deliveryTag, false);
+    }
+
+
+    /**
+     * 
+     *     spring.rabbitmq.listener.order.queue.name=queue-2
+        spring.rabbitmq.listener.order.queue.durable=true
+        spring.rabbitmq.listener.order.exchange.name=exchange-1
+        spring.rabbitmq.listener.order.exchange.durable=true
+        spring.rabbitmq.listener.order.exchange.type=topic
+        spring.rabbitmq.listener.order.exchange.ignoreDeclarationExceptions=true
+        spring.rabbitmq.listener.order.key=springboot.*
+     * @param order
+     * @param channel
+     * @param headers
+     * @throws Exception
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = &quot;${spring.rabbitmq.listener.order.queue.name}&quot;, 
+            durable=&quot;${spring.rabbitmq.listener.order.queue.durable}&quot;),
+            exchange = @Exchange(value = &quot;${spring.rabbitmq.listener.order.exchange.name}&quot;, 
+            durable=&quot;${spring.rabbitmq.listener.order.exchange.durable}&quot;, 
+            type= &quot;${spring.rabbitmq.listener.order.exchange.type}&quot;, 
+            ignoreDeclarationExceptions = &quot;${spring.rabbitmq.listener.order.exchange.ignoreDeclarationExceptions}&quot;),
+            key = &quot;${spring.rabbitmq.listener.order.key}&quot;
+            )
+    )
+    @RabbitHandler
+    public void onOrderMessage(@Payload com.bfxy.springboot.entity.Order order, 
+            Channel channel, 
+            @Headers Map&lt;String, Object&gt; headers) throws Exception {
+        System.err.println(&quot;--------------------------------------&quot;);
+        System.err.println(&quot;消费端order: &quot; + order.getId());
+        Long deliveryTag = (Long)headers.get(AmqpHeaders.DELIVERY_TAG);
+        //手工ACK
+        channel.basicAck(deliveryTag, false);
+    }
+}
+</code></pre>
+<h1 id="Springcloud-Stream整合"><a href="#Springcloud-Stream整合" class="headerlink" title="Springcloud Stream整合"></a>Springcloud Stream整合</h1><p>消息的生产和发送可以采用不同的消息中间件</p>
+<p><img src="/2019/06/07/springamqp/mq8.jpg" alt="mq8"></p>
+<p><img src="/2019/06/07/springamqp/mq9.jpg" alt="mq9"></p>
+<ul>
+<li>@Output：输出注解，用于定义发送消息接口</li>
+<li>@Input：输入注解，用于定义消息的消费者接口</li>
+<li>@StreamListener：用于定义监听方法的注解</li>
+</ul>
+<p>但是不能保证100%可靠性投递，兼容rabbitmq，Kafka</p>
+<p>添加依赖</p>
+<pre><code class="xml">&lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+        &lt;/dependency&gt;    
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+        &lt;/dependency&gt;        
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+            &lt;scope&gt;test&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-stream-rabbit&lt;/artifactId&gt;
+            &lt;version&gt;1.3.4.RELEASE&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+</code></pre>
+<p>生产端</p>
+<p>properties</p>
+<pre><code class="properties">server.port=8001
+server.servlet.context-path=/producer
+
+spring.application.name=producer
+spring.cloud.stream.bindings.output_channel.destination=exchange-3
+spring.cloud.stream.bindings.output_channel.group=queue-3
+spring.cloud.stream.bindings.output_channel.binder=rabbit_cluster
+
+spring.cloud.stream.binders.rabbit_cluster.type=rabbit
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.addresses=192.168.11.76:5672
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.username=guest
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.password=guest
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.virtual-host=/
+</code></pre>
+<p>Barista</p>
+<pre><code class="java">import org.springframework.cloud.stream.annotation.Output;
+import org.springframework.messaging.MessageChannel;
+
+/**
+ * &lt;B&gt;中文类名：&lt;/B&gt;&lt;BR&gt;
+ * &lt;B&gt;概要说明：&lt;/B&gt;&lt;BR&gt;
+ * 这里的Barista接口是定义来作为后面类的参数，这一接口定义来通道类型和通道名称。
+ * 通道名称是作为配置用，通道类型则决定了app会使用这一通道进行发送消息还是从中接收消息。
+ */
+public interface Barista {
+
+    //String INPUT_CHANNEL = &quot;input_channel&quot;;  
+    String OUTPUT_CHANNEL = &quot;output_channel&quot;;  
+
+    //注解@Input声明了它是一个输入类型的通道，名字是Barista.INPUT_CHANNEL，也就是position3的input_channel。这一名字与上述配置app2的配置文件中position1应该一致，表明注入了一个名字叫做input_channel的通道，它的类型是input，订阅的主题是position2处声明的mydest这个主题  
+//    @Input(Barista.INPUT_CHANNEL)  
+//    SubscribableChannel loginput();  
+    //注解@Output声明了它是一个输出类型的通道，名字是output_channel。这一名字与app1中通道名一致，表明注入了一个名字为output_channel的通道，类型是output，发布的主题名为mydest。  
+    @Output(Barista.OUTPUT_CHANNEL)
+    MessageChannel logoutput();  
+
+//    String INPUT_BASE = &quot;queue-1&quot;;  
+//    String OUTPUT_BASE = &quot;queue-1&quot;;  
+//    @Input(Barista.INPUT_BASE)  
+//    SubscribableChannel input1();  
+//    MessageChannel output1();  
+
+}  
+</code></pre>
+<p>sender</p>
+<pre><code class="java">import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.support.MessageBuilder;
+import org.springframework.stereotype.Service;
+
+@EnableBinding(Barista.class)
+@Service  
+public class RabbitmqSender {  
+
+    @Autowired  
+    private Barista barista;  
+
+    // 发送消息
+    public String sendMessage(Object message, Map&lt;String, Object&gt; properties) throws Exception {  
+        try{
+            MessageHeaders mhs = new MessageHeaders(properties);
+            Message msg = MessageBuilder.createMessage(message, mhs);
+            boolean sendStatus = barista.logoutput().send(msg);
+            System.err.println(&quot;--------------sending -------------------&quot;);
+            System.out.println(&quot;发送数据：&quot; + message + &quot;,sendStatus: &quot; + sendStatus);
+        }catch (Exception e){  
+            System.err.println(&quot;-------------error-------------&quot;);
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+
+        }  
+        return null;
+    }  
+
+}  
+</code></pre>
+<p>消费端</p>
+<pre><code class="properties">server.port=8002
+server.context-path=/consumer
+
+spring.application.name=consumer
+spring.cloud.stream.bindings.input_channel.destination=exchange-3
+spring.cloud.stream.bindings.input_channel.group=queue-3
+spring.cloud.stream.bindings.input_channel.binder=rabbit_cluster
+spring.cloud.stream.bindings.input_channel.consumer.concurrency=1
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.requeue-rejected=false
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.acknowledge-mode=MANUAL
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.recovery-interval=3000
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.durable-subscription=true
+spring.cloud.stream.rabbit.bindings.input_channel.consumer.max-concurrency=5
+
+spring.cloud.stream.binders.rabbit_cluster.type=rabbit
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.addresses=192.168.11.76:5672
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.username=guest
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.password=guest
+spring.cloud.stream.binders.rabbit_cluster.environment.spring.rabbitmq.virtual-host=/
+</code></pre>
+<pre><code class="java">import org.springframework.cloud.stream.annotation.Input;
+import org.springframework.messaging.SubscribableChannel;
+
+/**
+ * &lt;B&gt;中文类名：&lt;/B&gt;&lt;BR&gt;
+ * &lt;B&gt;概要说明：&lt;/B&gt;&lt;BR&gt;
+ * 这里的Barista接口是定义来作为后面类的参数，这一接口定义来通道类型和通道名称。
+ * 通道名称是作为配置用，通道类型则决定了app会使用这一通道进行发送消息还是从中接收消息。
+ * @author ashen（Alienware）
+ * @since 2016年7月22日
+ */
+
+public interface Barista {
+
+    String INPUT_CHANNEL = &quot;input_channel&quot;;  
+
+    //注解@Input声明了它是一个输入类型的通道，名字是Barista.INPUT_CHANNEL，也就是position3的input_channel。这一名字与上述配置app2的配置文件中position1应该一致，表明注入了一个名字叫做input_channel的通道，它的类型是input，订阅的主题是position2处声明的mydest这个主题  
+    @Input(Barista.INPUT_CHANNEL)  
+    SubscribableChannel loginput();  
+
+
+}  
+</code></pre>
+<pre><code class="java">import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.messaging.Message;
+import org.springframework.stereotype.Service;
+
+import com.rabbitmq.client.Channel;
+
+
+@EnableBinding(Barista.class)
+@Service
+public class RabbitmqReceiver {  
+
+    @StreamListener(Barista.INPUT_CHANNEL)  
+    public void receiver(Message message) throws Exception {  
+        Channel channel = (com.rabbitmq.client.Channel) message.getHeaders().get(AmqpHeaders.CHANNEL);
+        Long deliveryTag = (Long) message.getHeaders().get(AmqpHeaders.DELIVERY_TAG);
+        System.out.println(&quot;Input Stream 1 接受数据：&quot; + message);
+        System.out.println(&quot;消费完毕------------&quot;);
+        channel.basicAck(deliveryTag, false);
+    }  
+}  
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/06/07/springamqp/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MQ/">MQ</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spring/">Spring</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/06/08/rabbitcluster/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            RabbitMQ Cluster
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/05/28/mq/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">RabbitMQ Basic</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

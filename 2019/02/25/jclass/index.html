@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Java Common Class |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-jclass"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java Common Class
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/02/25/jclass/" class="article-date">
+  <time datetime="2019-02-25T13:40:52.000Z" itemprop="datePublished">2019-02-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.5k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">7 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h1><h2 id="Error-amp-Exception"><a href="#Error-amp-Exception" class="headerlink" title="Error &amp; Exception"></a>Error &amp; Exception</h2><ul>
+<li>error：致命系统错误，编辑器不检查</li>
+<li>exception：程序可以处理的异常，可被捕获和恢复</li>
+</ul>
+<p><img src="/2019/02/25/jclass/exception.jpg" alt="exception"></p>
+<ul>
+<li>RuntimeException：不可预知的，程序应当避免</li>
+<li>非RuntimeException：可预知，从编译器校验的异常</li>
+</ul>
+<h2 id="Common-Exception"><a href="#Common-Exception" class="headerlink" title="Common Exception"></a>Common Exception</h2><p><img src="/2019/02/25/jclass/commonexception.jpg" alt="commonexception"></p>
+<h2 id="异常处理机制"><a href="#异常处理机制" class="headerlink" title="异常处理机制"></a>异常处理机制</h2><ul>
+<li>抛出异常：创建异常对象，交由运行时系统处理</li>
+<li>捕获异常：寻找合适的异常处理器处理异常，否则终止程序</li>
+</ul>
+<pre><code class="java">package com.interview.javabasic.throwable;
+
+public class ExceptionHandleMechanism {
+    public static void doWork() {
+        try {
+            int i = 10 / 0;    //会抛出异常
+            System.out.println(&quot;i=&quot; + i);
+        } catch (ArithmeticException e) {
+            //捕获 Exception
+            System.out.println(&quot;ArithmeticException: &quot; + e);
+        } finally {
+            System.out.println(&quot;Finally&quot;);
+        }
+    }
+    public static void main(String[] args) {
+        doWork();
+        System.out.println(&quot;Mission Complete&quot;);
+    }
+}
+</code></pre>
+<ul>
+<li>finally先于return执行</li>
+<li>尽量不要捕获通用异常</li>
+<li>异常一定要处理，不要生吞异常</li>
+<li>提早抛出，方便精确定位</li>
+<li>延时处理，用更大的信息域处理异常</li>
+</ul>
+<h2 id="异常统一处理"><a href="#异常统一处理" class="headerlink" title="异常统一处理"></a>异常统一处理</h2><p><img src="/2019/02/25/jclass/handler.jpg" alt="handler"></p>
+<h2 id="try-catch"><a href="#try-catch" class="headerlink" title="try-catch"></a>try-catch</h2><ul>
+<li>try-catch耗时大于if</li>
+</ul>
+<h1 id="Data-Structure"><a href="#Data-Structure" class="headerlink" title="Data Structure"></a>Data Structure</h1><p><img src="/2019/02/25/jclass/listset.jpg" alt="listset"></p>
+<ul>
+<li>arraylist没有用到lock与synchronized，并发不安全</li>
+<li>vector大量synchronized，效率低，并发性差，矛盾，弃用</li>
+<li>没有用到lock与synchronized</li>
+</ul>
+<h2 id="Set实现两种比较"><a href="#Set实现两种比较" class="headerlink" title="Set实现两种比较"></a>Set实现两种比较</h2><ul>
+<li>自然排序</li>
+</ul>
+<pre><code class="java">package com.interview.javabasic.collection;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Customer implements Comparable{
+    private String name;
+
+    private int age;
+
+    public Customer(String name, int age) {
+        this.age = age;
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!(obj instanceof Customer))
+            return false;
+        final Customer other = (Customer) obj;
+
+        if (this.name.equals(other.getName()) &amp;&amp; this.age == other.getAge())
+            return true;
+        else
+            return false;
+    }
+    @Override
+    public int compareTo(Object o) {
+        Customer other = (Customer) o;
+
+        // 先按照name属性排序
+        if (this.name.compareTo(other.getName()) &gt; 0)
+            return 1;
+        if (this.name.compareTo(other.getName()) &lt; 0)
+            return -1;
+
+        // 在按照age属性排序
+        if (this.age &gt; other.getAge())
+            return 1;
+        if (this.age &lt; other.getAge())
+            return -1;
+        return 0;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        result = (name == null ? 0 : name.hashCode());
+        result = 29 * result + age;
+        return result;
+    }
+    public static void main(String[] args) {
+        Set&lt;Customer&gt; set = new TreeSet&lt;Customer&gt;();
+        Customer customer1 = new Customer(&quot;Tom&quot;, 16);
+        Customer customer2 = new Customer(&quot;Tom&quot;, 15);
+        set.add(customer1);
+        set.add(customer2);
+        for(Customer c : set){
+            System.out.println(c.name + &quot; &quot; + c.age);
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>客户化排序（共存优先）</li>
+</ul>
+<pre><code class="java">package com.interview.javabasic.collection;
+
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+public class CustomerComparator implements Comparator&lt;Customer&gt; {
+    @Override
+    public int compare(Customer c1, Customer c2) {
+        if(c1.getName().compareTo(c2.getName())&gt;0)return -1;
+        if(c1.getName().compareTo(c2.getName())&lt;0)return 1;
+        return 0;
+    }
+
+    public static void main(String args[]){
+        Set&lt;Customer&gt; set = new TreeSet&lt;Customer&gt;(new CustomerComparator());
+
+        Customer customer1= new Customer(&quot;Tom&quot;,5);
+        Customer customer2= new Customer(&quot;Tom&quot;,9);
+        Customer customer3= new Customer(&quot;Tom&quot;,2);
+        set.add(customer1);
+        set.add(customer2);
+        set.add(customer3);
+        Iterator&lt;Customer&gt; it = set.iterator();
+        while(it.hasNext()){
+            Customer customer = it.next();
+            System.out.println(customer.getName()+&quot; &quot;+customer.getAge());
+        }
+    }
+}
+</code></pre>
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><p><img src="/2019/02/25/jclass/map.jpg" alt="map"></p>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><ul>
+<li>散列表</li>
+</ul>
+<p><img src="/2019/02/25/jclass/hash.jpg" alt="hash"></p>
+<ul>
+<li>性能恶化O(1)-O(N)</li>
+</ul>
+<p><img src="/2019/02/25/jclass/hash2.jpg" alt="hash2"></p>
+<ul>
+<li>put</li>
+</ul>
+<p><img src="/2019/02/25/jclass/put.jpg" alt="put"></p>
+<ul>
+<li>hashmap ：减少碰撞</li>
+<li>扰动函数</li>
+<li>使用final对象，采用合适的equals，hashcode方法</li>
+<li>多线程下，调整大小可能造成死锁</li>
+</ul>
+<h3 id="HashTable"><a href="#HashTable" class="headerlink" title="HashTable"></a>HashTable</h3><ul>
+<li>线程安全</li>
+<li>涉及到修改hashtable的方法synchronized实现</li>
+<li>串行化运行，效率低</li>
+</ul>
+<h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><ul>
+<li>曾经：segment分段锁</li>
+<li>当前</li>
+</ul>
+<p><img src="/2019/02/25/jclass/cmap.jpg" alt="cmap"></p>
+<p><img src="/2019/02/25/jclass/cput.jpg" alt="cput"></p>
+<p><img src="/2019/02/25/jclass/csum.jpg" alt="csum"></p>
+<p><img src="/2019/02/25/jclass/sum.jpg" alt="sum"></p>
+<h1 id="IO"><a href="#IO" class="headerlink" title="IO"></a>IO</h1><h2 id="AIO-BIO-NIO"><a href="#AIO-BIO-NIO" class="headerlink" title="AIO,BIO,NIO"></a>AIO,BIO,NIO</h2><ul>
+<li>BIO</li>
+</ul>
+<p><img src="/2019/02/25/jclass/bio.jpg" alt="bio"></p>
+<pre><code class="java">package com.interview.javabasic.io;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class BIOPlainEchoServer {
+    public void serve(int port) throws IOException {
+        //将ServerSocket绑定到指定的端口里
+        final ServerSocket socket = new ServerSocket(port);
+        while (true) {
+            //阻塞直到收到新的客户端连接
+            final Socket clientSocket = socket.accept();
+            System.out.println(&quot;Accepted connection from &quot; + clientSocket);
+            //创建一个子线程去处理客户端的请求
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                        PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+                        //从客户端读取数据并原封不动回写回去
+                        while (true) {
+                            writer.println(reader.readLine());
+                            writer.flush();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
+
+    public void improvedServe(int port) throws IOException {
+        //将ServerSocket绑定到指定的端口里
+        final ServerSocket socket = new ServerSocket(port);
+        //创建一个线程池
+        ExecutorService executorService = Executors.newFixedThreadPool(6);
+        while (true) {
+            //阻塞直到收到新的客户端连接
+            final Socket clientSocket = socket.accept();
+            System.out.println(&quot;Accepted connection from &quot; + clientSocket);
+            //将请求提交给线程池去执行
+            executorService.execute(() -&gt; {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                    PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+                    //从客户端读取数据并原封不动回写回去
+                    while (true) {
+                        writer.println(reader.readLine());
+                        writer.flush();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>NIO</li>
+</ul>
+<p><img src="/2019/02/25/jclass/nio.jpg" alt="nio"></p>
+<p>核心：</p>
+<ul>
+<li>channels</li>
+<li>buffers</li>
+<li>selectors</li>
+</ul>
+<p><img src="/2019/02/25/jclass/selector.jpg" alt="selector"></p>
+<pre><code class="java">package com.interview.javabasic.io;
+
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.nio.ByteBuffer;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.util.Iterator;
+import java.util.Set;
+
+public class NIOPlainEchoServer {
+    public void serve(int port) throws IOException {
+        System.out.println(&quot;Listening for connections on port &quot; + port);
+        ServerSocketChannel serverChannel = ServerSocketChannel.open();
+        ServerSocket ss = serverChannel.socket();
+        InetSocketAddress address = new InetSocketAddress(port);
+        //将ServerSocket绑定到指定的端口里
+        ss.bind(address);
+        serverChannel.configureBlocking(false);
+        Selector selector = Selector.open();
+        //将channel注册到Selector里，并说明让Selector关注的点，这里是关注建立连接这个事件
+        serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+        while (true) {
+            try {
+                //阻塞等待就绪的Channel，即没有与客户端建立连接前就一直轮询
+                selector.select();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                //代码省略的部分是结合业务，正确处理异常的逻辑
+                break;
+            }
+            //获取到Selector里所有就绪的SelectedKey实例,每将一个channel注册到一个selector就会产生一个SelectedKey
+            Set&lt;SelectionKey&gt; readyKeys = selector.selectedKeys();
+            Iterator&lt;SelectionKey&gt; iterator = readyKeys.iterator();
+            while (iterator.hasNext()) {
+                SelectionKey key = (SelectionKey) iterator.next();
+                //将就绪的SelectedKey从Selector中移除，因为马上就要去处理它，防止重复执行
+                iterator.remove();
+                try {
+                    //若SelectedKey处于Acceptable状态
+                    if (key.isAcceptable()) {
+                        ServerSocketChannel server = (ServerSocketChannel) key.channel();
+                        //接受客户端的连接
+                        SocketChannel client = server.accept();
+                        System.out.println(&quot;Accepted connection from &quot; + client);
+                        client.configureBlocking(false);
+                        //像selector注册socketchannel，主要关注读写，并传入一个ByteBuffer实例供读写缓存
+                        client.register(selector, SelectionKey.OP_WRITE | SelectionKey.OP_READ, ByteBuffer.allocate(100));
+                    }
+                    //若SelectedKey处于可读状态
+                    if (key.isReadable()) {
+                        SocketChannel client = (SocketChannel) key.channel();
+                        ByteBuffer output = (ByteBuffer) key.attachment();
+                        //从channel里读取数据存入到ByteBuffer里面
+                        client.read(output);
+                    }
+                    //若SelectedKey处于可写状态
+                    if (key.isWritable()) {
+                        SocketChannel client = (SocketChannel) key.channel();
+                        ByteBuffer output = (ByteBuffer) key.attachment();
+                        output.flip();
+                        //将ByteBuffer里的数据写入到channel里
+                        client.write(output);
+                        output.compact();
+                    }
+                } catch (IOException ex) {
+                    key.cancel();
+                    try {
+                        key.channel().close();
+                    } catch (IOException cex) {
+                    }
+                }
+            }
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>AIO</li>
+</ul>
+<p><img src="/2019/02/25/jclass/aio.jpg" alt="aio"></p>
+<p>实现：</p>
+<ul>
+<li>基于回调，实现completionhandler，触发回调函数</li>
+<li>返回future</li>
+</ul>
+<p><img src="/2019/02/25/jclass/compare.jpg" alt="compare"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/02/25/jclass/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/03/04/database/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Database Basic
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/02/25/synchronized/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Java Synchronized</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    React Basic |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-react"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  React Basic
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/06/25/react/" class="article-date">
+  <time datetime="2019-06-25T15:53:32.000Z" itemprop="datePublished">2019-06-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>学习一下前端知识来完成基本的项目。。</p>
+<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><ul>
+<li>安装node，配置环境变量</li>
+<li>安装react脚手架   npm install -g create-react-app</li>
+</ul>
+<p>目录结构：</p>
+<p><img src="/2019/06/25/react/r0.jpg" alt="r0"></p>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>前端组件化，将复杂前端分割成多个组件完成</p>
+<p><img src="/2019/06/25/react/r1.jpg" alt="r1"></p>
+<p>在index.js中</p>
+<pre><code class="js">import React from &#39;react&#39;;
+import ReactDOM from &#39;react-dom&#39;;
+import &#39;./index.css&#39;;
+
+import App from &#39;./App&#39;;
+import * as serviceWorker from &#39;./serviceWorker&#39;;
+
+ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+</code></pre>
+<p>serviceWorker用于离线保存网页</p>
+<p>其中引入了app组件</p>
+<p>ReactDOM.render(<app>, document.getElementById(‘root’));</app></p>
+<p>在app.js中定义组件</p>
+<pre><code class="js">import React from &#39;react&#39;;
+import logo from &#39;./logo.svg&#39;;
+import &#39;./App.css&#39;;
+
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;header className=&quot;App-header&quot;&gt;
+        &lt;img src={logo} className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;
+        &lt;p&gt;
+          Edit &lt;code&gt;src/App.js&lt;/code&gt; and save to reload.
+        &lt;/p&gt;
+        &lt;a
+          className=&quot;App-link&quot;
+          href=&quot;https://reactjs.org&quot;
+          target=&quot;_blank&quot;
+          rel=&quot;noopener noreferrer&quot;
+        &gt;
+          Learn React
+        &lt;/a&gt;
+      &lt;/header&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</code></pre>
+<p><img src="/2019/06/25/react/r2.jpg" alt="r2"></p>
+<p>编写简单的组件：Rex.js</p>
+<pre><code class="js">import React, { Component} from &quot;react&quot;;
+
+class Rex extends Component{
+    render() {
+        return(
+            &lt;div&gt;
+                hello rex
+            &lt;/div&gt;
+        );
+    }
+}
+
+export default Rex;
+</code></pre>
+<p>index.js中改变引用（组件的开头必须大写）</p>
+<pre><code class="js">import React from &#39;react&#39;;
+import ReactDOM from &#39;react-dom&#39;;
+import &#39;./index.css&#39;;
+
+import App from &#39;./App&#39;;
+import Rex from &#39;./Rex&#39;;
+import * as serviceWorker from &#39;./serviceWorker&#39;;
+
+// ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;));
+ReactDOM.render(&lt;Rex /&gt;, document.getElementById(&#39;root&#39;));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+
+</code></pre>
+<p>显示效果：</p>
+<p><img src="/2019/06/25/react/r3.jpg" alt="r3"></p>
+<h1 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h1><p>必须引入react，才可以使用JSX语法，是一种在js中使用html的方式</p>
+<p>大写标签代表组件，小写标签代表html</p>
+<p>react中，component render返回的html，最外层必须被包裹</p>
+<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
+
+class TodoList extends Component{
+    render() {
+        return(
+
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;input/&gt;
+                    &lt;button&gt;submit&lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;ul&gt;
+                    &lt;li&gt;hahah&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/Fragment&gt;
+
+        )
+    }
+}
+export default TodoList;
+</code></pre>
+<p>Fragment为最外层隐形div（大写开头为组件）</p>
+<p>JSX注释{/<em> </em>/}</p>
+<p>创建css文件</p>
+<pre><code class="css">.input {
+    border: 1px solid red;
+}
+</code></pre>
+<p>导入包</p>
+<blockquote>
+<p>impott ‘./xxx.css’;</p>
+</blockquote>
+<pre><code class="jsx">&lt;input
+    className-&#39;input&#39;
+    /&gt;
+</code></pre>
+<p>触发光标位置</p>
+<pre><code class="jsx">&lt;label htmlFor=&quot;id&quot;&gt;label&lt;/label&gt;
+</code></pre>
+<h1 id="响应式与事件"><a href="#响应式与事件" class="headerlink" title="响应式与事件"></a>响应式与事件</h1><p>react中的类默认一个构造函数，会率先触发，state负责存储数据</p>
+<p>react可以给页面状态，响应状态的变化</p>
+<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
+
+class TodoList extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            input: &#39;&#39;,
+            list: []
+        }
+    }
+
+
+    render() {
+        return(
+
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;input
+                        value={this.state.input}
+                        onChange={this.handleInputChange.bind(this)}
+                    /&gt;
+                    &lt;button&gt;submit&lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;ul&gt;
+                    &lt;li&gt;hahah&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/Fragment&gt;
+
+        )
+    }
+
+    handleInputChange(e){
+        this.setState({
+            input: e.target.value
+        })
+    }
+
+}
+export default TodoList;
+</code></pre>
+<p>绑定相同this，通过e传递数据，并通过setState改变数值，全程对数据操作</p>
+<h1 id="实现一个TodoList"><a href="#实现一个TodoList" class="headerlink" title="实现一个TodoList"></a>实现一个TodoList</h1><p>react不允许对state进行操作，必须深拷贝操作，以方便优化性能</p>
+<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
+
+class TodoList extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            input: &#39;&#39;,
+            list: []
+        }
+    }
+
+    render() {
+        return(
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;input
+                        value={this.state.input}
+                        onChange={this.handleInputChange.bind(this)}
+                    /&gt;
+                    &lt;button
+                        onClick={this.handleBtnClick.bind(this)}
+                    &gt;Submit&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;ul&gt;
+                        {
+                            this.state.list.map((item,index) =&gt;{
+                                return&lt;li
+                                    key={index}
+                                    onClick={this.handleDelete.bind(this,index)}
+                                &gt;{item}&lt;/li&gt;
+                            })
+                        }
+                &lt;/ul&gt;
+            &lt;/Fragment&gt;
+        )
+    }
+
+    handleBtnClick(){
+        this.setState({
+            list: [...this.state.list, this.state.input],
+            input: &#39;&#39;
+        })
+    }
+
+    handleInputChange(e){
+        this.setState({
+            input: e.target.value
+        })
+    }
+
+    handleDelete(index){
+        const list = [...this.state.list];
+        list.splice(index,1);
+        this.setState({
+            list: list
+        })
+    }
+
+}
+export default TodoList;
+</code></pre>
+<p><img src="/2019/06/25/react/r4.jpg" alt="r4"></p>
+<h1 id="组件-js之间的传值"><a href="#组件-js之间的传值" class="headerlink" title="组件.js之间的传值"></a>组件.js之间的传值</h1><p>大组件：</p>
+<pre><code class="jsx">import React, { Component, Fragment } from &#39;react&#39;;
+import TodoItem from &#39;./TodoItem&#39;;
+import Test from &#39;./Test&#39;;
+import &#39;./style.css&#39;;
+
+class TodoList extends Component {
+
+    constructor(props) {
+        super(props);
+        // 当组件的state或者props发生改变的时候，render函数就会重新执行
+        this.state = {
+            inputValue: &#39;&#39;,
+            list: []
+        }
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleBtnClick = this.handleBtnClick.bind(this);
+        this.handleItemDelete = this.handleItemDelete.bind(this);
+    }
+
+    render() {
+        return (
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;label htmlFor=&quot;insertArea&quot;&gt;输入内容&lt;/label&gt;
+                    &lt;input 
+                        id=&quot;insertArea&quot;
+                        className=&#39;input&#39;
+                        value={this.state.inputValue}
+                        onChange={this.handleInputChange}
+                    /&gt;
+                    &lt;button onClick={this.handleBtnClick}&gt;提交&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;ul&gt;
+                    {this.getTodoItem()}
+                &lt;/ul&gt;
+                &lt;Test content={this.state.inputValue}/&gt;
+            &lt;/Fragment&gt;
+        )
+    }
+
+    getTodoItem() {
+        return this.state.list.map((item, index) =&gt; {
+            return (
+                &lt;TodoItem 
+                    key={index}
+                    content={item} 
+                    index={index}
+                    deleteItem={this.handleItemDelete}
+                /&gt;
+            )
+        })
+    }
+
+    handleInputChange(e) {
+        const value = e.target.value;
+        this.setState(() =&gt; ({
+            inputValue: value
+        }));
+    }
+
+    handleBtnClick() {
+        this.setState((prevState) =&gt; ({
+            list: [...prevState.list, prevState.inputValue],
+            inputValue: &#39;&#39;
+        }));
+    }
+
+    handleItemDelete(index) {
+        this.setState((prevState) =&gt; {
+            const list = [...prevState.list];
+            list.splice(index, 1);
+            return {list}
+        });
+    }
+}
+
+export default TodoList;
+</code></pre>
+<p>小组件：</p>
+<pre><code class="jsx">import React, { Component } from &#39;react&#39;;
+import PropTypes from &#39;prop-types&#39;;
+
+class TodoItem extends Component {
+
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    render() {
+        const { content, test }  = this.props;
+        // JSX -&gt; createElemnt -&gt;  虚拟DOM（JS 对象） -&gt; 真实的DOM
+        // return &lt;div&gt;&lt;span&gt;item&lt;/span&gt;&lt;/div&gt;
+        return React.createElement(&#39;div&#39;, {}, React.createElement(&#39;span&#39;, {}, &#39;item&#39;));
+    }
+
+    handleClick() {
+        const { deleteItem, index } = this.props;
+        deleteItem(index);
+    }
+}
+
+TodoItem.propTypes = {
+    test: PropTypes.string.isRequired,
+    content: PropTypes.arrayOf(PropTypes.number, PropTypes.string),
+    deleteItem: PropTypes.func,
+    index: PropTypes.number
+}
+
+TodoItem.defaultProps = {
+    test: &#39;hello world&#39;
+}
+
+export default TodoItem;
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/06/25/react/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/07/03/algo/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Algorithm Practice
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/06/23/goad/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Golang Advanced Features</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

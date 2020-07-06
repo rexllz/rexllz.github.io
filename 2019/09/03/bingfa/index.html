@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Java Concurrency Note1 |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-bingfa"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java Concurrency Note1
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/09/03/bingfa/" class="article-date">
+  <time datetime="2019-09-02T16:04:13.000Z" itemprop="datePublished">2019-09-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">12 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="并发与内存模型"><a href="#并发与内存模型" class="headerlink" title="并发与内存模型"></a>并发与内存模型</h1><p><img src="/2019/09/03/bingfa/mm.jpg" alt="mm"></p>
+<h1 id="并发模拟"><a href="#并发模拟" class="headerlink" title="并发模拟"></a>并发模拟</h1><ul>
+<li>postman</li>
+<li>ab</li>
+<li>代码实现</li>
+</ul>
+<p><strong>CountDownLatch</strong></p>
+<p><img src="/2019/09/03/bingfa/cd.jpg" alt="cd"></p>
+<p>保证所有线程执行完后进行处理</p>
+<pre><code class="java">package com.hku.concurrency;
+import com.hku.concurrency.annoations.NotThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.*;
+
+@Slf4j
+@NotThreadSafe
+public class ConcurrencyTest {
+    public static int clientTotal = 5000;
+    public static int threadTotal = 200;
+    public static int count = 0;
+
+    public static void main(String[] args) throws Exception{
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        final Semaphore semaphore = new Semaphore(threadTotal);
+        final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
+        for (int i = 0; i&lt;clientTotal; i++){
+            executorService.execute(()-&gt;{
+                try {
+                    semaphore.acquire();
+                    add();
+                    semaphore.release();
+                }catch (Exception e){
+                    log.error(&quot;exception&quot;,e);
+                }
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+        executorService.shutdown();
+        log.info(&quot;count:{}&quot;,count);
+    }
+
+    private static void add(){
+        count ++;
+    }
+}
+
+</code></pre>
+<h1 id="线程安全性"><a href="#线程安全性" class="headerlink" title="线程安全性"></a>线程安全性</h1><p><img src="/2019/09/03/bingfa/security.jpg" alt="security"></p>
+<p><img src="/2019/09/03/bingfa/s3.jpg" alt="s3"></p>
+<h2 id="Atomic包"><a href="#Atomic包" class="headerlink" title="Atomic包"></a>Atomic包</h2><pre><code class="java">package com.hku.concurrency.example.count;
+
+import com.hku.concurrency.annoations.ThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Slf4j
+@ThreadSafe
+public class CountExample2 {
+    public static int clientTotal = 5000;
+    public static int threadTotal = 200;
+    public static AtomicInteger count = new AtomicInteger(0);
+
+    public static void main(String[] args) throws Exception{
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        final Semaphore semaphore = new Semaphore(threadTotal);
+        final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
+        for (int i = 0; i&lt;clientTotal; i++){
+            executorService.execute(()-&gt;{
+                try {
+                    semaphore.acquire();
+                    add();
+                    semaphore.release();
+                }catch (Exception e){
+                    log.error(&quot;exception&quot;,e);
+                }
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+        executorService.shutdown();
+        log.info(&quot;count:{}&quot;,count);
+    }
+
+    private static void add(){
+        count.incrementAndGet();
+    }
+}
+</code></pre>
+<pre><code class="java">/**
+     * Atomically increments by one the current value.
+     *
+     * @return the updated value
+     */
+    public final int incrementAndGet() {
+        return unsafe.getAndAddInt(this, valueOffset, 1) + 1;
+    }
+</code></pre>
+<pre><code class="java">/**
+    * var1 当前对象
+    * var2 当前对象的值
+    * var4 要增加的值：1
+    * var5 通过底层方法得到的当前值getIntVolatile
+    * CAS:
+    * compareAndSwapInt(var1, var2, var5, var5 + var4)
+    * 当var1对象的当前值var2与底层的值var5相同时
+    * 执行var5 + var4（增量1），并赋值给var1
+*/
+public final int getAndAddInt(Object var1, long var2, int var4) {
+        int var5;
+        do {
+            var5 = this.getIntVolatile(var1, var2);
+        } while(!this.compareAndSwapInt(var1, var2, var5, var5 + var4));
+        return var5;
+    }
+</code></pre>
+<ul>
+<li>AtomicLong vs Longadder</li>
+</ul>
+<p>AtomicLong 在compare过程中如果一直操作，就会陷入循环，影响性能</p>
+<p>Longadder 适合高并发，将任务分散至多个节点，可能有小误差</p>
+<ul>
+<li>AtomicReference</li>
+</ul>
+<pre><code class="java">package com.hku.concurrency.example.atomic;
+import com.hku.concurrency.annoations.ThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.atomic.AtomicReference;
+@Slf4j
+@ThreadSafe
+public class AtomicExample4 {
+    private static AtomicReference&lt;Integer&gt; count = new AtomicReference&lt;&gt;(0);
+
+    public static void main(String[] args) {
+        count.compareAndSet(0,2);
+        count.compareAndSet(0,1);
+        count.compareAndSet(1,3);
+        count.compareAndSet(2,4);
+        count.compareAndSet(3,5);
+        log.info(&quot;count:{}&quot;,count.get());
+    }
+}
+</code></pre>
+<ul>
+<li>AtomicIntegerFieldUpdater</li>
+</ul>
+<p>挂钩volatile非static字段</p>
+<pre><code class="java">package com.hku.concurrency.example.atomic;
+import com.hku.concurrency.annoations.ThreadSafe;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+@Slf4j
+@ThreadSafe
+public class AtomicExample5 {
+
+    private static AtomicIntegerFieldUpdater&lt;AtomicExample5&gt; updater =
+        AtomicIntegerFieldUpdater.newUpdater(AtomicExample5.class, &quot;count&quot;);
+    @Getter
+    public volatile int count = 100;
+    private static AtomicExample5 atomicExample5 = new AtomicExample5();
+    public static void main(String[] args) {
+        if (updater.compareAndSet(atomicExample5,100,120))
+        log.info(&quot;success1:{}&quot;,atomicExample5.getCount());
+        if (updater.compareAndSet(atomicExample5,100,120))
+            log.info(&quot;success2:{}&quot;,atomicExample5.getCount());
+        else log.info(&quot;failed:{}&quot;,atomicExample5.getCount());
+    }
+}
+</code></pre>
+<ul>
+<li>AtomicStampReference</li>
+</ul>
+<p>ABA问题，修改后又修改回去，cas失效</p>
+<p>CAS方法增加了stamp版本判断</p>
+<pre><code class="java">/**
+     * Atomically sets the value of both the reference and stamp
+     * to the given update values if the
+     * current reference is {@code ==} to the expected reference
+     * and the current stamp is equal to the expected stamp.
+     *
+     * @param expectedReference the expected value of the reference
+     * @param newReference the new value for the reference
+     * @param expectedStamp the expected value of the stamp
+     * @param newStamp the new value for the stamp
+     * @return {@code true} if successful
+     */
+    public boolean compareAndSet(V   expectedReference,
+                                 V   newReference,
+                                 int expectedStamp,
+                                 int newStamp) {
+        Pair&lt;V&gt; current = pair;
+        return
+            expectedReference == current.reference &amp;&amp;
+            expectedStamp == current.stamp &amp;&amp;
+            ((newReference == current.reference &amp;&amp;
+              newStamp == current.stamp) ||
+             casPair(current, Pair.of(newReference, newStamp)));
+    }
+</code></pre>
+<ul>
+<li>AtomicBoolean</li>
+</ul>
+<pre><code class="java">package com.hku.concurrency.example.atomic;
+import com.hku.concurrency.annoations.ThreadSafe;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+
+@Slf4j
+@ThreadSafe
+public class AtomicExample6 {
+    private static AtomicBoolean atomicBoolean = new AtomicBoolean(false);
+    public static int clientTotal = 5000;
+    public static int threadTotal = 200;
+    public static void main(String[] args) throws Exception{
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        final Semaphore semaphore = new Semaphore(threadTotal);
+        final CountDownLatch countDownLatch = new CountDownLatch(clientTotal);
+        for (int i = 0; i&lt;clientTotal; i++){
+            executorService.execute(()-&gt;{
+                try {
+                    semaphore.acquire();
+                    test();
+                    semaphore.release();
+                }catch (Exception e){
+                    log.error(&quot;exception&quot;,e);
+                }
+                countDownLatch.countDown();
+            });
+        }
+        countDownLatch.await();
+        executorService.shutdown();
+        log.info(&quot;atomicBoolean:{}&quot;,atomicBoolean.get());
+    }
+    private static void test(){
+        if (atomicBoolean.compareAndSet(false,true))log.info(&quot;execute&quot;);
+    }
+}
+</code></pre>
+<h2 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h2><p><img src="/2019/09/03/bingfa/lock.jpg" alt="lock"></p>
+<ul>
+<li>同步锁</li>
+</ul>
+<p><img src="/2019/09/03/bingfa/syn.jpg" alt="syn"></p>
+<pre><code class="java">package com.hku.concurrency.example.sync;
+import lombok.extern.slf4j.Slf4j;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+@Slf4j
+public class SynchronizedExample1 {
+    //修饰代码块
+    public void test1(){
+        synchronized (this){
+            for (int i = 0; i&lt;10; i++){
+                log.info(&quot;test1-{}&quot;,i);
+            }
+        }
+    }
+    //修饰方法
+    public synchronized void test2(){
+        for (int i = 0; i&lt;10; i++){
+            log.info(&quot;test2-{}&quot;,i);
+        }
+    }
+    public static void main(String[] args) {
+        SynchronizedExample1 synchronizedExample1 = new SynchronizedExample1();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        //启用线程池，可使两个线程同时启动
+        executorService.execute(()-&gt;{
+            synchronizedExample1.test1();
+        });
+        executorService.execute(()-&gt;{
+            synchronizedExample1.test1();
+        });
+    }
+}
+</code></pre>
+<p>上式可保证有序输出</p>
+<pre><code class="java"> public static void main(String[] args) {
+        SynchronizedExample1 synchronizedExample1 = new SynchronizedExample1();
+        SynchronizedExample1 synchronizedExample2 = new SynchronizedExample1();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        //启用线程池，可使两个线程同时启动
+        executorService.execute(()-&gt;{
+            synchronizedExample1.test1(1);
+        });
+        executorService.execute(()-&gt;{
+            synchronizedExample2.test1(2);
+        });
+    }
+</code></pre>
+<ul>
+<li>修饰块和方法时，作用于调用的对象，不同的调用对象之间不影响</li>
+</ul>
+<p><img src="/2019/09/03/bingfa/synlog.jpg" alt="synlog"></p>
+<ul>
+<li>修饰静态方法</li>
+</ul>
+<pre><code class="java"> //修饰静态方法
+    public static synchronized void test2(int t){
+        for (int i = 0; i&lt;10; i++){
+            log.info(&quot;test2-{}-{}&quot;,t,i);
+        }
+    }
+    public static void main(String[] args) {
+        SynchronizedExample2 synchronizedExample1 = new SynchronizedExample2();
+        SynchronizedExample2 synchronizedExample2 = new SynchronizedExample2();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        //启用线程池，可使两个线程同时启动
+        executorService.execute(()-&gt;{
+            synchronizedExample1.test2(1);
+        });
+        executorService.execute(()-&gt;{
+            synchronizedExample2.test2(2);
+        });
+    }
+</code></pre>
+<p><img src="/2019/09/03/bingfa/synlog1.jpg" alt="synlog1"></p>
+<p>作用于所有对象</p>
+<ul>
+<li>修饰类</li>
+</ul>
+<pre><code class="java">//修饰class
+public void test1(int k){
+        synchronized (SynchronizedExample2.class) {
+            for (int i = 0; i &lt; 10; i++) {
+                log.info(&quot;test1-example{}-{}&quot;, k, i);
+            }
+        }
+    }
+    public static void main(String[] args) {
+        SynchronizedExample2 synchronizedExample1 = new SynchronizedExample2();
+        SynchronizedExample2 synchronizedExample2 = new SynchronizedExample2();
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        //启用线程池，可使两个线程同时启动
+        executorService.execute(()-&gt;{
+            synchronizedExample1.test1(1);
+        });
+        executorService.execute(()-&gt;{
+            synchronizedExample2.test1(2);
+        });
+    }
+</code></pre>
+<p>结果与上图相同</p>
+<p><img src="/2019/09/03/bingfa/3lock.jpg" alt="3lock"></p>
+<h1 id="线程可见性"><a href="#线程可见性" class="headerlink" title="线程可见性"></a>线程可见性</h1><ul>
+<li>共享变量在线程间的可见性</li>
+</ul>
+<p><strong>不可见的原因</strong></p>
+<ul>
+<li>线程交叉进行</li>
+<li>重排序+线程交叉执行</li>
+<li>共享变量更新后的值没有在主内存和工作内存中及时更新</li>
+</ul>
+<h2 id="Synchronized-1"><a href="#Synchronized-1" class="headerlink" title="Synchronized"></a>Synchronized</h2><p><img src="/2019/09/03/bingfa/jmmsyn.jpg" alt="jmmsyn"></p>
+<h2 id="Volatile"><a href="#Volatile" class="headerlink" title="Volatile"></a>Volatile</h2><p><img src="/2019/09/03/bingfa/volatile.jpg" alt="volatile"></p>
+<p><img src="/2019/09/03/bingfa/v1.jpg" alt="v1"></p>
+<p><img src="/2019/09/03/bingfa/v2.jpg" alt="v2"></p>
+<p>直接使用volatile修饰变量并不线程安全，不具有原子性</p>
+<p>使用条件：</p>
+<ul>
+<li>对变量写操作不依赖当前值</li>
+<li>该变量赋值过程不包含其他变量</li>
+<li>适合作为状态标识</li>
+</ul>
+<h1 id="线程有序性"><a href="#线程有序性" class="headerlink" title="线程有序性"></a>线程有序性</h1><p>JMM会对指令重排序，虽然不会影响单线程的执行，但是会影响多线程并发得到正确性</p>
+<ul>
+<li><p>JVM会默认保证一定的有序性，根据happens-before原则</p>
+</li>
+<li><p>程序次序原则：单线程内按顺序执行（看起来），只会重排无依赖的指令</p>
+</li>
+<li>锁定原则：unlock先于lock操作</li>
+<li>volatile变量原则：对一个变量的写先于之后对此变量的读</li>
+<li>传递原则：A先于B，B先于C，那么A先于C</li>
+<li>线程启动原则：start先于其他动作</li>
+<li>线程中断原则：interrupt后才可检测到中断发生</li>
+<li>线程终结原则：所有行为先于线程终止检测</li>
+<li>对象终结原则：初始化先于finalize方法</li>
+</ul>
+<h1 id="安全发布对象"><a href="#安全发布对象" class="headerlink" title="安全发布对象"></a>安全发布对象</h1><h2 id="不安全的情况"><a href="#不安全的情况" class="headerlink" title="不安全的情况"></a>不安全的情况</h2><p>直接发布可能带来的不安全性：被其他线程改变</p>
+<pre><code class="java">package com.hku.concurrency.example.publish;
+
+import com.hku.concurrency.annoations.NotThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+import java.util.Arrays;
+@Slf4j
+@NotThreadSafe
+public class UnsafePublish {
+    private String [] status = {&quot;a&quot;,&quot;b&quot;,&quot;c&quot;};
+    public String[] getStatus() {
+        return status;
+    }
+
+    public static void main(String[] args) {
+        UnsafePublish unsafePublish =new UnsafePublish();
+        log.info(&quot;status:{}&quot;, Arrays.toString(unsafePublish.status));
+        unsafePublish.getStatus()[0] = &quot;e&quot;;
+        log.info(&quot;status:{}&quot;,Arrays.toString(unsafePublish.status));
+    }
+}
+</code></pre>
+<p>构造完成之前，便发布使其可见</p>
+<pre><code class="java">package com.hku.concurrency.example.publish;
+import com.hku.concurrency.annoations.NotRecommend;
+import com.hku.concurrency.annoations.NotThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
+@NotThreadSafe
+@NotRecommend
+public class Escape {
+    private int escapeIt = 0;
+    public Escape(){
+        new InnerClass();
+    }
+    private class InnerClass{
+        public InnerClass(){
+            log.info(&quot;{}&quot;,Escape.this.escapeIt);
+        }
+    }
+    //对象溢出，在该对象构造完成之前，就已经对他发布，使其对外可见
+    public static void main(String[] args) {
+        new Escape();
+    }
+}
+</code></pre>
+<h2 id="安全的发布对象"><a href="#安全的发布对象" class="headerlink" title="安全的发布对象"></a>安全的发布对象</h2><p><img src="/2019/09/03/bingfa/publish.jpg" alt="publish"></p>
+<h2 id="单例模式的发布"><a href="#单例模式的发布" class="headerlink" title="单例模式的发布"></a>单例模式的发布</h2><pre><code class="java">package com.hku.concurrency.example.singleton;
+
+import com.hku.concurrency.annoations.NotRecommend;
+import com.hku.concurrency.annoations.NotThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+/**
+ * 懒汉模式
+ * 多线程有问题
+ * 多个线程都检测到空值，导致拿到不同的实例
+ * Synchronized修饰getInstance可安全，但是性能降低
+ */
+@Slf4j
+@NotRecommend
+@NotThreadSafe
+public class SingletonExample1 {
+    //private constructor
+    private SingletonExample1(){
+    }
+    //singleton instance
+    private static SingletonExample1 instance = null;
+    //static factory method
+    public static SingletonExample1 getInstance(){
+        if(instance == null){
+            instance = new SingletonExample1();
+        }
+        return instance;
+    }
+}
+</code></pre>
+<pre><code class="java">package com.hku.concurrency.example.singleton;
+
+import com.hku.concurrency.annoations.NotRecommend;
+import com.hku.concurrency.annoations.NotThreadSafe;
+import com.hku.concurrency.annoations.ThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+/**
+ * 饿汉模式
+ * 单例实例在类装载时创建
+ * 可能有资源浪费（如果实例没有使用）
+ */
+@Slf4j
+@ThreadSafe
+public class SingletonExample2 {
+    //private constructor
+    private SingletonExample2(){
+    }
+    //singleton instance
+    private static SingletonExample2 instance = new SingletonExample2();
+    //static factory method
+    public static SingletonExample2 getInstance(){
+        return instance;
+    }
+}
+</code></pre>
+<pre><code class="java">package com.hku.concurrency.example.singleton;
+
+import com.hku.concurrency.annoations.NotRecommend;
+import com.hku.concurrency.annoations.NotThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+/**
+ * 懒汉模式-双重同步锁单例模式
+ * 多线程有问题
+ */
+@Slf4j
+@NotThreadSafe
+public class SingletonExample3 {
+    //private constructor
+    private SingletonExample3(){
+    }
+    //1、 memory = allocate()
+    //2、 ctorInstance()初始化
+    //3、 instance = memory使实例指向内存
+
+    //JVM优化后，指令重排
+
+    //1、 memory = allocate()
+    //3、 instance = memory使实例指向内存
+    //2、 ctorInstance()初始化
+
+    //A还没有初始化，就被return
+    //singleton instance
+    private static SingletonExample3 instance = null;
+    //static factory method
+    public static SingletonExample3 getInstance(){
+        if(instance == null){//双重检测                 //B
+            synchronized (SingletonExample3.class) {//同步锁
+                if(instance == null) {
+                    instance = new SingletonExample3();//A-3
+                }
+            }
+        }
+        return instance;
+    }
+}
+</code></pre>
+<p>限制指令重排序，通过volatile：</p>
+<pre><code class="java">package com.hku.concurrency.example.singleton;
+
+import com.hku.concurrency.annoations.NotRecommend;
+import com.hku.concurrency.annoations.NotThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+/**
+ * 懒汉模式-双重同步锁单例模式+volatile
+ */
+@Slf4j
+@ThreadSafe
+public class SingletonExample3 {
+    //private constructor
+    private SingletonExample3(){
+    }
+    //1、 memory = allocate()
+    //2、 ctorInstance()初始化
+    //3、 instance = memory使实例指向内存
+
+    //JVM优化后，指令重排(volatile限制重排)
+
+    //1、 memory = allocate()
+    //3、 instance = memory使实例指向内存
+    //2、 ctorInstance()初始化
+
+    //A还没有初始化，就被return
+    //singleton instance
+    private volatile static SingletonExample3 instance = null;
+    //static factory method
+    public static SingletonExample3 getInstance(){
+        if(instance == null){//双重检测                 //B
+            synchronized (SingletonExample3.class) {//同步锁
+                if(instance == null) {
+                    instance = new SingletonExample3();//A-3
+                }
+            }
+        }
+        return instance;
+    }
+}
+</code></pre>
+<pre><code class="java">package com.hku.concurrency.example.singleton;
+
+import com.hku.concurrency.annoations.NotThreadSafe;
+import com.hku.concurrency.annoations.Recommend;
+import com.hku.concurrency.annoations.ThreadSafe;
+import lombok.extern.slf4j.Slf4j;
+/**
+ * 枚举模式
+ * 安全且无资源浪费
+ */
+@Slf4j
+@ThreadSafe
+@Recommend
+public class SingletonExample4 {
+    //private constructor
+    private SingletonExample4(){
+    }
+    public static SingletonExample4 getInstance(){
+        return Singleton.INSTANCE.getInstance();
+    }
+    private enum Singleton{
+        INSTANCE;
+        private SingletonExample4 singleton;
+        //JVM保证这个方法只被调用一次
+        Singleton(){
+            singleton = new SingletonExample4();
+        }
+        public SingletonExample4 getInstance(){
+            return singleton;
+        }
+    }
+}
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/09/03/bingfa/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/06/07/k8sintro/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            K8S Concepts
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/07/16/imgo/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">IM project</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Netty Demo |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-nettydemo"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Netty Demo
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/06/11/nettydemo/" class="article-date">
+  <time datetime="2019-06-11T07:54:59.000Z" itemprop="datePublished">2019-06-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">9 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="初识Netty"><a href="#初识Netty" class="headerlink" title="初识Netty"></a>初识Netty</h1><p>Netty是一个提供了易于使用的API的客户端/服务器框架</p>
+<ul>
+<li>高并发</li>
+<li>NIO（非阻塞IO）</li>
+<li>传输快，零拷贝</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n1.jpg" alt="n1"></p>
+<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>线程访问资源，该资源是否准备就绪的一种处理方式</p>
+<ul>
+<li><p>阻塞：如果资源占用，则一直等待</p>
+</li>
+<li><p>非阻塞：如果资源占用，则返回一个结果</p>
+</li>
+</ul>
+<h2 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h2><p>访问数据的一种机制</p>
+<p><img src="/2019/06/11/nettydemo/n2.jpg" alt="n2"></p>
+<h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><ul>
+<li><p>BIO</p>
+<p>同步阻塞IO，Block IO</p>
+<p>并发处理能力差，依赖网速带宽</p>
+</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n3.jpg" alt="n3"></p>
+<p>通过增加线程，一应一答，改良后引入线程池</p>
+<ul>
+<li><p>NIO</p>
+<p>非堵塞IO，Non-Block IO</p>
+<p>线程会做其他事情，定时再去查看资源情况</p>
+<p>引入selector多路复用选择器，buffer等</p>
+</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n4.jpg" alt="n4"></p>
+<p>客户端增多，不会影响性能</p>
+<ul>
+<li><p>AIO</p>
+<p>异步非阻塞</p>
+<p>线程做其他事情，释放资源者通知线程</p>
+</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n5.jpg" alt="n5"></p>
+<p><img src="/2019/06/11/nettydemo/n6.jpg" alt="n6"></p>
+<h2 id="Netty的线程模型"><a href="#Netty的线程模型" class="headerlink" title="Netty的线程模型"></a>Netty的线程模型</h2><ul>
+<li>单线程模型：所有操作由一个NIO单线程处理</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n7.jpg" alt="n7"></p>
+<ul>
+<li>多线程模型：由一组NIO线程处理IO操作</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n8.jpg" alt="n8"></p>
+<ul>
+<li>主从线程模型：一组线程池接受请求，一组线程池处理IO</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n9.jpg" alt="n9"></p>
+<h1 id="简单服务器编写"><a href="#简单服务器编写" class="headerlink" title="简单服务器编写"></a>简单服务器编写</h1><p>引入依赖</p>
+<pre><code class="xml">&lt;dependency&gt;
+            &lt;groupId&gt;io.netty&lt;/groupId&gt;
+            &lt;artifactId&gt;netty-all&lt;/artifactId&gt;
+            &lt;version&gt;4.1.25.Final&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<pre><code class="java">public class HelloServer {
+    public static void main(String[] args) throws Exception{
+
+        //declare a thread group, to accept the connect from the client
+        //bossgroup
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        //workergroup,do the task from the bossgroup
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+
+        try {
+            //create the netty server
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(bossGroup,workerGroup)
+                    .channel(NioServerSocketChannel.class)   //set nio pattern
+                    .childHandler(new HelloServerIni());
+
+            //start the server and set the port
+            ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();
+
+            //listen the closed channel and set sync
+            channelFuture.channel().closeFuture().sync();
+        }finally {
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
+        }
+    }
+}
+</code></pre>
+<p>每个channel由多个handler组成管道pipeline</p>
+<p><img src="/2019/06/11/nettydemo/n10.jpg" alt="n10"></p>
+<pre><code class="java">public class HelloServerIni extends ChannelInitializer&lt;SocketChannel&gt; {
+    @Override
+    protected void initChannel(SocketChannel channel) throws Exception {
+        //get pipeline
+        ChannelPipeline channelPipeline = channel.pipeline();
+        //add handler by pipeline
+        channelPipeline.addLast(&quot;HttpServerCodec&quot;,new HttpServerCodec());
+        channelPipeline.addLast(&quot;customHandler&quot;,new CustomHandler());
+
+    }
+}
+</code></pre>
+<pre><code class="java">public class CustomHandler extends SimpleChannelInboundHandler&lt;HttpObject&gt; {
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpObject httpObject) throws Exception {
+
+        Channel channel = channelHandlerContext.channel();
+
+        if (httpObject instanceof HttpRequest){
+
+            System.out.println(channel.remoteAddress());
+
+            ByteBuf content = Unpooled.copiedBuffer(&quot;Hello Netty&quot;, CharsetUtil.UTF_8);
+
+            FullHttpResponse fullHttpResponse =
+                    new DefaultFullHttpResponse(HttpVersion.HTTP_1_0,
+                            HttpResponseStatus.OK,
+                            content);
+
+            fullHttpResponse.headers().set(HttpHeaderNames.CONTENT_TYPE,&quot;text/plain&quot;);
+            fullHttpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH,content.readableBytes());
+
+            channel.writeAndFlush(fullHttpResponse);
+        }
+
+    }
+}
+</code></pre>
+<h1 id="Netty生命周期"><a href="#Netty生命周期" class="headerlink" title="Netty生命周期"></a>Netty生命周期</h1><p><img src="/2019/06/11/nettydemo/n11.jpg" alt="n11"></p>
+<p><img src="/2019/06/11/nettydemo/n12.jpg" alt="n12"></p>
+<h1 id="实时通讯Demo"><a href="#实时通讯Demo" class="headerlink" title="实时通讯Demo"></a>实时通讯Demo</h1><p>三种实现方式：</p>
+<ul>
+<li>Ajax轮询</li>
+<li>Long pull</li>
+<li>websocket</li>
+</ul>
+<h2 id="server端"><a href="#server端" class="headerlink" title="server端"></a>server端</h2><p>chatserver</p>
+<pre><code class="java">public class ChatServer {
+    public static void main(String[] args) throws Exception{
+        EventLoopGroup maingroup = new NioEventLoopGroup();
+        EventLoopGroup subgroup = new NioEventLoopGroup();
+
+        try {
+
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(maingroup,subgroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new ChatServerIni());
+
+            ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();
+            channelFuture.channel().closeFuture().sync();
+
+        }finally {
+            maingroup.shutdownGracefully();
+            subgroup.shutdownGracefully();
+
+        }
+
+    }
+}
+</code></pre>
+<p>chatserverini</p>
+<pre><code class="java">public class ChatServerIni extends ChannelInitializer&lt;SocketChannel&gt; {
+
+    @Override
+    protected void initChannel(SocketChannel channel) throws Exception {
+        ChannelPipeline channelPipeline = channel.pipeline();
+
+        channelPipeline.addLast(new HttpServerCodec());
+
+        //support write big data stream
+        channelPipeline.addLast(new ChunkedWriteHandler());
+
+        //max contend length
+        //aggregate the http request and http response
+        channelPipeline.addLast(new HttpObjectAggregator(1024*64));
+
+        //--------------to support http---------------------
+
+        //to set the websocket route
+        //do something about handshaking(close, ping, pong)
+        channelPipeline.addLast(new WebSocketServerProtocolHandler(&quot;/ws&quot;));
+
+        //custom handler
+        channelPipeline.addLast(new ChatHandler());
+    }
+}
+</code></pre>
+<p>chatserver handler</p>
+<pre><code class="java">public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFrame&gt; {
+
+    //manage the clients channels
+    private static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+
+        //add client channel to channel group
+        clients.add(ctx.channel());
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        super.handlerRemoved(ctx);
+
+        System.out.println(ctx.channel().id().asLongText());
+        System.out.println(ctx.channel().id().asShortText());
+
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
+
+        String content = msg.text();
+        System.out.println(content);
+
+        for (Channel channel: clients){
+            channel.writeAndFlush(
+                    new TextWebSocketFrame(&quot;[server get message:]&quot;
+                            + LocalDateTime.now() + content));
+
+        }
+
+//        clients.writeAndFlush (
+//                new TextWebSocketFrame(&quot;[server get message:]&quot;
+//                + LocalDateTime.now() + content));
+    }
+}
+</code></pre>
+<h2 id="client端"><a href="#client端" class="headerlink" title="client端"></a>client端</h2><pre><code class="js">var socket = new WebSocket(&quot;ws://[ip]:[port]&quot;); 
+</code></pre>
+<p>生命周期：</p>
+<ul>
+<li>onopen()</li>
+<li>onmessage()</li>
+<li>onerror()</li>
+<li>onclose()</li>
+</ul>
+<p>主动方法：</p>
+<ul>
+<li>Socket.send()</li>
+<li>Socket.close()</li>
+</ul>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+
+        &lt;div&gt;send message:&lt;/div&gt;
+        &lt;input type=&quot;text&quot; id=&quot;msgContent&quot; /&gt;
+        &lt;input type=&quot;button&quot; value=&quot;send&quot; onclick=&quot;CHAT.chat()&quot;/&gt;
+
+        &lt;div&gt;get message:&lt;/div&gt;
+        &lt;div id=&quot;receiveMsg&quot; style=&quot;background-color: antiquewhite;&quot;&gt;&lt;/div&gt;
+
+        &lt;script type=&quot;application/javascript&quot;&gt;
+
+            window.CHAT = {
+                socket: null,
+                init: function(){
+                    if(window.WebSocket){
+                        CHAT.socket = new WebSocket(&quot;ws://127.0.0.1:8088/ws&quot;);
+                        CHAT.socket.onopen = function(){
+                            console.log(&quot;on open&quot;);
+                        };
+                        CHAT.socket.onclose = function(){
+                            console.log(&quot;on close&quot;);
+                        };
+                        CHAT.socket.onerror = function(){
+                            console.log(&quot;on error&quot;);
+                        };
+                        CHAT.socket.onmessage = function(e){
+                            console.log(&quot;on message&quot; + e.data);
+                            var receiveMsg = document.getElementById(&quot;receiveMsg&quot;);
+                            var html = receiveMsg.innerHTML;
+                            receiveMsg.innerHTML = html + &quot;&lt;br/&gt;&quot; + e.data;
+                        };
+
+                    }else{
+                        alert(&quot;no support for websocket&quot;);
+                    }
+                },
+                chat: function(){
+                    var msg = document.getElementById(&quot;msgContent&quot;);
+                    CHAT.socket.send(msg.value);
+                }
+            }
+            CHAT.init();
+
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre>
+<p><img src="/2019/06/11/nettydemo/n13.jpg" alt="n13"></p>
+<h2 id="Springboot中整合"><a href="#Springboot中整合" class="headerlink" title="Springboot中整合"></a>Springboot中整合</h2><p>修改chatserver</p>
+<pre><code class="java">@Component
+public class ChatServer {
+
+    private static class SingletionChatServer{
+        static final ChatServer instance = new ChatServer();
+    }
+
+    public static ChatServer getInstance(){
+        return SingletionChatServer.instance;
+    }
+
+    private EventLoopGroup maingroup;
+    private EventLoopGroup subgroup;
+    private ChannelFuture channelFuture;
+    private ServerBootstrap serverBootstrap;
+
+    public ChatServer() {
+        maingroup = new NioEventLoopGroup();
+        subgroup = new NioEventLoopGroup();
+        serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(maingroup,subgroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChatServerIni());
+
+    }
+
+    public void start() {
+        this.channelFuture = serverBootstrap.bind(8088);
+        System.err.println(&quot;netty started&quot;);
+    }
+}
+</code></pre>
+<p>在springapplication同级目录下创建nettybooter类</p>
+<pre><code class="java">@Component
+public class NettyBooter implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        if(contextRefreshedEvent.getApplicationContext().getParent() == null){
+            try {
+                ChatServer.getInstance().start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+}
+</code></pre>
+<h1 id="项目部分代码"><a href="#项目部分代码" class="headerlink" title="项目部分代码"></a>项目部分代码</h1><pre><code class="java">package hku.knowname.weasel.chatmanagement.chatserver;
+
+import hku.knowname.weasel.chatmanagement.ChatService.ChatService;
+import hku.knowname.weasel.chatmanagement.SpringUtil;
+import hku.knowname.weasel.chatmanagement.enums.MsgActionEnum;
+import hku.knowname.weasel.chatmanagement.utils.JsonUtils;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import org.apache.commons.lang3.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFrame&gt; {
+
+    //manage the clients channels
+    public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+
+        //add client channel to channel group
+        clients.add(ctx.channel());
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        super.handlerRemoved(ctx);
+
+        System.out.println(ctx.channel().id().asLongText());
+        System.out.println(ctx.channel().id().asShortText());
+
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
+
+        String content = msg.text();
+//        System.out.println(content);
+
+        Channel currentChannel = ctx.channel();
+
+        //1. get the message from client
+        DataContent dataContent = JsonUtils.jsonToPojo(content, DataContent.class);
+        Integer action = dataContent.getAction();
+
+        //2. judge the message type
+        if (action == MsgActionEnum.CONNECT.type){
+            // 2.1 link the channel and user id
+            int sendID = dataContent.getChatMsg().getSendId();
+            UserChannelRel.put(sendID, currentChannel);
+
+            //test
+            for (Channel c : clients){
+                System.out.println(c.id().asLongText());
+            }
+            UserChannelRel.output();
+
+        }else if (action == MsgActionEnum.CHAT.type){
+            ChatMsg chatMsg = dataContent.getChatMsg();
+            String msgText = chatMsg.getMsg();
+            int receivedid = chatMsg.getReceiveId();
+            int sendid = chatMsg.getSendId();
+
+            // 2.2 chat type: save the chat message in db, tag the status[no read]
+            //save chat to db
+            ChatService chatService = (ChatService) SpringUtil.getBean(&quot;chatServiceImp&quot;);
+
+            String msgId = chatService.saveMsg(chatMsg);
+            chatMsg.setChatId(msgId);
+
+            //send msg
+            Channel receiverChannel = UserChannelRel.get(receivedid);
+            if (receiverChannel == null){
+                // receiver user offline , send msg TODO
+            }else {
+                // find this receiver in channel group
+                Channel findChannel = clients.find(receiverChannel.id());
+                if (findChannel != null){
+                    //user online
+                    receiverChannel.writeAndFlush(
+                            new TextWebSocketFrame(JsonUtils.objectToJson(chatMsg)));
+
+                }else {
+                    // user offline TODO
+
+                }
+            }
+
+
+
+
+        }else if (action == MsgActionEnum.SIGNED.type){
+            // 2.3 read type: change the status to the [already read]
+            ChatService chatService = (ChatService) SpringUtil.getBean(&quot;chatServiceImp&quot;);
+            //extand means the chatid in the signed type, with comma
+            String chatidstr = dataContent.getExtand();
+            String[] chatids = chatidstr.split(&quot;,&quot;);
+            List&lt;String&gt; chatidList = new ArrayList&lt;&gt;();
+            for (String mid: chatids){
+                if (StringUtils.isNotBlank(mid)){
+                    chatidList.add(mid);
+                }
+            }
+            System.out.println(chatidList.toString());
+
+            if (chatidList != null &amp;&amp; !chatidList.isEmpty() &amp;&amp; chatidList.size()&gt;0){
+                //sign the msg batch
+                chatService.updateMsgSigned(chatidList);
+
+            }
+        }else if (action == MsgActionEnum.KEEPALIVE.type){
+            // 2.4 heartbeat
+        }
+
+//        for (Channel channel: clients){
+//            channel.writeAndFlush(
+//                    new TextWebSocketFrame(&quot;[server get message:]&quot;
+//                            + LocalDateTime.now() + content));
+//        }
+
+        clients.writeAndFlush (
+                new TextWebSocketFrame(&quot;[server get message:]&quot;
+                + LocalDateTime.now() + content));
+
+
+    }
+}
+
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/06/11/nettydemo/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Netty/">Netty</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/06/15/golang/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Golang Basic
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/06/09/setstruct/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">SET-Architecture</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

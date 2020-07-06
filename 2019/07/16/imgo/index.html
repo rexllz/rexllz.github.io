@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    IM project |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-imgo"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  IM project
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/07/16/imgo/" class="article-date">
+  <time datetime="2019-07-16T10:25:18.000Z" itemprop="datePublished">2019-07-16</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/project/">project</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">4.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">23 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="IM系统架构"><a href="#IM系统架构" class="headerlink" title="IM系统架构"></a>IM系统架构</h1><p>毕设项目接触了IM，当时是用Java实现，现在来用golang复现一下，有时间再复盘整理一下毕设项目</p>
+<p>源代码：<a href="https://github.com/rexllz/im" target="_blank" rel="noopener">https://github.com/rexllz/im</a></p>
+<p><img src="/2019/07/16/imgo/i1.jpg" alt="i1"></p>
+<h1 id="单机性能瓶颈"><a href="#单机性能瓶颈" class="headerlink" title="单机性能瓶颈"></a>单机性能瓶颈</h1><ul>
+<li>Map</li>
+</ul>
+<p>Map不能太大</p>
+<p>读写锁（读次数远大于写次数）</p>
+<ul>
+<li>系统</li>
+</ul>
+<p>Linux的最大文件数影响</p>
+<ul>
+<li>CPU</li>
+</ul>
+<p>JSON编码次数影响最大</p>
+<p>IO资源的使用（合并写操作）</p>
+<p>多使用缓存</p>
+<ul>
+<li>应用/资源服务相分离</li>
+</ul>
+<p>文件服务迁移到oss</p>
+<h1 id="搭建框架"><a href="#搭建框架" class="headerlink" title="搭建框架"></a>搭建框架</h1><h2 id="前端获取数据DEMO"><a href="#前端获取数据DEMO" class="headerlink" title="前端获取数据DEMO"></a>前端获取数据DEMO</h2><pre><code class="go">package main
+
+import (
+    &quot;net/http&quot;
+)
+
+func main() {
+
+    //bind the func and request
+    http.HandleFunc(&quot;/user/login&quot;,
+        func(writer http.ResponseWriter, request *http.Request) {
+
+            request.ParseForm()
+            mobile := request.PostForm.Get(&quot;mobile&quot;)
+            passwd := request.PostForm.Get(&quot;passwd&quot;)
+            loginok := false
+
+            if (mobile == &quot;186&quot; &amp;&amp; passwd == &quot;123&quot;) {
+
+                loginok = true
+            }
+
+            str := `{&quot;code&quot;:0,&quot;data&quot;:{&quot;id&quot;:1,&quot;token&quot;:&quot;test&quot;}}`
+
+            if !loginok {
+
+                str = `{&quot;code&quot;:-1,&quot;msg&quot;:&quot;password wrong&quot;}`
+            }
+            //set header
+            writer.Header().Set(&quot;Content-Type&quot;,&quot;application/json&quot;)
+            writer.WriteHeader(http.StatusOK)
+
+            writer.Write([]byte(str))
+
+            //io.WriteString(writer,&quot;hello world&quot;)
+    })
+
+    //start the web server
+    http.ListenAndServe(&quot;:8080&quot;,nil)
+}
+</code></pre>
+<p><img src="/2019/07/16/imgo/i0.jpg" alt="i0"></p>
+<h2 id="View的使用和支持"><a href="#View的使用和支持" class="headerlink" title="View的使用和支持"></a>View的使用和支持</h2><pre><code class="go">//support the static resource
+    http.Handle(&quot;/&quot;, http.FileServer(http.Dir(&quot;.&quot;)))
+</code></pre>
+<p>create the shtml</p>
+<pre><code class="html">{{define "/user/login.shtml"}}
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;/html&gt;
+&lt;script&gt;
+&lt;/script&gt;
+{{end}}
+</code></pre>
+<p>handle</p>
+<pre><code class="go">http.HandleFunc(&quot;/user/login.shtml&quot;,
+        func(writer http.ResponseWriter, request *http.Request) {
+            tpl,err := template.ParseFiles(&quot;view/user/login.html&quot;)
+            if err!=nil {
+                //quit and print the err
+                log.Fatal(err.Error())
+            }
+            tpl.ExecuteTemplate(writer,&quot;/user/login.shtml&quot;,nil)
+
+    })
+</code></pre>
+<p><img src="/2019/07/16/imgo/i3.jpg" alt="i3"></p>
+<h2 id="Xorm操作数据库"><a href="#Xorm操作数据库" class="headerlink" title="Xorm操作数据库"></a>Xorm操作数据库</h2><pre><code>go get github.com/go-xorm/xorm
+go get github.com/go-sql-driver/mysql
+</code></pre><p>定义init函数（自动运行）</p>
+<pre><code class="go">var DbEngin *xorm.Engine
+func init(){
+    drivename := &quot;mysql&quot;
+    DsName := &quot;root:root@(127.0.0.1:3306)/imchat?charset=utf8&quot;
+    DbEngin, err := xorm.NewEngine(drivename,DsName)
+    if err!=nil {
+        log.Fatal(err.Error())
+    }
+    //show the sql
+    DbEngin.ShowSQL(true)
+    //set the max connect num
+    DbEngin.SetMaxOpenConns(2)
+    //auto create tables
+    //DbEngin.Sync2(new(User))
+    fmt.Println(&quot;init DB connect&quot;)
+}
+</code></pre>
+<h2 id="创建web项目结构"><a href="#创建web项目结构" class="headerlink" title="创建web项目结构"></a>创建web项目结构</h2><ul>
+<li>建立目录</li>
+<li>init.go（DB初始化）</li>
+<li>服务函数</li>
+</ul>
+<p>实现注册功能</p>
+<p>service</p>
+<pre><code class="go">package service
+
+import (
+    &quot;errors&quot;
+    &quot;fmt&quot;
+    &quot;im/model&quot;
+    &quot;im/util&quot;
+    &quot;math/rand&quot;
+    &quot;time&quot;
+)
+
+type UserService struct {
+
+}
+
+func (s* UserService)Register (
+    mobile,
+    plainpwd,
+    nickname,
+    avatar,
+    sex string)(user model.User, err error){
+
+        //check if the mobile exist
+        tmp := model.User{}
+        _, err = DbEngin.Where(&quot;mobile=?&quot;, mobile).Get(&amp;tmp)
+        if err!=nil {
+            return tmp,err
+        }
+        if tmp.Id&gt;0 {
+            return tmp,errors.New(&quot;this mobile have account&quot;)
+        }
+
+        tmp.Mobile = mobile
+        tmp.Nickname = nickname
+        tmp.Avatar = avatar
+        tmp.Sex = sex
+        tmp.Salt = fmt.Sprintf(&quot;%06d&quot;,rand.Int31n(10000))
+        tmp.Passwd = util.MakePasswd(plainpwd,tmp.Salt)
+        tmp.Createat = time.Now()
+        tmp.Token = fmt.Sprintf(&quot;%08d&quot;,rand.Int31())
+
+        //insert one data,return number and error
+        _, err = DbEngin.InsertOne(&amp;tmp)
+
+
+        return tmp, err
+}
+
+func (s* UserService)Login (
+    mobile,
+    plainpwd string)(user model.User, err error){
+    return user,nil
+}
+</code></pre>
+<p>model</p>
+<pre><code class="go">package model
+
+import &quot;time&quot;
+
+const (
+    SEX_WOMEN=&quot;W&quot;
+    SEX_MEN=&quot;M&quot;
+    //
+    SEX_UNKNOW=&quot;U&quot;
+)
+type User struct {
+    //用户ID
+    Id         int64     `xorm:&quot;pk autoincr bigint(20)&quot; form:&quot;id&quot; json:&quot;id&quot;`
+    Mobile   string         `xorm:&quot;varchar(20)&quot; form:&quot;mobile&quot; json:&quot;mobile&quot;`
+    Passwd       string    `xorm:&quot;varchar(40)&quot; form:&quot;passwd&quot; json:&quot;-&quot;`   // 什么角色
+    Avatar       string         `xorm:&quot;varchar(150)&quot; form:&quot;avatar&quot; json:&quot;avatar&quot;`
+    Sex        string    `xorm:&quot;varchar(2)&quot; form:&quot;sex&quot; json:&quot;sex&quot;`   // 什么角色
+    Nickname    string    `xorm:&quot;varchar(20)&quot; form:&quot;nickname&quot; json:&quot;nickname&quot;`   // 什么角色
+    //加盐随机字符串6
+    Salt       string    `xorm:&quot;varchar(10)&quot; form:&quot;salt&quot; json:&quot;-&quot;`   // 什么角色
+    Online     int    `xorm:&quot;int(10)&quot; form:&quot;online&quot; json:&quot;online&quot;`   //是否在线
+    //前端鉴权因子,
+    Token      string    `xorm:&quot;varchar(40)&quot; form:&quot;token&quot; json:&quot;token&quot;`   // 什么角色
+    Memo      string    `xorm:&quot;varchar(140)&quot; form:&quot;memo&quot; json:&quot;memo&quot;`   // 什么角色
+    Createat   time.Time    `xorm:&quot;datetime&quot; form:&quot;createat&quot; json:&quot;createat&quot;`   // 什么角色
+}
+</code></pre>
+<p>ctrl</p>
+<pre><code class="go">package ctrl
+
+import (
+    &quot;fmt&quot;
+    &quot;im/model&quot;
+    &quot;im/service&quot;
+    &quot;im/util&quot;
+    &quot;math/rand&quot;
+    &quot;net/http&quot;
+)
+
+var userService service.UserService
+
+func UserRegister(writer http.ResponseWriter, request *http.Request) {
+
+    request.ParseForm()
+
+    mobile := request.PostForm.Get(&quot;mobile&quot;)
+    plainpwd := request.PostForm.Get(&quot;passwd&quot;)
+
+    nickname := fmt.Sprintf(&quot;user%06d&quot;, rand.Int31())
+    avatar := &quot;&quot;
+    sex := model.SEX_UNKNOW
+
+    user, err := userService.Register(mobile, plainpwd, nickname, avatar, sex)
+    if err!=nil {
+        util.RespFail(writer,err.Error())
+    }else {
+        util.RespOk(writer,user,&quot;&quot;)
+    }
+}
+
+func UserLogin(writer http.ResponseWriter, request *http.Request) {
+
+    request.ParseForm()
+    mobile := request.PostForm.Get(&quot;mobile&quot;)
+    passwd := request.PostForm.Get(&quot;passwd&quot;)
+    loginok := false
+
+    if (mobile == &quot;186&quot; &amp;&amp; passwd == &quot;123&quot;) {
+
+        loginok = true
+    }
+
+    if loginok {
+        data := make(map[string]interface{})
+        data[&quot;id&quot;] = 1
+        data[&quot;token&quot;] = &quot;test&quot;
+        util.RespOk(writer,data,&quot;&quot;)
+    }else {
+        util.RespFail(writer,&quot;password wrong&quot;)
+    }
+
+}
+</code></pre>
+<p>util</p>
+<pre><code class="go">package util
+
+import (
+    &quot;encoding/json&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+)
+
+type H struct {
+    Code int `json:&quot;code&quot;`
+    Msg string `json:&quot;msg&quot;`
+    Data interface{} `json:&quot;data,omitempty&quot;`
+}
+
+func RespFail(w http.ResponseWriter,msg string){
+    Resp(w,-1,nil,msg)
+}
+
+func RespOk(w http.ResponseWriter,data interface{},msg string){
+    Resp(w,0,data,msg)
+}
+
+func Resp(writer http.ResponseWriter,code int, data interface{}, msg string)  {
+    //set header
+    writer.Header().Set(&quot;Content-Type&quot;,&quot;application/json&quot;)
+    writer.WriteHeader(http.StatusOK)
+
+    //define a struct
+    h := H{
+        Code:code,
+        Msg:msg,
+        Data:data,
+    }
+
+    //transform the h to string
+    ret,err := json.Marshal(h)
+
+    if err!=nil {
+        log.Println(err.Error())
+    }
+
+    writer.Write(ret)
+}
+</code></pre>
+<p><img src="/2019/07/16/imgo/i6.jpg" alt="i6"></p>
+<p><img src="/2019/07/16/imgo/i5.jpg" alt="i5"></p>
+<h1 id="IM业务"><a href="#IM业务" class="headerlink" title="IM业务"></a>IM业务</h1><p>websocket.connect为并行数据，需要转为串行</p>
+<pre><code class="go">node := &amp;Node{
+        Conn:conn,
+
+        //transfer Parallel to serial
+        DataQueue:make(chan []byte,50),
+        GroupSets:set.New(set.ThreadSafe),
+    }
+</code></pre>
+<p>存储node，user的map需要上读写锁，以防止出错</p>
+<p>读写锁实际是一种特殊的<a href="https://baike.baidu.com/item/自旋锁" target="_blank" rel="noopener">自旋锁</a>，它把对共享资源的访问者划分成读者和写者，读者只对共享资源进行读访问，写者则需要对共享资源进行写操作。这种锁相对于自旋锁而言，能提高并发性，因为在<a href="https://baike.baidu.com/item/多处理器系统" target="_blank" rel="noopener">多处理器系统</a>中，它允许同时有多个读者来访问共享资源，最大可能的读者数为实际的逻辑CPU数。写者是排他性的，一个读写锁同时只能有一个写者或多个读者（与CPU数相关），但不能同时既有读者又有写者。</p>
+<pre><code class="go">rwlocker.Lock()
+    clientMap[userId]=node
+    rwlocker.Unlock()
+</code></pre>
+<pre><code class="go">//todo 完成发送逻辑,con
+    go sendproc(node)
+    //todo 完成接收逻辑
+    go recvproc(node)
+</code></pre>
+<p>设计可以无限扩张业务场景的消息通讯结构</p>
+<pre><code class="cgo">func recvproc(node *Node) {
+    for{
+        _,data,err := node.Conn.ReadMessage()
+        if err!=nil{
+            log.Println(err.Error())
+            return
+        }
+        //todo 对data进一步处理
+        //dispatch(data)
+        fmt.Printf(&quot;recv&lt;=%s&quot;,data)
+    }
+}
+</code></pre>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>前端通过websocket发送<code>json格式的字符串</code><br>用户2向用户3发送文字消息hello</p>
+<pre><code class="json5">{id:1,userid:2,dstid:3,cmd:10,media:1,content:&quot;hello&quot;}
+</code></pre>
+<p>里面携带<br>谁发的-userid<br>要发给谁-dstid<br>这个消息有什么用-cmd<br>消息怎么展示-media<br>消息内容是什么-(url,amout,pic,content等)</p>
+<h2 id="核心数据结构"><a href="#核心数据结构" class="headerlink" title="核心数据结构"></a>核心数据结构</h2><pre><code class="go">type Message struct {
+    Id      int64  `json:&quot;id,omitempty&quot; form:&quot;id&quot;` //消息ID
+    //谁发的
+    Userid  int64  `json:&quot;userid,omitempty&quot; form:&quot;userid&quot;` //谁发的
+    //什么业务
+    Cmd     int    `json:&quot;cmd,omitempty&quot; form:&quot;cmd&quot;` //群聊还是私聊
+    //发给谁
+    Dstid   int64  `json:&quot;dstid,omitempty&quot; form:&quot;dstid&quot;`//对端用户ID/群ID
+    //怎么展示
+    Media   int    `json:&quot;media,omitempty&quot; form:&quot;media&quot;` //消息按照什么样式展示
+    //内容是什么
+    Content string `json:&quot;content,omitempty&quot; form:&quot;content&quot;` //消息的内容
+    //图片是什么
+    Pic     string `json:&quot;pic,omitempty&quot; form:&quot;pic&quot;` //预览图片
+    //连接是什么
+    Url     string `json:&quot;url,omitempty&quot; form:&quot;url&quot;` //服务的URL
+    //简单描述
+    Memo    string `json:&quot;memo,omitempty&quot; form:&quot;memo&quot;` //简单描述
+    //其他的附加数据，语音长度/红包金额
+    Amount  int    `json:&quot;amount,omitempty&quot; form:&quot;amount&quot;` //其他和数字相关的
+}
+const (
+    //点对点单聊,dstid是用户ID
+    CMD_SINGLE_MSG = 10
+    //群聊消息,dstid是群id
+    CMD_ROOM_MSG   = 11
+    //心跳消息,不处理
+    CMD_HEART      = 0
+
+)
+const (
+    //文本样式
+    MEDIA_TYPE_TEXT=1
+    //新闻样式,类比图文消息
+    MEDIA_TYPE_News=2
+    //语音样式
+    MEDIA_TYPE_VOICE=3
+    //图片样式
+    MEDIA_TYPE_IMG=4
+
+    //红包样式
+    MEDIA_TYPE_REDPACKAGR=5
+    //emoj表情样式
+    MEDIA_TYPE_EMOJ=6
+    //超链接样式
+    MEDIA_TYPE_LINK=7
+    //视频样式
+    MEDIA_TYPE_VIDEO=8
+    //名片样式
+    MEDIA_TYPE_CONCAT=9
+    //其他自己定义,前端做相应解析即可
+    MEDIA_TYPE_UDEF=100
+)
+/**
+消息发送结构体,点对点单聊为例
+1、MEDIA_TYPE_TEXT
+{id:1,userid:2,dstid:3,cmd:10,media:1,
+content:&quot;hello&quot;}
+
+3、MEDIA_TYPE_VOICE,amount单位秒
+{id:1,userid:2,dstid:3,cmd:10,media:3,
+url:&quot;http://www.a,com/dsturl.mp3&quot;,
+amount:40}
+
+4、MEDIA_TYPE_IMG
+{id:1,userid:2,dstid:3,cmd:10,media:4,
+url:&quot;http://www.baidu.com/a/log.jpg&quot;}
+
+
+2、MEDIA_TYPE_News
+{id:1,userid:2,dstid:3,cmd:10,media:2,
+content:&quot;标题&quot;,
+pic:&quot;http://www.baidu.com/a/log,jpg&quot;,
+url:&quot;http://www.a,com/dsturl&quot;,
+&quot;memo&quot;:&quot;这是描述&quot;}
+
+
+5、MEDIA_TYPE_REDPACKAGR //红包amount 单位分
+{id:1,userid:2,dstid:3,cmd:10,media:5,url:&quot;http://www.baidu.com/a/b/c/redpackageaddress?id=100000&quot;,&quot;amount&quot;:300,&quot;memo&quot;:&quot;恭喜发财&quot;}
+6、MEDIA_TYPE_EMOJ 6
+{id:1,userid:2,dstid:3,cmd:10,media:6,&quot;content&quot;:&quot;cry&quot;}
+
+7、MEDIA_TYPE_Link 7
+{id:1,userid:2,dstid:3,cmd:10,media:7,
+&quot;url&quot;:&quot;http://www.a.com/dsturl.html&quot;
+}
+
+8、MEDIA_TYPE_VIDEO 8
+{id:1,userid:2,dstid:3,cmd:10,media:8,
+pic:&quot;http://www.baidu.com/a/log,jpg&quot;,
+url:&quot;http://www.a,com/a.mp4&quot;
+}
+
+9、MEDIA_TYPE_CONTACT 9
+{id:1,userid:2,dstid:3,cmd:10,media:9,
+&quot;content&quot;:&quot;10086&quot;,
+&quot;pic&quot;:&quot;http://www.baidu.com/a/avatar,jpg&quot;,
+&quot;memo&quot;:&quot;胡大力&quot;}
+
+*/
+</code></pre>
+<p>从哪里接收数据?怎么处理这些数据呢?</p>
+<pre><code class="go">func recvproc(node *Node) {
+    for{
+        _,data,err := node.Conn.ReadMessage()
+        if err!=nil{
+            log.Println(err.Error())
+            return
+        }
+        //todo 对data进一步处理
+        fmt.Printf(&quot;recv&lt;=%s&quot;,data)
+        dispatch(data)
+    }
+}
+func dispatch(data []byte){
+    //todo 转成message对象
+
+    //todo 根据cmd参数处理逻辑
+
+
+
+
+
+    msg :=Message{}
+    err := json.UnMarshal(data,&amp;msg)
+    if err!=nil{
+        log.Printf(err.Error())
+        return ;
+    }
+    switch msg.Cmd {
+        case CMD_SINGLE_MSG: //如果是单对单消息,直接将消息转发出去
+            //向某个用户发回去
+            fmt.Printf(&quot;c2cmsg %d=&gt;%d\n%s\n&quot;,msg.Userid,msg.Dstid,string(tmp))
+            SendMsgToUser(msg.Userid, msg.Dstid, tmp)
+            //fmt.Println(msg)
+        case CMD_ROOM_MSG: //群聊消息,需要知道
+            fmt.Printf(&quot;c2gmsg %d=&gt;%d\n%s\n&quot;,msg.Userid,msg.Dstid,string(tmp))
+            SendMsgToRoom(msg.Userid, msg.Dstid, tmp)
+        case CMD_HEART:
+        default:
+            //啥也别做
+
+        }
+
+}
+</code></pre>
+<h2 id="发送文字、表情包"><a href="#发送文字、表情包" class="headerlink" title="发送文字、表情包"></a>发送文字、表情包</h2><p>前端user1拼接好数据对象Message<br>msg={id:1,userid:2,dstid:3,cmd:10,media:1,content:txt}<br>转化成json字符串jsonstr<br>jsonstr = JSON.stringify(msg)<br>通过websocket.send(jsonstr)发送<br>后端S在recvproc中接收收数据data<br>并做相应的逻辑处理dispatch(data)-转发给user2<br>user2通过websocket.onmessage收到消息后做解析并显示</p>
+<p>前端所有的操作都在拼接数据<br>如何拼接?</p>
+<pre><code class="javascript">sendtxtmsg:function(txt){
+//{id:1,userid:2,dstid:3,cmd:10,media:1,content:txt}
+var msg =this.createmsgcontext();
+//msg={&quot;dstid&quot;:dstid,&quot;cmd&quot;:cmd,&quot;userid&quot;:userId()}
+//选择某个好友/群的时候对dstid,cmd进行赋值
+//userId()返回用户自己的id ,
+// 从/chat/index.shtml?id=xx&amp;token=yy中获得
+//1文本类型
+msg.media=1;msg.content=txt;
+this.showmsg(userInfo(),msg);//显示自己发的文字
+this.webSocket.send(JSON.stringify(msg))//发送
+}
+
+sendpicmsg:function(picurl){
+    //{id:1,userid:2,dstid:3,cmd:10,media:4,
+    // url:&quot;http://www.baidu.com/a/log,jpg&quot;}
+    var msg =this.createmsgcontext();
+    msg.media=4;
+    msg.url=picurl;
+    this.showmsg(userInfo(),msg)
+    this.webSocket.send(JSON.stringify(msg))
+}
+sendaudiomsg:function(url,num){
+    //{id:1,userid:2,dstid:3,cmd:10,media:3,url:&quot;http://www.a,com/dsturl.mp3&quot;,anount:40}
+    var msg =this.createmsgcontext();
+    msg.media=3;
+    msg.url=url;
+    msg.amount = num;
+    this.showmsg(userInfo(),msg)
+    console.log(&quot;sendaudiomsg&quot;,this.msglist);
+    this.webSocket.send(JSON.stringify(msg))
+}
+</code></pre>
+<h3 id="后端逻辑处理函数"><a href="#后端逻辑处理函数" class="headerlink" title="后端逻辑处理函数"></a>后端逻辑处理函数</h3><p>func dispatch(data[]byte)</p>
+<pre><code class="cgo">func dispatch(data[]byte){
+    //todo 解析data为message
+
+    //todo根据message的cmd属性做相应的处理
+
+}
+func recvproc(node *Node) {
+    for{
+        _,data,err := node.Conn.ReadMessage()
+        if err!=nil{
+            log.Println(err.Error())
+            return
+        }
+        //todo 对data进一步处理
+        dispatch(data)
+        fmt.Printf(&quot;recv&lt;=%s&quot;,data)
+    }
+}
+</code></pre>
+<h3 id="对端接收到消息后处理函数"><a href="#对端接收到消息后处理函数" class="headerlink" title="对端接收到消息后处理函数"></a>对端接收到消息后处理函数</h3><pre><code class="js">//初始化websocket的时候进行回调配置
+this.webSocket.onmessage = function(evt){
+     //{&quot;data&quot;:&quot;}&quot;,...}
+     if(evt.data.indexOf(&quot;}&quot;)&gt;-1){
+         this.onmessage(JSON.parse(evt.data));
+     }else{
+         console.log(&quot;recv&lt;==&quot;+evt.data)
+     }
+ }.bind(this)
+onmessage:function(data){
+     this.loaduserinfo(data.userid,function(user){
+         this.showmsg(user,data)
+     }.bind(this))
+ }
+
+ //消息显示函数
+showmsg:function(user,msg){
+    var data={}
+    data.ismine = userId()==msg.userid;
+    //console.log(data.ismine,userId(),msg.userid)
+    data.user = user;
+    data.msg = msg;
+    //vue 只需要修改数据结构即可完成页面渲染
+    this.msglist = this.msglist.concat(data)
+    //面板重置
+    this.reset();
+    var that =this;
+    //滚动到新消息处
+    that.timer = setTimeout(function(){
+        window.scrollTo(0, document.getElementById(&quot;convo&quot;).offsetHeight);
+        clearTimeout(that.timer)
+    },100)
+ }
+</code></pre>
+<h3 id="表情包简单逻辑"><a href="#表情包简单逻辑" class="headerlink" title="表情包简单逻辑"></a>表情包简单逻辑</h3><p>弹出一个窗口,<br>选择图片获得一个连接地址<br>调用sendpicmsg方法开始发送流程</p>
+<h2 id="图片等upload"><a href="#图片等upload" class="headerlink" title="图片等upload"></a>图片等upload</h2><p>##5.5 发送图片/拍照<br>弹出一个窗口,<br>选择图片,上传到服务器<br>获得一个链接地址<br>调用sendpicmsg方法开始发送流程</p>
+<pre><code class="html">&lt;input 
+accept=&quot;image/gif,image/jpeg,,image/png&quot; 
+type=&quot;file&quot; 
+onchange=&quot;upload(this)&quot; 
+class=&#39;upload&#39;/&gt;
+</code></pre>
+<p>sendpicmsg方法开始发送流程</p>
+<h3 id="upload前端实现"><a href="#upload前端实现" class="headerlink" title="upload前端实现"></a>upload前端实现</h3><pre><code class="javascript">function upload(dom){
+        uploadfile(&quot;attach/upload&quot;,dom,function(res){
+            if(res.code==0){//成功以后调用sendpicmsg
+                vm.sendpicmsg(res.data)
+            }
+        })
+    }
+
+function uploadfile(uri,dom,callback){
+    //H5新特性
+    var formdata = new FormData();
+    //获得一个文件dom.files[0]
+    formdata.append(&quot;file&quot;,dom.files[0])
+    //formdata.append(&quot;filetype&quot;,&quot;.png&quot;)//.mp3指定后缀
+
+    var xhr = new XMLHttpRequest();//ajax初始化
+    var url = &quot;http://&quot;+location.host+&quot;/&quot;+uri;
+    //&quot;http://127.0.0.1/attach/upload&quot;
+    xhr.open(&quot;POST&quot;,url, true);
+    //成功时候回调
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 &amp;&amp; 
+        xhr.status == 200) {
+            //fn.call(this, JSON.parse(xhr.responseText));
+            callback(JSON.parse(xhr.responseText))
+        }
+    };
+    xhr.send(formdata);
+}    
+</code></pre>
+<h3 id="upload后端实现"><a href="#upload后端实现" class="headerlink" title="upload后端实现"></a>upload后端实现</h3><p>存储到本地</p>
+<pre><code>func UploadLocal(writer http.ResponseWriter,
+    request * http.Request){
+    }
+</code></pre><p>存储到alioss</p>
+<pre><code>func UploadLocal(writer http.ResponseWriter,
+     request * http.Request){
+}
+如何安装 golang.org/x/time/rate
+&gt;cd $GOPATH/src/golang.org/x/
+&gt;git clone https://github.com/golang/time.git time
+
+</code></pre><p>采集语音</p>
+<pre><code class="javascript">navigator.mediaDevices.getUserMedia(
+    {audio: true, video: true}
+    ).then(successfunc).catch(errfunc);
+
+
+navigator.mediaDevices.getUserMedia(
+    {audio: true, video: false}
+    ).then(function(stream)  {
+              //请求成功
+              this.recorder = new MediaRecorder(stream);
+              this.recorder.start();
+              this.recorder.ondataavailable = (event) =&gt; {
+                  uploadblob(&quot;attach/upload&quot;,event.data,&quot;.mp3&quot;,res=&gt;{
+                      var duration = Math.ceil((new Date().getTime()-this.duration)/1000);
+                      this.sendaudiomsg(res.data,duration);
+                  })
+
+                  stream.getTracks().forEach(function (track) {
+                      track.stop();
+                  });
+                  this.showprocess = false
+              }
+
+          }.bind(this)).catch(function(err){
+                mui.toast(err.msg)
+                this.showprocess = false
+            }.bind(this));
+</code></pre>
+<p>上传语音</p>
+<pre><code class="javascript">function uploadblob(uri,blob,filetype,fn){
+       var xhr = new XMLHttpRequest();
+       xhr.open(&quot;POST&quot;,&quot;//&quot;+location.host+&quot;/&quot;+uri, true);
+       // 添加http头，发送信息至服务器时内容编码类型
+       xhr.onreadystatechange = function() {
+           if (xhr.readyState == 4 &amp;&amp; (xhr.status == 200 || xhr.status == 304)) {
+               fn.call(this, JSON.parse(xhr.responseText));
+           }
+       };
+       var _data=[];
+       var formdata = new FormData();
+       formdata.append(&quot;filetype&quot;,filetype);
+       formdata.append(&quot;file&quot;,blob)
+       xhr.send(formdata);
+   }
+</code></pre>
+<h2 id="群聊"><a href="#群聊" class="headerlink" title="群聊"></a>群聊</h2><p>分析群id,找到加了这个群的用户,把消息发送过去</p>
+<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p>map<userid>&lt;qunid1,qunid2,qunid3&gt;<br>优势是锁的频次低<br>劣势是要轮训全部map</userid></p>
+<pre><code class="go">type Node struct {
+    Conn *websocket.Conn
+    //并行转串行,
+    DataQueue chan []byte
+    GroupSets set.Interface
+}
+//映射关系表
+var clientMap map[int64]*Node = make(map[int64]*Node,0)
+</code></pre>
+<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p>map&lt;群id&gt;&lt;userid1,userid2,userid3&gt;<br>优势是找用户ID非常快<br>劣势是发送信息时需要根据userid获取node,锁的频次太高</p>
+<pre><code class="go">type Node struct {
+    Conn *websocket.Conn
+    //并行转串行,
+    DataQueue chan []byte
+}
+//映射关系表
+var clientMap map[int64]*Node = make(map[int64]*Node,0)
+var comMap map[int64]set.Interface= make(map[int64]set.Interface,0)
+
+</code></pre>
+<p>需要处理的问题</p>
+<pre><code class="javascript">1、当用户接入的时候初始化groupset
+2、当用户加入群的时候刷新groupset
+3、完成信息分发
+</code></pre>
+<h1 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h1><h2 id="静态资源分离（Aliyun-OSS）"><a href="#静态资源分离（Aliyun-OSS）" class="headerlink" title="静态资源分离（Aliyun OSS）"></a>静态资源分离（Aliyun OSS）</h2><p>使用阿里云OSS</p>
+<blockquote>
+<p>go get github.com/aliyun/aliyun-oss-go-sdk/oss</p>
+</blockquote>
+<pre><code class="go">//权限设置为公共读状态
+//需要安装
+func UploadOss(writer http.ResponseWriter,
+    request * http.Request){
+    //todo 获得上传的文件
+    srcfile,head,err:=request.FormFile(&quot;file&quot;)
+    if err!=nil{
+        util.RespFail(writer,err.Error())
+        return
+    }
+
+
+    //todo 获得文件后缀.png/.mp3
+
+    suffix := &quot;.png&quot;
+    //如果前端文件名称包含后缀 xx.xx.png
+    ofilename := head.Filename
+    tmp := strings.Split(ofilename,&quot;.&quot;)
+    if len(tmp)&gt;1{
+        suffix = &quot;.&quot;+tmp[len(tmp)-1]
+    }
+    //如果前端指定filetype
+    //formdata.append(&quot;filetype&quot;,&quot;.png&quot;)
+    filetype := request.FormValue(&quot;filetype&quot;)
+    if len(filetype)&gt;0{
+        suffix = filetype
+    }
+
+    //todo 初始化ossclient
+    client,err:=oss.New(EndPoint,AccessKeyId,AccessKeySecret)
+    if err!=nil{
+        util.RespFail(writer,err.Error())
+        return
+    }
+    //todo 获得bucket
+    bucket,err := client.Bucket(Bucket)
+    if err!=nil{
+        util.RespFail(writer,err.Error())
+        return
+    }
+    //todo 设置文件名称
+    //time.Now().Unix()
+    filename := fmt.Sprintf(&quot;mnt/%d%04d%s&quot;,
+        time.Now().Unix(), rand.Int31(),
+        suffix)
+    //todo 通过bucket上传
+    err=bucket.PutObject(filename,srcfile)
+    if err!=nil{
+        util.RespFail(writer,err.Error())
+        return
+    }
+    //todo 获得url地址
+    url := &quot;http://&quot;+Bucket+&quot;.&quot;+EndPoint+&quot;/&quot;+filename
+
+    //todo 响应到前端
+    util.RespOk(writer,url,&quot;&quot;)
+}
+</code></pre>
+<h1 id="分布式部署"><a href="#分布式部署" class="headerlink" title="分布式部署"></a>分布式部署</h1><h2 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h2><p><img src="/2019/07/16/imgo/i7.jpg" alt="i7"></p>
+<p>普通方案无法满足connect之间无法通讯的问题</p>
+<p>需要建立总线维持信息</p>
+<h2 id="消息总线"><a href="#消息总线" class="headerlink" title="消息总线"></a>消息总线</h2><p><img src="/2019/07/16/imgo/i8.jpg" alt="i8"></p>
+<h2 id="局域网通讯协议"><a href="#局域网通讯协议" class="headerlink" title="局域网通讯协议"></a>局域网通讯协议</h2><p><img src="/2019/07/16/imgo/i9.jpg" alt="i9"></p>
+<h2 id="实现调度应用"><a href="#实现调度应用" class="headerlink" title="实现调度应用"></a>实现调度应用</h2><p><img src="/2019/07/16/imgo/i10.jpg" alt="i10"></p>
+<h2 id="实现（UDP方案）"><a href="#实现（UDP方案）" class="headerlink" title="实现（UDP方案）"></a>实现（UDP方案）</h2><p>回顾单体应用<br>开启ws接收协程recvproc/ws发送协程sendproc<br>websocket收到消息-&gt;dispatch发送给dstid</p>
+<p>基于UDP的分布式应用<br>开启ws接收协程recvproc/ws发送协程sendproc<br>开启udp接收协程udprecvproc/udp发送协程udpsendproc</p>
+<p>websocket收到消息-&gt;broadMsg广播到局域网<br>udp接收到收到消息-&gt;dispatch发送给dstid<br>自己是局域网一份子,所以也能接收到消息</p>
+<pre><code class="go">var  udpsendchan chan []byte=make(chan []byte,1024)
+//todo 将消息广播到局域网
+func broadMsg(data []byte){
+    udpsendchan&lt;-data
+}
+
+//todo 完成udp数据的发送协程
+func udpsendproc(){
+    log.Println(&quot;start udpsendproc&quot;)
+    //todo 使用udp协议拨号
+    con,err:=net.DialUDP(&quot;udp&quot;,nil,
+        &amp;net.UDPAddr{
+            IP:net.IPv4(192,168,0,255),
+            Port:3000,
+        })
+    defer con.Close()
+    if err!=nil{
+        log.Println(err.Error())
+        return
+    }
+    //todo 通过的到的con发送消息
+    //con.Write()
+    for{
+        select {
+        case data := &lt;- udpsendchan:
+            _,err=con.Write(data)
+            if err!=nil{
+                log.Println(err.Error())
+                return
+            }
+        }
+    }
+}
+//todo 完成upd接收并处理功能
+func udprecvproc(){
+    log.Println(&quot;start udprecvproc&quot;)
+    //todo 监听udp广播端口
+    con,err:=net.ListenUDP(&quot;udp&quot;,&amp;net.UDPAddr{
+        IP:net.IPv4zero,
+        Port:3000,
+    })
+    defer con.Close()
+    if err!=nil{log.Println(err.Error())}
+    //TODO 处理端口发过来的数据
+    for{
+        var buf [512]byte
+        n,err:=con.Read(buf[0:])
+        if err!=nil{
+            log.Println(err.Error())
+            return
+        }
+        //直接数据处理
+        dispatch(buf[0:n])
+    }
+    log.Println(&quot;stop updrecvproc&quot;)
+}
+</code></pre>
+<h3 id="nginx反向代理-1"><a href="#nginx反向代理-1" class="headerlink" title="nginx反向代理"></a>nginx反向代理</h3><pre><code>    upstream wsbackend {
+            server 192.168.0.102:8080;
+            server 192.168.0.100:8080;
+            hash $request_uri;
+    }
+    map $http_upgrade $connection_upgrade {
+    default upgrade;
+    &#39;&#39;      close;
+    }
+    server {
+      listen  80;
+      server_name localhost;
+      location / {
+       proxy_pass http://wsbackend;
+      }
+      location ^~ /chat {
+       proxy_pass http://wsbackend;
+       proxy_connect_timeout 500s;
+       proxy_read_timeout 500s;
+       proxy_send_timeout 500s;
+       proxy_set_header Upgrade $http_upgrade;
+       proxy_set_header Connection &quot;Upgrade&quot;;
+      }
+     }
+
+}
+</code></pre><h3 id="打包发布"><a href="#打包发布" class="headerlink" title="打包发布"></a>打包发布</h3><ul>
+<li>windows平台</li>
+</ul>
+<pre><code class="bash">::remove dir
+rd /s/q release
+::make dir 
+md release
+::go build -ldflags &quot;-H windowsgui&quot; -o chat.exe
+go build -o chat.exe
+::
+COPY chat.exe release\
+COPY favicon.ico release\favicon.ico
+::
+XCOPY asset\*.* release\asset\  /s /e
+XCOPY view\*.* release\view\  /s /e 
+</code></pre>
+<ul>
+<li>linux平台</li>
+</ul>
+<pre><code class="bash">#!/bin/sh
+rm -rf ./release
+mkdir  release
+go build -o chat
+chmod +x ./chat
+cp chat ./release/
+cp favicon.ico ./release/
+cp -arf ./asset ./release/
+cp -arf ./view ./release/
+</code></pre>
+<ul>
+<li>运行注意事项<br>linux 下</li>
+</ul>
+<pre><code class="bash">nohup ./chat &gt;&gt;./log.log 2&gt;&amp;1 &amp;
+</code></pre>
+<h1 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h1><h2 id="idea-ignore插件"><a href="#idea-ignore插件" class="headerlink" title="idea .ignore插件"></a>idea .ignore插件</h2><p><img src="/2019/07/16/imgo/i2.jpg" alt="i2"></p>
+<h2 id="JSON改为小写"><a href="#JSON改为小写" class="headerlink" title="JSON改为小写"></a>JSON改为小写</h2><p>nil值不发送</p>
+<pre><code class="go">type H struct {
+    Code int `json:&quot;code&quot;`
+    Msg string `json:&quot;msg&quot;`
+    Data interface{} `json:&quot;data,omitempty&quot;`
+}
+</code></pre>
+<h2 id="自动渲染和接入全部View"><a href="#自动渲染和接入全部View" class="headerlink" title="自动渲染和接入全部View"></a>自动渲染和接入全部View</h2><p>写入统一函数</p>
+<pre><code class="go">func RegisterView()  {
+    tpl,err := template.ParseGlob(&quot;view/**/*&quot;)
+    if err!=nil {
+        //quit and print the err
+        log.Fatal(err.Error())
+    }
+
+    for _,v := range tpl.Templates(){
+        tplname := v.Name()
+
+        http.HandleFunc(tplname,
+            func(writer http.ResponseWriter, request *http.Request) {
+                tpl.ExecuteTemplate(writer, tplname, nil)
+        })
+    }
+}
+</code></pre>
+<h2 id="自动创建表结构"><a href="#自动创建表结构" class="headerlink" title="自动创建表结构"></a>自动创建表结构</h2><pre><code class="go">package service
+
+import (
+    &quot;errors&quot;
+    &quot;fmt&quot;
+    _ &quot;github.com/go-sql-driver/mysql&quot;
+    &quot;github.com/go-xorm/xorm&quot;
+    &quot;im/model&quot;
+    &quot;log&quot;
+)
+
+var DbEngin *xorm.Engine
+func init(){
+    drivename := &quot;mysql&quot;
+    DsName := &quot;root:root@(127.0.0.1:3306)/imchat?charset=utf8&quot;
+    err := errors.New(&quot;&quot;)
+    DbEngin, err = xorm.NewEngine(drivename,DsName)
+    if err!=nil &amp;&amp; &quot;&quot;!=err.Error(){
+        log.Fatal(err.Error())
+    }
+    //show the sql
+    DbEngin.ShowSQL(true)
+    //set the max connect num
+    DbEngin.SetMaxOpenConns(2)
+    //auto create tables
+    DbEngin.Sync2(new(model.User))
+    fmt.Println(&quot;init DB connect&quot;)
+}
+
+</code></pre>
+<p><img src="/2019/07/16/imgo/i4.jpg" alt="i4"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/07/16/imgo/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/09/03/bingfa/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Java Concurrency Note1
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/07/08/reduxnote/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Redux</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

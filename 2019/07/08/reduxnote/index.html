@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Redux |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-reduxnote"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Redux
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/07/08/reduxnote/" class="article-date">
+  <time datetime="2019-07-07T19:53:32.000Z" itemprop="datePublished">2019-07-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h1><p>Redux是一个数据层框架，方便组件之间的传值</p>
+<p><img src="/2019/07/08/reduxnote/r0.jpg" alt="r0"></p>
+<p>Store为公共存储区域，所有组件会自动感知到Store的变化</p>
+<p>Redux = Reducer + Flux</p>
+<h2 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h2><p><img src="/2019/07/08/reduxnote/r1.jpg" alt="r1"></p>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><p>纯函数：固定输入，一定有固定输出（例如不允许date（）函数等，以及Ajax请求），</p>
+<p>并且无其他副作用（对参数不进行修改，深拷贝）</p>
+<p><img src="/2019/07/08/reduxnote/r6.jpg" alt="r6"></p>
+<h2 id="核心API"><a href="#核心API" class="headerlink" title="核心API"></a>核心API</h2><p><img src="/2019/07/08/reduxnote/r7.jpg" alt="r7"></p>
+<h1 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h1><h2 id="Antd"><a href="#Antd" class="headerlink" title="Antd"></a>Antd</h2><p>Antd为一个样式表，提供更好看的UI</p>
+<blockquote>
+<p>yarn add antd</p>
+</blockquote>
+<blockquote>
+<p>import ‘antd/dist/antd.css’;</p>
+</blockquote>
+<h2 id="Redux"><a href="#Redux" class="headerlink" title="Redux"></a>Redux</h2><blockquote>
+<p>yarn add redux</p>
+</blockquote>
+<p>创建store文件夹，index.js文件</p>
+<pre><code class="jsx">import { createStore } from &#39;redux&#39;;
+import reducer from &#39;./reducer&#39;;
+
+const store = createStore(reducer);
+
+export default store;
+</code></pre>
+<p>reducer相当于笔记本，返回state</p>
+<p>state表示store中的数据，可以设置为default</p>
+<p>reducer.js</p>
+<pre><code class="jsx">const defaultState = {
+    inputValue: &#39;&#39;,
+    list: []
+}
+
+// reducer 可以接受state，但是绝不能修改state
+
+export default (state = defaultState, action) =&gt; {
+    return state;
+}
+</code></pre>
+<p>使用store时，在相应的component中引入store</p>
+<blockquote>
+<p>import store from ‘./store/‘</p>
+<p>this.state = store.getState()</p>
+</blockquote>
+<h2 id="Redux调试"><a href="#Redux调试" class="headerlink" title="Redux调试"></a>Redux调试</h2><p>下载工具reduxdev，并在store参数中加入</p>
+<pre><code class="jsx">const store = createStore(
+    reducer, 
+    window.__REDUX_DEVTOOLS_EXTENSION__ &amp;&amp; window.__REDUX_DEVTOOLS_EXTENSION__()
+);
+</code></pre>
+<h1 id="Action-amp-Reducer"><a href="#Action-amp-Reducer" class="headerlink" title="Action &amp; Reducer"></a>Action &amp; Reducer</h1><p>改变store中的数据，使用action</p>
+<p>在component对应函数中，创建action</p>
+<p>并将此action回传给store，通过dispatch</p>
+<p><img src="/2019/07/08/reduxnote/r2.jpg" alt="r2"></p>
+<p><img src="/2019/07/08/reduxnote/r1.jpg" alt="r1"></p>
+<p>store会将当前值和action传给reducer，并结合进行操作，返回新的值</p>
+<p><img src="/2019/07/08/reduxnote/r3.jpg" alt="r3"></p>
+<p>深拷贝后return new state，并在store中做更新</p>
+<p>在对应组件中做更新，只要store中的数据发生了改变，则执行对应函数</p>
+<p><img src="/2019/07/08/reduxnote/r4.jpg" alt="r4"></p>
+<p>在函数中刷新组件state，触发render</p>
+<p><img src="/2019/07/08/reduxnote/r5.jpg" alt="r5"></p>
+<p>reducer.js</p>
+<pre><code class="jsx">import { INIT_LIST_ACTION, CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM } from &#39;./actionTypes&#39;
+
+const defaultState = {
+    inputValue: &#39;&#39;,
+    list: []
+}
+
+// reducer 可以接受state，但是绝不能修改state
+// 纯函数指的是，给定固定的输入，就一定会有固定的输出，而且不会有任何副作用
+export default (state = defaultState, action) =&gt; {
+
+    if (action.type === CHANGE_INPUT_VALUE) {
+        const newState = JSON.parse(JSON.stringify(state));
+        newState.inputValue = action.value;
+        return newState;
+    }
+
+    if (action.type === INIT_LIST_ACTION) {
+        const newState = JSON.parse(JSON.stringify(state));
+        newState.list = action.data;
+        return newState;
+    }
+
+    if (action.type === ADD_TODO_ITEM) {
+        const newState = JSON.parse(JSON.stringify(state));
+        newState.list.push(newState.inputValue);
+        newState.inputValue = &#39;&#39;;
+        return newState;
+    }
+    if (action.type === DELETE_TODO_ITEM) {
+        const newState = JSON.parse(JSON.stringify(state));
+        newState.list.splice(action.index, 1);
+        return newState;
+    }
+    return state;
+}
+</code></pre>
+<h1 id="ActionType"><a href="#ActionType" class="headerlink" title="ActionType"></a>ActionType</h1><p>actionType.js</p>
+<pre><code class="jsx">export const CHANGE_INPUT_VALUE = &#39;change_input_value&#39;;
+export const ADD_TODO_ITEM = &#39;add_todo_item&#39;;
+export const DELETE_TODO_ITEM = &#39;delete_todo_item&#39;;
+export const INIT_LIST_ACTION = &#39;init_list_action&#39;;
+</code></pre>
+<blockquote>
+<p>import { getInputChangeAction, getAddItemAction, getDeleteItemAction, initListAction } from ‘./store/actionCreators’</p>
+</blockquote>
+<p>component和reducer中引入</p>
+<p>并替换action中的type</p>
+<h1 id="actionCreator"><a href="#actionCreator" class="headerlink" title="actionCreator"></a>actionCreator</h1><p>避免直接定义action，使用creator统一创建，方便管理</p>
+<p>actionCreator.js</p>
+<pre><code class="jsx">import { CHANGE_INPUT_VALUE, ADD_TODO_ITEM, DELETE_TODO_ITEM, INIT_LIST_ACTION } from &#39;./actionTypes&#39;;
+
+export const getInputChangeAction = (value) =&gt; ({
+    type: CHANGE_INPUT_VALUE,
+    value
+});
+
+export const getAddItemAction = () =&gt; ({
+    type: ADD_TODO_ITEM
+});
+
+export const getDeleteItemAction = (index) =&gt; ({
+    type: DELETE_TODO_ITEM,
+    index
+});
+
+export const initListAction = (data) =&gt; ({
+    type: INIT_LIST_ACTION,
+    data
+});
+</code></pre>
+<p>在component中引入</p>
+<blockquote>
+<p>import { getInputChangeAction, getAddItemAction, getDeleteItemAction, initListAction } from ‘./store/actionCreators’</p>
+</blockquote>
+<pre><code class="jsx">handleInputChange(e) {
+        const action = getInputChangeAction(e.target.value);
+        store.dispatch(action);
+    }
+
+    handleStoreChange() {
+        this.setState(store.getState());
+    }
+
+    handleBtnClick() {
+        const action = getAddItemAction();
+        store.dispatch(action);
+    }
+
+    handleItemDelete(index) {
+        const action = getDeleteItemAction(index);
+        store.dispatch(action);
+    }
+</code></pre>
+<h1 id="UI与容器组件"><a href="#UI与容器组件" class="headerlink" title="UI与容器组件"></a>UI与容器组件</h1><p>将渲染与逻辑区分，UI组件负责渲染，容器组件负责逻辑</p>
+<p>UI.js</p>
+<pre><code class="jsx">import React, { Component } from &#39;react&#39;;
+import { Input, Button, List } from &#39;antd&#39;;
+
+class TodoListUI extends Component{
+   render() {
+    return (
+        &lt;div style={{marginTop: '10px', marginLeft: '10px'}}&gt;
+            &lt;div&gt;
+                &lt;Input 
+                    value={this.props.inputValue} 
+                    placeholder=&#39;todo info&#39; 
+                    style={{width: '300px', marginRight: '10px'}}
+                    onChange={this.props.handleInputChange}
+                /&gt;
+                &lt;Button type=&quot;primary&quot; onClick={this.props.handleBtnClick}&gt;提交&lt;/Button&gt;
+            &lt;/div&gt;
+            &lt;List
+                style={{marginTop: '10px', width: '300px'}}
+          bordered
+          dataSource={this.props.list}
+          renderItem={(item, index) =&gt; (&lt;List.Item onClick={(index) =&gt;         {this.props.handleItemDelete(index)}}&gt;{item}&lt;/List.Item&gt;)}
+        /&gt;
+        &lt;/div&gt;
+    )
+  } 
+}
+export default TodoListUI;
+</code></pre>
+<p>list.js</p>
+<pre><code class="jsx">import React, { Component } from &#39;react&#39;;
+import &#39;antd/dist/antd.css&#39;;
+import store from &#39;./store&#39;;
+import { getInputChangeAction, getAddItemAction, getDeleteItemAction, initListAction } from &#39;./store/actionCreators&#39;
+import TodoListUI from &#39;./TodoListUI&#39;;
+import axios from &#39;axios&#39;;
+
+class TodoList extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = store.getState();
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleStoreChange = this.handleStoreChange.bind(this);
+        this.handleBtnClick = this.handleBtnClick.bind(this);
+        this.handleItemDelete = this.handleItemDelete.bind(this)
+        store.subscribe(this.handleStoreChange);
+    }
+
+    render() {
+        return (
+            &lt;TodoListUI 
+                inputValue={this.state.inputValue}
+                list={this.state.list}
+                handleInputChange={this.handleInputChange}
+                handleBtnClick={this.handleBtnClick}
+                handleItemDelete={this.handleItemDelete}
+            /&gt;
+        )
+    }
+
+    componentDidMount() {
+        axios.get(&#39;/list.json&#39;).then((res) =&gt; {
+            const data = res.data;
+            const action = initListAction(data);
+            store.dispatch(action);
+        })
+    }
+
+    handleInputChange(e) {
+        const action = getInputChangeAction(e.target.value);
+        store.dispatch(action);
+    }
+
+    handleStoreChange() {
+        this.setState(store.getState());
+    }
+
+    handleBtnClick() {
+        const action = getAddItemAction();
+        store.dispatch(action);
+    }
+
+    handleItemDelete(index) {
+        const action = getDeleteItemAction(index);
+        store.dispatch(action);
+    }
+
+}
+
+export default TodoList;
+</code></pre>
+<h1 id="无状态组件"><a href="#无状态组件" class="headerlink" title="无状态组件"></a>无状态组件</h1><p>只有render函数的组件（相当于是一个函数），常为UI组件</p>
+<p>把render return 改为一个函数,将this.props改为props</p>
+<pre><code class="jsx">import React, { Component } from &#39;react&#39;;
+import { Input, Button, List } from &#39;antd&#39;;
+
+const TodoListUI = (props)=&gt; {
+    return (
+        &lt;div style={{marginTop: '10px', marginLeft: '10px'}}&gt;
+            &lt;div&gt;
+                &lt;Input 
+                    value={props.inputValue} 
+                    placeholder=&#39;todo info&#39; 
+                    style={{width: '300px', marginRight: '10px'}}
+                    onChange={props.handleInputChange}
+                /&gt;
+                &lt;Button type=&quot;primary&quot; onClick={props.handleBtnClick}&gt;提交&lt;/Button&gt;
+            &lt;/div&gt;
+            &lt;List
+                style={{marginTop: '10px', width: '300px'}}
+          bordered
+          dataSource={props.list}
+          renderItem={(item, index) =&gt; (&lt;List.Item onClick={(index) =&gt; {props.handleItemDelete(index)}}&gt;{item}&lt;/List.Item&gt;)}
+        /&gt;
+        &lt;/div&gt;
+    )
+}
+
+export default TodoListUI;
+</code></pre>
+<p>无需执行生命周期，无状态组件效率更高</p>
+<h1 id="Redux中异步请求数据"><a href="#Redux中异步请求数据" class="headerlink" title="Redux中异步请求数据"></a>Redux中异步请求数据</h1><pre><code class="jsx">componentDidMount() {
+        axios.get(&#39;/list.json&#39;).then((res) =&gt; {
+            const data = res.data;
+            const action = initListAction(data);
+            store.dispatch(action);
+        })
+    }
+</code></pre>
+<p>actionCreator.js</p>
+<pre><code class="jsx">export const initListAction = (data) =&gt; ({
+    type: INIT_LIST_ACTION,
+    data
+});
+</code></pre>
+<h1 id="React-Redux"><a href="#React-Redux" class="headerlink" title="React-Redux"></a>React-Redux</h1><p>引入provider</p>
+<p><img src="/2019/07/08/reduxnote/r8.jpg" alt="r8"></p>
+<p>provider将store提供给了内部的所有组件（todolist）</p>
+<p>在todolist中引入connect和store，并且连接</p>
+<p><img src="/2019/07/08/reduxnote/r9.jpg" alt="r9"></p>
+<p><img src="/2019/07/08/reduxnote/r10.jpg" alt="r10"></p>
+<p>传入两个参数，实现prop.function调用</p>
+<blockquote>
+<p>this.props.changeInputValue</p>
+</blockquote>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/07/08/reduxnote/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/React/">React</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/07/16/imgo/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            IM project
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/07/07/react2/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">React Skills</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

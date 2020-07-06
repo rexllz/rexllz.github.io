@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Sorting Algorithm |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-sort"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Sorting Algorithm
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/05/03/sort/" class="article-date">
+  <time datetime="2019-05-02T16:04:13.000Z" itemprop="datePublished">2019-05-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">9 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><img src="/2019/05/03/sort/o.jpg" alt="o"></p>
+<h1 id="Select-Sort"><a href="#Select-Sort" class="headerlink" title="Select Sort"></a>Select Sort</h1><pre><code class="java">public class SelectionSort {
+    private SelectionSort(){}
+    public static void sort(int[] arr){
+        int n = arr.length;
+        for( int i = 0 ; i &lt; n ; i ++ ){
+            // 寻找[i, n)区间里的最小值的索引
+            int minIndex = i;
+            for( int j = i + 1 ; j &lt; n ; j ++ )
+                if( arr[j] &lt; arr[minIndex] )
+                    minIndex = j;
+            swap( arr , i , minIndex);
+        }
+    }
+    private static void swap(int[] arr, int i, int j) {
+        int t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+    public static void main(String[] args) {
+        int[] arr = {10,9,8,7,6,5,4,3,2,1};
+        SelectionSort.sort(arr);
+        for( int i = 0 ; i &lt; arr.length ; i ++ ){
+            System.out.print(arr[i]);
+            System.out.print(&#39; &#39;);
+        }
+        System.out.println();
+    }
+}
+</code></pre>
+<h1 id="Insert-Sort"><a href="#Insert-Sort" class="headerlink" title="Insert Sort"></a>Insert Sort</h1><ul>
+<li>内层循环可能不需要执行满，因为比选择排序快（可提前终止内层循环，最快速度高）</li>
+</ul>
+<pre><code class="java">import java.util.*;
+public class InsertionSort{
+    private InsertionSort(){}
+    public static void sort(Comparable[] arr){
+        int n = arr.length;
+        for (int i = 0; i &lt; n; i++) {
+            // 寻找元素arr[i]合适的插入位置
+            // 写法1
+//            for( int j = i ; j &gt; 0 ; j -- )
+//                if( arr[j].compareTo( arr[j-1] ) &lt; 0 )
+//                    swap( arr, j , j-1 );
+//                else
+//                    break;
+
+            // 写法2
+//            for( int j = i; j &gt; 0 &amp;&amp; arr[j].compareTo(arr[j-1]) &lt; 0 ; j--)
+//                swap(arr, j, j-1);
+
+            // 写法3
+            // 减少swap赋值操作
+            Comparable e = arr[i];
+            int j = i;
+            for( ; j &gt; 0 &amp;&amp; arr[j-1].compareTo(e) &gt; 0 ; j--)
+                arr[j] = arr[j-1];
+            arr[j] = e;
+        }
+    }
+    private static void swap(Object[] arr, int i, int j) {
+        Object t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+}
+</code></pre>
+<h1 id="Merge-Sort"><a href="#Merge-Sort" class="headerlink" title="Merge-Sort"></a>Merge-Sort</h1><pre><code class="java">import java.util.*;
+// 优化的Merge Sort算法
+public class MergeSort2{
+
+    private MergeSort2(){}
+
+    // 将arr[l...mid]和arr[mid+1...r]两部分进行归并
+    private static void merge(Comparable[] arr, int l, int mid, int r) {
+
+        Comparable[] aux = Arrays.copyOfRange(arr, l, r+1);
+
+        // 初始化，i指向左半部分的起始索引位置l；j指向右半部分起始索引位置mid+1
+        int i = l, j = mid+1;
+        for( int k = l ; k &lt;= r; k ++ ){
+
+            if( i &gt; mid ){  // 如果左半部分元素已经全部处理完毕
+                arr[k] = aux[j-l]; j ++;
+            }
+            else if( j &gt; r ){   // 如果右半部分元素已经全部处理完毕
+                arr[k] = aux[i-l]; i ++;
+            }
+            else if( aux[i-l].compareTo(aux[j-l]) &lt; 0 ){  // 左半部分所指元素 &lt; 右半部分所指元素
+                arr[k] = aux[i-l]; i ++;
+            }
+            else{  // 左半部分所指元素 &gt;= 右半部分所指元素
+                arr[k] = aux[j-l]; j ++;
+            }
+        }
+    }
+
+    // 递归使用归并排序,对arr[l...r]的范围进行排序
+    private static void sort(Comparable[] arr, int l, int r) {
+
+        // 优化2: 对于小规模数组, 使用插入排序
+        if( r - l &lt;= 15 ){
+            InsertionSort.sort(arr, l, r);
+            return;
+        }
+
+        int mid = (l+r)/2;
+        sort(arr, l, mid);
+        sort(arr, mid + 1, r);
+
+        // 优化1: 对于arr[mid] &lt;= arr[mid+1]的情况,不进行merge
+        // 对于近乎有序的数组非常有效,但是对于一般情况,有一定的性能损失
+        if( arr[mid].compareTo(arr[mid+1]) &gt; 0 )
+            merge(arr, l, mid, r);
+    }
+
+    public static void sort(Comparable[] arr){
+
+        int n = arr.length;
+        sort(arr, 0, n-1);
+    }
+}
+</code></pre>
+<pre><code class="java">public class MergeSortBU{
+    private MergeSortBU(){}
+
+    // 将arr[l...mid]和arr[mid+1...r]两部分进行归并
+    private static void merge(Comparable[] arr, int l, int mid, int r) {
+
+        Comparable[] aux = Arrays.copyOfRange(arr, l, r+1);
+
+        // 初始化，i指向左半部分的起始索引位置l；j指向右半部分起始索引位置mid+1
+        int i = l, j = mid+1;
+        for( int k = l ; k &lt;= r; k ++ ){
+
+            if( i &gt; mid ){  // 如果左半部分元素已经全部处理完毕
+                arr[k] = aux[j-l]; j ++;
+            }
+            else if( j &gt; r ){   // 如果右半部分元素已经全部处理完毕
+                arr[k] = aux[i-l]; i ++;
+            }
+            else if( aux[i-l].compareTo(aux[j-l]) &lt; 0 ){  // 左半部分所指元素 &lt; 右半部分所指元素
+                arr[k] = aux[i-l]; i ++;
+            }
+            else{  // 左半部分所指元素 &gt;= 右半部分所指元素
+                arr[k] = aux[j-l]; j ++;
+            }
+        }
+    }
+
+    public static void sort(Comparable[] arr){
+
+        int n = arr.length;
+
+        // Merge Sort Bottom Up 无优化版本
+//        for (int sz = 1; sz &lt; n; sz *= 2)
+//            for (int i = 0; i &lt; n - sz; i += sz+sz)
+//                // 对 arr[i...i+sz-1] 和 arr[i+sz...i+2*sz-1] 进行归并
+//                merge(arr, i, i+sz-1, Math.min(i+sz+sz-1,n-1));
+
+        // Merge Sort Bottom Up 优化
+        // 对于小数组, 使用插入排序优化
+        for( int i = 0 ; i &lt; n ; i += 16 )
+            InsertionSort.sort(arr, i, Math.min(i+15, n-1) );
+
+        for( int sz = 16; sz &lt; n ; sz += sz )
+            for( int i = 0 ; i &lt; n - sz ; i += sz+sz )
+                // 对于arr[mid] &lt;= arr[mid+1]的情况,不进行merge
+                if( arr[i+sz-1].compareTo(arr[i+sz]) &gt; 0 )
+                    merge(arr, i, i+sz-1, Math.min(i+sz+sz-1,n-1) );
+    }
+}
+</code></pre>
+<h1 id="Quick-Sort"><a href="#Quick-Sort" class="headerlink" title="Quick-Sort"></a>Quick-Sort</h1><p><img src="/2019/05/03/sort/quick.jpg" alt="quick"></p>
+<p>本质是不平均的归并，递归树不平衡，高度可能很高，最差退化为n^2，即为有序时</p>
+<p>或者随机产生标杆</p>
+<p><img src="/2019/05/03/sort/parti.jpg" alt="parti"></p>
+<pre><code class="java">public class QuickSort {
+
+    // 我们的算法类不允许产生任何实例
+    private QuickSort(){}
+
+    // 对arr[l...r]部分进行partition操作
+    // 返回p, 使得arr[l...p-1] &lt; arr[p] ; arr[p+1...r] &gt; arr[p]
+    private static int partition(Comparable[] arr, int l, int r){
+
+        Comparable v = arr[l];
+
+        int j = l; // arr[l+1...j] &lt; v ; arr[j+1...i) &gt; v
+        for( int i = l + 1 ; i &lt;= r ; i ++ )
+            if( arr[i].compareTo(v) &lt; 0 ){
+                j ++;
+                swap(arr, j, i);
+            }
+
+        swap(arr, l, j);
+
+        return j;
+    }
+
+    // 递归使用快速排序,对arr[l...r]的范围进行排序
+    private static void sort(Comparable[] arr, int l, int r){
+
+        if( l &gt;= r )
+            return;
+
+        int p = partition(arr, l, r);
+        sort(arr, l, p-1 );
+        sort(arr, p+1, r);
+    }
+
+    public static void sort(Comparable[] arr){
+
+        int n = arr.length;
+        sort(arr, 0, n-1);
+    }
+
+    private static void swap(Object[] arr, int i, int j) {
+        Object t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+}
+</code></pre>
+<p>双路快排</p>
+<p><img src="/2019/05/03/sort/parti2.jpg" alt="parti2"></p>
+<pre><code class="java">public class QuickSort2Ways {
+
+    private QuickSort2Ways(){}
+
+    // 双路快速排序的partition
+    // 返回p, 使得arr[l...p-1] &lt; arr[p] ; arr[p+1...r] &gt; arr[p]
+    private static int partition(Comparable[] arr, int l, int r){
+
+        // 随机在arr[l...r]的范围中, 选择一个数值作为标定点pivot
+        swap( arr, l , (int)(Math.random()*(r-l+1))+l );
+
+        Comparable v = arr[l];
+
+        // arr[l+1...i) &lt;= v; arr(j...r] &gt;= v
+        int i = l+1, j = r;
+        while( true ){
+            // 注意这里的边界, arr[i].compareTo(v) &lt; 0, 不能是arr[i].compareTo(v) &lt;= 0
+            while( i &lt;= r &amp;&amp; arr[i].compareTo(v) &lt; 0 )
+                i ++;
+
+            // 注意这里的边界, arr[j].compareTo(v) &gt; 0, 不能是arr[j].compareTo(v) &gt;= 0
+            while( j &gt;= l+1 &amp;&amp; arr[j].compareTo(v) &gt; 0 )
+                j --;
+            if( i &gt; j )
+                break;
+
+            swap( arr, i, j );
+            i ++;
+            j --;
+        }
+
+        swap(arr, l, j);
+
+        return j;
+    }
+
+    // 递归使用快速排序,对arr[l...r]的范围进行排序
+    private static void sort(Comparable[] arr, int l, int r){
+
+        // 对于小规模数组, 使用插入排序
+        if( r - l &lt;= 15 ){
+            InsertionSort.sort(arr, l, r);
+            return;
+        }
+
+        int p = partition(arr, l, r);
+        sort(arr, l, p-1 );
+        sort(arr, p+1, r);
+    }
+
+    public static void sort(Comparable[] arr){
+
+        int n = arr.length;
+        sort(arr, 0, n-1);
+    }
+
+    private static void swap(Object[] arr, int i, int j) {
+        Object t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+}
+</code></pre>
+<p>应对大量重复值，使用三路排序</p>
+<p><img src="/2019/05/03/sort/quick3.jpg" alt="quick3"></p>
+<p><img src="/2019/05/03/sort/finish.jpg" alt="finish"></p>
+<p>碰头后，l,lt交换位置</p>
+<pre><code class="java">public class QuickSort3Ways {
+
+    private QuickSort3Ways(){}
+
+    // 递归使用快速排序,对arr[l...r]的范围进行排序
+    private static void sort(Comparable[] arr, int l, int r){
+
+        // 对于小规模数组, 使用插入排序
+        if( r - l &lt;= 15 ){
+            InsertionSort.sort(arr, l, r);
+            return;
+        }
+
+        // 随机在arr[l...r]的范围中, 选择一个数值作为标定点pivot
+        swap( arr, l, (int)(Math.random()*(r-l+1)) + l );
+
+        Comparable v = arr[l];
+
+        int lt = l;     // arr[l+1...lt] &lt; v
+        int gt = r + 1; // arr[gt...r] &gt; v
+        int i = l+1;    // arr[lt+1...i) == v
+        while( i &lt; gt ){
+            if( arr[i].compareTo(v) &lt; 0 ){
+                swap( arr, i, lt+1);
+                i ++;
+                lt ++;
+            }
+            else if( arr[i].compareTo(v) &gt; 0 ){
+                swap( arr, i, gt-1);
+                gt --;
+            }
+            else{ // arr[i] == v
+                i ++;
+            }
+        }
+
+        swap( arr, l, lt );
+
+        sort(arr, l, lt-1);
+        sort(arr, gt, r);
+    }
+
+    public static void sort(Comparable[] arr){
+
+        int n = arr.length;
+        sort(arr, 0, n-1);
+    }
+
+    private static void swap(Object[] arr, int i, int j) {
+        Object t = arr[i];
+        arr[i] = arr[j];
+        arr[j] = t;
+    }
+}
+</code></pre>
+<p>其他排序动图演示：</p>
+<p><a href="https://www.cnblogs.com/onepixel/articles/7674659.html" target="_blank" rel="noopener">https://www.cnblogs.com/onepixel/articles/7674659.html</a></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/05/03/sort/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/05/04/sparknote/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Spark Final Note
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/05/03/visual/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Visualization Final Note</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

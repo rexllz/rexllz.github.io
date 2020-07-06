@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Java GC |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-javagc"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Java GC
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/02/22/javagc/" class="article-date">
+  <time datetime="2019-02-22T09:52:46.000Z" itemprop="datePublished">2019-02-22</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">5 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="垃圾判定"><a href="#垃圾判定" class="headerlink" title="垃圾判定"></a>垃圾判定</h1><ul>
+<li>没有被其他对象引用</li>
+</ul>
+<h2 id="判定算法"><a href="#判定算法" class="headerlink" title="判定算法"></a>判定算法</h2><h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><ul>
+<li>判断对象的引用数量</li>
+<li>每个对象都有一个引用计数器，被引用+1，完成引用-1</li>
+<li>任何引用计数为0的对象实例可以被当作垃圾收集</li>
+</ul>
+<p>优点：执行效率高，程序执行受影响小</p>
+<p>缺点：无法检测出循环引用，导致内存泄露（引用计数永不为0）</p>
+<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><ul>
+<li>通过判断对象的引用链是否可达来决定对象是否被回收</li>
+</ul>
+<p><img src="/2019/02/22/javagc/access.jpg" alt="access"></p>
+<h4 id="GC-Root对象"><a href="#GC-Root对象" class="headerlink" title="GC Root对象"></a>GC Root对象</h4><ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>本地方法栈中JNI（Native方法）的引用对象</li>
+<li>活跃线程的引用对象</li>
+</ul>
+<h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h1><h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><h3 id="标记-清除算法（Mark-amp-Sweep）"><a href="#标记-清除算法（Mark-amp-Sweep）" class="headerlink" title="标记-清除算法（Mark &amp; Sweep）"></a>标记-清除算法（Mark &amp; Sweep）</h3><ul>
+<li>标记：从根集合扫描，对存活对象进行标记</li>
+<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象</li>
+</ul>
+<p><img src="/2019/02/22/javagc/sweep.jpg" alt="sweep"></p>
+<ul>
+<li>缺点：碎片化严重</li>
+</ul>
+<h3 id="复制算法（Copying）"><a href="#复制算法（Copying）" class="headerlink" title="复制算法（Copying）"></a>复制算法（Copying）</h3><ul>
+<li>内存被分为对象面和空闲面</li>
+<li>对象在对象面创建</li>
+<li>对象面用完，将存活的对象复制到空闲面</li>
+<li>将对象面所有对象清理</li>
+</ul>
+<p><img src="/2019/02/22/javagc/copy.jpg" alt="copy"></p>
+<ul>
+<li>解决碎片化问题</li>
+<li>顺序分配内存，简单高效</li>
+<li>适合存活率低的场景（不适合老年代）</li>
+</ul>
+<h3 id="标记-整理算法（Compacting）"><a href="#标记-整理算法（Compacting）" class="headerlink" title="标记-整理算法（Compacting）"></a>标记-整理算法（Compacting）</h3><ul>
+<li>标记：从根集合扫描，对存活对象进行标记</li>
+<li>清除：移动所有存活对象，按照内存地址重新依次排列，将末端内存地址以后的内存全部回收</li>
+</ul>
+<p><img src="/2019/02/22/javagc/sc.png" alt="compact"></p>
+<ul>
+<li>避免了碎片化</li>
+<li>不用设置两块内存空间</li>
+<li>适用于存活率高的场景（老年代）</li>
+</ul>
+<h3 id="分代收集算法（Generational-Collector）"><a href="#分代收集算法（Generational-Collector）" class="headerlink" title="分代收集算法（Generational Collector）"></a>分代收集算法（Generational Collector）</h3><ul>
+<li>回收算法组合拳</li>
+<li>按照对象生命周期不同划分区域采取不同算法</li>
+</ul>
+<p><img src="/2019/02/22/javagc/gcold.jpg" alt="gcold"></p>
+<ul>
+<li>jdk8以后取消永久代</li>
+</ul>
+<p><img src="/2019/02/22/javagc/gcnow.jpg" alt="gcnow"></p>
+<ul>
+<li>年轻代存活率低，采用复制算法</li>
+<li>老年代存活率高，采用标记清除/整理算法</li>
+</ul>
+<h4 id="Minor-GC"><a href="#Minor-GC" class="headerlink" title="Minor GC"></a>Minor GC</h4><ul>
+<li>年轻代GC</li>
+<li>复制算法</li>
+<li>频繁</li>
+</ul>
+<p>年轻代分为两个区域</p>
+<ul>
+<li>Eden</li>
+<li>两个Survivor：From，To</li>
+<li>8：1：1</li>
+</ul>
+<p><img src="/2019/02/22/javagc/young.jpg" alt="young"></p>
+<p>对象在Eden出生，确定存活转移到s0</p>
+<p><img src="/2019/02/22/javagc/y1.jpg" alt="y1"></p>
+<p>清除所有eden区对象，并将存活对象年龄设置为1</p>
+<p><img src="/2019/02/22/javagc/y2.jpg" alt="y2"></p>
+<p>Eden重新加载对象，重复上述过程到s2，年龄+1</p>
+<p><img src="/2019/02/22/javagc/y3.jpg" alt="y2"></p>
+<p>清空Eden和s0</p>
+<p><img src="/2019/02/22/javagc/y4.jpg" alt="y2"></p>
+<p>周而复始</p>
+<p><img src="/2019/02/22/javagc/y5.jpg" alt="y2"></p>
+<p>年龄达到某值，进入老年区</p>
+<blockquote>
+<p>-XX:MaxTenuringThreshold     //可调整此年龄</p>
+</blockquote>
+<p>年轻代溢出对象也会转移至老年代</p>
+<p>晋升到老年代的对象：</p>
+<ul>
+<li>经理多数Minor GC，年龄超过一定数值</li>
+<li>Survivor中放不下的对象</li>
+<li>新生成的大对象</li>
+</ul>
+<blockquote>
+<p>-XX:+PretenuerSizeThreshold</p>
+</blockquote>
+<h4 id="调优参数"><a href="#调优参数" class="headerlink" title="调优参数"></a>调优参数</h4><blockquote>
+<p>-XX:SurvivorRatio        //Eden,Survivor比例，默认8：1</p>
+<p>-XX:NewRatio            //年轻代与老年代比例，默认1：2</p>
+</blockquote>
+<h4 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h4><ul>
+<li>老年代存放周期较长的对象</li>
+<li>采用标记清理/整理算法GC</li>
+<li>速度慢</li>
+<li>频率低</li>
+</ul>
+<p>触发条件：</p>
+<ul>
+<li>老年代空间不足</li>
+<li>永久代空间不足（JDK7以后取消）</li>
+<li>CMS GC出现promotion/concurrent mode fail</li>
+<li>Minor GC晋升老年代平均大小大于剩余空间</li>
+<li>调用System.gc() 显式但不强制</li>
+<li>使用RMI进行RPC或管理的JDK应用，一小时执行一次</li>
+</ul>
+<h2 id="年轻代垃圾回收器"><a href="#年轻代垃圾回收器" class="headerlink" title="年轻代垃圾回收器"></a>年轻代垃圾回收器</h2><h3 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop-the-World"></a>Stop-the-World</h3><ul>
+<li>JVM由于要执行GC而停止应用程序的执行</li>
+<li>任何GC算法都会发生</li>
+<li>减少stop-the-world实现GC优化</li>
+</ul>
+<h3 id="Safepoint"><a href="#Safepoint" class="headerlink" title="Safepoint"></a>Safepoint</h3><ul>
+<li>GC时不再产生垃圾</li>
+<li>分析过程中对象引用关系不会发生变化的点</li>
+<li>到达安全点程序才会暂停</li>
+<li>多在方法调用，循环跳转，异常跳转等</li>
+<li>安全点数量适中</li>
+</ul>
+<h3 id="JVM运行模式"><a href="#JVM运行模式" class="headerlink" title="JVM运行模式"></a>JVM运行模式</h3><ul>
+<li>server，启动慢运行快</li>
+<li>client，启动快运行慢</li>
+</ul>
+<blockquote>
+<p>java -version</p>
+</blockquote>
+<h3 id="垃圾收集器关系"><a href="#垃圾收集器关系" class="headerlink" title="垃圾收集器关系"></a>垃圾收集器关系</h3><p><img src="/2019/02/22/javagc/collector.jpg" alt="collector"></p>
+<h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><blockquote>
+<p>-XX:+UseSerialGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>单线程收集，GC时，必须暂停所有工作线程</li>
+<li>简单高效，client默认年轻代收集器</li>
+</ul>
+<h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><blockquote>
+<p>-XX:+UserParNewGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>多线程收集</li>
+<li>单核执行效率不及Serial，多核下有优势</li>
+</ul>
+<h3 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h3><blockquote>
+<p>-XX:+UserParallelGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>吞吐量=运行用户代码时间/(运行用户代码时间+GC时间)</li>
+<li>关注吞吐量，忽视用户线程卡顿</li>
+<li>Server模式下默认的年轻代收集器</li>
+</ul>
+<h2 id="老年代垃圾回收器"><a href="#老年代垃圾回收器" class="headerlink" title="老年代垃圾回收器"></a>老年代垃圾回收器</h2><h3 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h3><blockquote>
+<p>-XX:+UseSerialOldGC        //标记整理算法</p>
+</blockquote>
+<ul>
+<li>单线程收集，必须停止工作线程</li>
+<li>简单高效</li>
+</ul>
+<h3 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h3><blockquote>
+<p>-XX:+UseParallelOldGC        //标记整理算法</p>
+</blockquote>
+<ul>
+<li>多线程，吞吐量优先</li>
+</ul>
+<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a><strong>CMS收集器</strong></h3><blockquote>
+<p>-XX:UseConcMarkSweepGC        //标记清除算法</p>
+</blockquote>
+<ul>
+<li>初始标记：stop-the-world，JVM停顿，时间短</li>
+<li>并发标记：并发追溯标记，程序不停顿</li>
+<li>并发预处理：查找执行并发标记时晋升老年代的对象，不停顿</li>
+<li>重新标记：暂停虚拟机，扫描CMS堆中剩余对象</li>
+<li>并发清理：清理垃圾对象，程序不卡顿</li>
+<li>并发重置：重置CMS收集器的数据结构</li>
+</ul>
+<p>特点：边产生边回收、碎片化严重</p>
+<h3 id="Garbage-First"><a href="#Garbage-First" class="headerlink" title="Garbage First"></a>Garbage First</h3><ul>
+<li>并行和并发</li>
+<li>分代收集</li>
+<li>空间整合</li>
+<li>可预测停顿</li>
+</ul>
+<p>1、将整个Java堆内存划分为多个大小相等的Region</p>
+<p>2、年轻代老年代不再物理隔阂</p>
+<p><img src="/2019/02/22/javagc/gf.jpg" alt="gf"></p>
+<h3 id="收集器结合情况"><a href="#收集器结合情况" class="headerlink" title="收集器结合情况"></a>收集器结合情况</h3><p><img src="/2019/02/22/javagc/gclink.jpg" alt="gclink"></p>
+<h2 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h2><ul>
+<li>Object.finalize()是否与C++析构函数作用相同</li>
+</ul>
+<p>不同</p>
+<p>析构函数调用确定，finalize()不确定，也就是还未运行完已经被GC</p>
+<ul>
+<li>Java中的强引用、软引用、弱引用和虚引用</li>
+</ul>
+<p>强引用：</p>
+<blockquote>
+<p>Object obj = new Object();</p>
+</blockquote>
+<p>1、即使抛出OutOfMemoryError也不会回收该对象</p>
+<p>2、可以通过设置为null来弱化作用，使其被回收</p>
+<p>软引用：</p>
+<blockquote>
+<p>SoftReference<string> softRef=new SoftReference<string>(str);</string></string></p>
+</blockquote>
+<p>1、对象有用但非必须状态</p>
+<p>2、只有当内存不足，GC才会回收</p>
+<p>3、可用来实现高速缓存</p>
+<p>弱引用</p>
+<blockquote>
+<p>WeakReference<string> weakRef=new WeakReference<string>(str);</string></string></p>
+</blockquote>
+<p>1、比软引用更弱</p>
+<p>2、GC时被回收</p>
+<p>3、GC优先级低，所以被回收概率也不大</p>
+<p>虚引用：</p>
+<p>1、形同虚设</p>
+<p>2、任何时候都可能被回收</p>
+<p>3、跟踪对象被GC的活动，起哨兵作用</p>
+<p>4、必须和引用队列ReferenceQueue联合使用</p>
+<p><img src="/2019/02/22/javagc/ref.jpg" alt="ref"></p>
+<p>四种引用的关系：</p>
+<p><img src="/2019/02/22/javagc/ref4.jpg" alt="ref4"></p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/02/22/javagc/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/">JVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/02/24/javamt/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Java Thread Basic
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/02/22/memory/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Java Memory Model</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

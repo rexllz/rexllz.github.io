@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Database Basic |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-database"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Database Basic
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/03/04/database/" class="article-date">
+  <time datetime="2019-03-04T12:16:38.000Z" itemprop="datePublished">2019-03-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">1.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">6 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="数据库架构"><a href="#数据库架构" class="headerlink" title="数据库架构"></a>数据库架构</h1><h2 id="如何设计一个关系型数据库"><a href="#如何设计一个关系型数据库" class="headerlink" title="如何设计一个关系型数据库"></a>如何设计一个关系型数据库</h2><p><img src="/2019/03/04/database/design.jpg" alt="design"></p>
+<ul>
+<li>实例与os文件系统相对应</li>
+<li>io时间长，io一次将块和页至于内存，相近数据访问概率高</li>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><ul>
+<li>数据量很大时，避免全表扫描</li>
+<li>类似字典</li>
+<li>提升查询速度</li>
+<li>主键，唯一键，普通键作为索引</li>
+</ul>
+<h3 id="如何生成索引"><a href="#如何生成索引" class="headerlink" title="如何生成索引"></a>如何生成索引</h3><h4 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h4><ul>
+<li>左小右大</li>
+<li>对半搜索，O(logn)</li>
+</ul>
+<p><img src="/2019/03/04/database/twotree.jpg" alt="twotree"></p>
+<ul>
+<li>查找速度快</li>
+<li>可能会很深，导致IO增多，速度降低（每深一层一次IO）</li>
+</ul>
+<h4 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h4><ul>
+<li><p>平衡多路查找树</p>
+<p><img src="/2019/03/04/database/btree.jpg" alt="btree"></p>
+</li>
+<li><p>平衡</p>
+</li>
+</ul>
+<h4 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+-Tree"></a>B+-Tree</h4><p><img src="/2019/03/04/database/bplustree.jpg" alt="bplustree"></p>
+<p>B+TREE更有优势</p>
+<ul>
+<li>磁盘读写代价低</li>
+<li>查询效率稳定（所有查询路径相同）</li>
+<li>有利于数据库的扫描，范围查询（叶子相连）</li>
+</ul>
+<h4 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h4><p><img src="/2019/03/04/database/hash.jpg" alt="hash"></p>
+<ul>
+<li>只能满足=，不满足IN（hash运算前后关系不确定）</li>
+<li>无法避免排序运算</li>
+<li>不能利用部分索引</li>
+<li>不能避免行扫描</li>
+<li>大量hash相等，性能低下，变为线性</li>
+</ul>
+<h4 id="BitMap索引"><a href="#BitMap索引" class="headerlink" title="BitMap索引"></a>BitMap索引</h4><p><img src="/2019/03/04/database/bitmap.jpg" alt="bitmap"></p>
+<ul>
+<li>锁力度大</li>
+<li>应用范围小，关键字有限</li>
+</ul>
+<h3 id="密集索引-amp-稀疏索引"><a href="#密集索引-amp-稀疏索引" class="headerlink" title="密集索引&amp;稀疏索引"></a>密集索引&amp;稀疏索引</h3><ul>
+<li>密集索引：每个搜索码值对应一个索引</li>
+<li>稀疏索引：只为索引码的某些值建立索引项</li>
+</ul>
+<p><img src="/2019/03/04/database/mijixishu.jpg" alt="mijixishu"></p>
+<p>代表：（mysql两个引擎）</p>
+<ul>
+<li>InnoDB：密集索引（数据索引存储在.ibd文件）</li>
+<li>MyISAM：稀疏索引（数据索引分开存储.MYI.MYD）</li>
+</ul>
+<p><img src="/2019/03/04/database/innodb.jpg" alt="innodb"></p>
+<p>检索过程：</p>
+<p><img src="/2019/03/04/database/jiansuo.jpg" alt="jiansuo"></p>
+<h3 id="如何调优sql"><a href="#如何调优sql" class="headerlink" title="如何调优sql"></a>如何调优sql</h3><ul>
+<li>根据慢日志定位慢查询sql</li>
+</ul>
+<blockquote>
+<p>show variables like ‘%quer%’;        //查看相关变量</p>
+</blockquote>
+<p><img src="/2019/03/04/database/slowlog.jpg" alt="slowlog"></p>
+<blockquote>
+<p>show status like ‘%slow_queries’;        //慢查询数量</p>
+</blockquote>
+<blockquote>
+<p>set global slow_query_log = on;</p>
+<p>set global long_query_time = 1;    //需要重连</p>
+</blockquote>
+<ul>
+<li>Explain分析sql</li>
+</ul>
+<p>加在执行语句前，查看结果项</p>
+<p>type：index，all需要优化</p>
+<p>extra：Using filesort/Using temporary</p>
+<ul>
+<li>修改sql尽量让sql走索引</li>
+</ul>
+<h3 id="mysql联合索引最左匹配原则"><a href="#mysql联合索引最左匹配原则" class="headerlink" title="mysql联合索引最左匹配原则"></a>mysql联合索引最左匹配原则</h3><p>index（a，b）</p>
+<p>只用b select 不走索引</p>
+<p><img src="/2019/03/04/database/unionindex.jpg" alt="unionindex"></p>
+<h3 id="索引越多越好吗"><a href="#索引越多越好吗" class="headerlink" title="索引越多越好吗"></a>索引越多越好吗</h3><ul>
+<li>数据量小不需要建立索引</li>
+<li>数据变更需要维护索引，维护成本变高</li>
+<li>更多索引占用更多空间</li>
+</ul>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="数据库锁的分类"><a href="#数据库锁的分类" class="headerlink" title="数据库锁的分类"></a>数据库锁的分类</h3><h4 id="按粒度划分"><a href="#按粒度划分" class="headerlink" title="按粒度划分"></a>按粒度划分</h4><ul>
+<li>表级锁</li>
+<li>行级锁</li>
+<li>页级锁</li>
+</ul>
+<h4 id="按锁级别划分"><a href="#按锁级别划分" class="headerlink" title="按锁级别划分"></a>按锁级别划分</h4><ul>
+<li>共享锁</li>
+<li>排他锁</li>
+</ul>
+<h4 id="按枷锁方式划分"><a href="#按枷锁方式划分" class="headerlink" title="按枷锁方式划分"></a>按枷锁方式划分</h4><ul>
+<li>自动锁</li>
+<li>显式锁</li>
+</ul>
+<h4 id="按操作划分"><a href="#按操作划分" class="headerlink" title="按操作划分"></a>按操作划分</h4><ul>
+<li>DML锁（对数据操作）</li>
+<li>DDL锁（对表结构操作）</li>
+</ul>
+<h4 id="按使用方式划分"><a href="#按使用方式划分" class="headerlink" title="按使用方式划分"></a>按使用方式划分</h4><ul>
+<li>乐观锁（基于数据版本）</li>
+<li>悲观锁（对外界修改保守态度）</li>
+</ul>
+<h3 id="MyISAM-amp-InnoDB锁的区别"><a href="#MyISAM-amp-InnoDB锁的区别" class="headerlink" title="MyISAM&amp;InnoDB锁的区别"></a>MyISAM&amp;InnoDB锁的区别</h3><ul>
+<li>MyISAM默认表级锁，不支持行级锁</li>
+</ul>
+<p>对一个表进行操作时，会将表锁，其他session不能操作</p>
+<p>读锁（共享锁）不释放，无法增加写锁</p>
+<p>读锁（共享锁）不释放，可以增加读锁</p>
+<p>写锁（排他锁）不释放，无法增加读锁</p>
+<p>写锁不释放，无法增加写锁</p>
+<blockquote>
+<p>lock tables table_name read;</p>
+<p>unlock tables;</p>
+</blockquote>
+<ul>
+<li>InnoDB默认行级锁，也支持表级锁</li>
+</ul>
+<p>InnoDB采用二段锁</p>
+<p>行级锁只锁一行数据</p>
+<p>但是不走索引时，整张表都会被锁住</p>
+<h4 id="MyISAM适合的场景"><a href="#MyISAM适合的场景" class="headerlink" title="MyISAM适合的场景"></a>MyISAM适合的场景</h4><ul>
+<li>频繁执行全表count语句（保存行数变量）</li>
+<li>对数据增删改频率低，查询频率高（增删改锁表）</li>
+<li>没有事务</li>
+</ul>
+<h4 id="InnoDB适合的场景"><a href="#InnoDB适合的场景" class="headerlink" title="InnoDB适合的场景"></a>InnoDB适合的场景</h4><ul>
+<li>数据增删改查都频繁（行级锁）</li>
+<li>可靠性要求高</li>
+<li>支持事务</li>
+</ul>
+<h3 id="数据库事务四大特性"><a href="#数据库事务四大特性" class="headerlink" title="数据库事务四大特性"></a>数据库事务四大特性</h3><p>ACID</p>
+<ul>
+<li>原子性（Atomic）操作一体化</li>
+<li>一致性（Consistency）总体一致eg转账</li>
+<li>隔离性（Isolation）并发互不影响</li>
+<li>持久性（Durability）可恢复，储存持久</li>
+</ul>
+<h3 id="事务隔离级别以及各级别下并发访问"><a href="#事务隔离级别以及各级别下并发访问" class="headerlink" title="事务隔离级别以及各级别下并发访问"></a>事务隔离级别以及各级别下并发访问</h3><h4 id="事务并发访问可能引起的问题"><a href="#事务并发访问可能引起的问题" class="headerlink" title="事务并发访问可能引起的问题"></a>事务并发访问可能引起的问题</h4><ul>
+<li>更新丢失</li>
+</ul>
+<p>一个事务的更新覆盖了另一个事务的更新</p>
+<p><img src="/2019/03/04/database/updatelost.jpg" alt="updatelost"></p>
+<p>（mysql所有事务隔离级别已经避免）</p>
+<ul>
+<li>Dirty Read</li>
+</ul>
+<p>一个事务读到另一个事务未提交的更新数据（回滚发生问题）</p>
+<blockquote>
+<p>select @@tx_isolation;        //查看事务隔离级别</p>
+<p>set session transaction isolation level read uncommitted;    //设置隔离级别</p>
+</blockquote>
+<p>（READ-COMMITTED事务隔离级别以上可避免）</p>
+<ul>
+<li>不可重复读</li>
+</ul>
+<p>A多次读取数据，B在过程中更新数据，导致事务A读取数据不一致</p>
+<p>（REPEATABLE-READ事务隔离级别以上可避免）InnoDB default</p>
+<ul>
+<li>幻读</li>
+</ul>
+<p>事务A读取与搜索条件匹配的若干行，事务B插入或删除行的方式修改了A的结果集，导致事务A像出现幻觉</p>
+<p>（SERIALIZABLE事务隔离级别以上可避免）Top Level</p>
+<h4 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h4><p><img src="/2019/03/04/database/level.jpg" alt="level"></p>
+<p>事务隔离级别越高，串行程度越高，并行化越低，效率越低</p>
+<p>Oracle默认为READ-COMMITTED，MySQL默认为REPEATABLE-READ</p>
+<h4 id="InnoDB可重复读隔离级别下避免幻读"><a href="#InnoDB可重复读隔离级别下避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下避免幻读"></a>InnoDB可重复读隔离级别下避免幻读</h4><h5 id="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"><a href="#表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）" class="headerlink" title="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"></a>表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）</h5><ul>
+<li>当前读：select…lock in share mode, select…for update</li>
+</ul>
+<p>update, delete, insert（）</p>
+<p>加了锁的增删改查，读取最新版本，并且锁住避免其他事务修改当前记录</p>
+<p><img src="/2019/03/04/database/dangqian.jpg" alt="dangqian"></p>
+<ul>
+<li>快照读：不加锁（SERIALIZABLE事务隔离级别不成立）</li>
+</ul>
+<p>可能读到的是历史版本数据</p>
+<h5 id="内在：next-key锁（行锁-gap锁）"><a href="#内在：next-key锁（行锁-gap锁）" class="headerlink" title="内在：next-key锁（行锁+gap锁）"></a>内在：next-key锁（行锁+gap锁）</h5><p>RR级别以上支持gap锁，防止两次当前读出现幻读</p>
+<p>不锁内容本身，锁周围数据</p>
+<p>对主键和唯一键索引时：</p>
+<ul>
+<li>where条件全部命中，不会加gap锁，只加记录锁</li>
+</ul>
+<p><img src="/2019/03/04/database/recordlock.jpg" alt="recordlock"></p>
+<ul>
+<li>where条件部分命中或全不命中，加gap锁</li>
+</ul>
+<p>gap锁用在非唯一索引或不走索引的当前读中</p>
+<p>1、非唯一索引</p>
+<p><img src="/2019/03/04/database/gaplock1.jpg" alt="gaplock1"></p>
+<p>(6,9], (9,11] 被锁住（不仅id在范围内，而是范围内所有数据，可能id是20也会被锁住）</p>
+<p>官方定义：</p>
+<p><img src="/2019/03/04/database/gaplock2.jpg" alt="gaplock2"></p>
+<p>2、不走索引</p>
+<p><img src="/2019/03/04/database/gaplock3.jpg" alt="gaplock3"></p>
+<p>对所有gap上锁</p>
+<h3 id="RC、RR级别下InnoDB的非阻塞读的实现"><a href="#RC、RR级别下InnoDB的非阻塞读的实现" class="headerlink" title="RC、RR级别下InnoDB的非阻塞读的实现"></a>RC、RR级别下InnoDB的非阻塞读的实现</h3><ul>
+<li>数据行里DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID字段</li>
+</ul>
+<p>DB_TRX_ID：最后一次对本行数据做修改的事务ID</p>
+<p>DB_ROLL_PTR：回滚指针，undo日志记录</p>
+<p>DB_ROW_ID：行号</p>
+<ul>
+<li>undo log，提交后丢弃</li>
+<li>update undo log，回滚，快照都需要此log</li>
+</ul>
+<p><img src="/2019/03/04/database/undolog.jpg" alt="undolog"></p>
+<ul>
+<li>read view，能看到的数据，根据算法处理</li>
+</ul>
+<h2 id="关键语法"><a href="#关键语法" class="headerlink" title="关键语法"></a>关键语法</h2><h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><ul>
+<li>SELECT子句中的列名必须为分组列或列函数</li>
+<li>列函数对于GROUP BY子句定义的每个组返回一个结果</li>
+</ul>
+<p><img src="/2019/03/04/database/groupby.jpg" alt="groupby"></p>
+<p>1、查询所有同学的学号、选课数、总成绩</p>
+<pre><code class="sql">select student_id,count(course_id),sum(score)
+
+from score
+
+group by student_id
+</code></pre>
+<p>GROUP BY会缓存临时数据表</p>
+<p>2、查询所有同学的学号、姓名、选课数、总成绩</p>
+<pre><code class="sql">select s.student_id,stu.name,count(s.course_id),sum(s.score)
+from
+    score s,
+    student stu
+where
+s.student_id = stu.student_id
+group by s.student_id;
+</code></pre>
+<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><ul>
+<li>通常与GROUP BY子句一起使用</li>
+<li>WHERE过滤行，HAVING过滤组</li>
+<li>出现顺序：WHERE&gt;GROUP BY&gt;HAVING</li>
+</ul>
+<p>3、查询平均成绩大于60的同学的学号和平均成绩</p>
+<pre><code class="sql">select student_id,avg(score)
+from score
+group by student_id
+having avg(score)&gt;60
+</code></pre>
+<p>4、查询没有学全所有课的同学的学号、姓名</p>
+<pre><code class="sql">select stu.student_id,stu.name
+from
+student stu,
+score s
+where stu.student_id = s.student_id
+group by s.student_id
+having count(*) &lt;
+(select count(*) from course)
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/03/04/database/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Database/">Database</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/InnoDB/">InnoDB</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Lock/">Lock</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MyISAM/">MyISAM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SQL/">SQL</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/03/13/bingfa2/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Java Concurrency Note2
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/02/25/jclass/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Java Common Class</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,2528 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Algorithm Practice |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-algo"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Algorithm Practice
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/07/03/algo/" class="article-date">
+  <time datetime="2019-07-02T16:04:13.000Z" itemprop="datePublished">2019-07-03</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">9.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">59 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><h2 id="283-Move-Zeroes"><a href="#283-Move-Zeroes" class="headerlink" title="283. Move Zeroes"></a>283. Move Zeroes</h2><p>Given an array <code>nums</code>, write a function to move all <code>0</code>‘s to the end of it while maintaining the relative order of the non-zero elements.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [0,1,0,3,12]
+Output: [1,3,12,0,0]
+</code></pre><p>copy-array:</p>
+<pre><code class="java">class Solution {
+    public void moveZeroes(int[] nums) {
+        int len = nums.length;
+        int[] tmp = new int[len];
+        int k = 0;
+        for(int i = 0; i&lt;len; i++){
+            if(nums[i]!=0){
+                tmp[k]=nums[i];
+                k++;
+            }
+        }
+        for(int i = 0; i&lt;k; i++){
+            nums[i]=tmp[i];
+        }
+        for(int i = k; i&lt;len; i++){
+            nums[i]=0;
+        }  
+    }
+}
+</code></pre>
+<pre><code class="java">class Solution {
+    public void moveZeroes(int[] nums) {
+        int len = nums.length;
+        int index = 0;
+        for(int i = 0; i&lt;len; i++){
+            if(nums[i]!=0){
+                nums[index] = nums[i];
+                index++;
+            }else continue;
+        }
+        while(index&lt;len)nums[index++]=0;
+    }
+}
+</code></pre>
+<h2 id="27-Remove-Element"><a href="#27-Remove-Element" class="headerlink" title="27. Remove Element"></a>27. Remove Element</h2><p>Given an array <em>nums</em> and a value <em>val</em>, remove all instances of that value <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank" rel="noopener"><strong>in-place</strong></a> and return the new length.</p>
+<p>Do not allocate extra space for another array, you must do this by <strong>modifying the input array in-place</strong> with O(1) extra memory.</p>
+<p>The order of elements can be changed. It doesn’t matter what you leave beyond the new length.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Given nums = [3,2,2,3], val = 3,
+
+Your function should return length = 2, with the first two elements of nums being 2.
+
+It doesn&#39;t matter what you leave beyond the returned length.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Given nums = [0,1,2,2,3,0,4,2], val = 2,
+
+Your function should return length = 5, with the first five elements of nums containing 0, 1, 3, 0, and 4.
+
+Note that the order of those five elements can be arbitrary.
+
+It doesn&#39;t matter what values are set beyond the returned length.
+</code></pre><p><strong>Clarification:</strong></p>
+<p>Confused why the returned value is an integer but your answer is an array?</p>
+<p>Note that the input array is passed in by <strong>reference</strong>, which means modification to the input array will be known to the caller as well.</p>
+<p>Internally you can think of this:</p>
+<pre><code>// nums is passed in by reference. (i.e., without making a copy)
+int len = removeElement(nums, val);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i &lt; len; i++) {
+    print(nums[i]);
+}
+</code></pre><pre><code class="java">class Solution {
+    public int removeElement(int[] nums, int val) {
+        int len = nums.length;
+        int j = 0;
+        for(int i = 0; i&lt;len; i++){
+            if(nums[i]!=val)nums[j++]=nums[i];
+        }
+        return j;
+    }
+}
+</code></pre>
+<h2 id="26-Remove-Duplicates-from-Sorted-Array"><a href="#26-Remove-Duplicates-from-Sorted-Array" class="headerlink" title="26. Remove Duplicates from Sorted Array"></a>26. Remove Duplicates from Sorted Array</h2><p>Given a sorted array <em>nums</em>, remove the duplicates <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank" rel="noopener"><strong>in-place</strong></a> such that each element appear only <em>once</em> and return the new length.</p>
+<p>Do not allocate extra space for another array, you must do this by <strong>modifying the input array in-place</strong> with O(1) extra memory.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Given nums = [1,1,2],
+
+Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively.
+
+It doesn&#39;t matter what you leave beyond the returned length.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Given nums = [0,0,1,1,1,2,2,3,3,4],
+
+Your function should return length = 5, with the first five elements of nums being modified to 0, 1, 2, 3, and 4 respectively.
+
+It doesn&#39;t matter what values are set beyond the returned length.
+</code></pre><p><strong>Clarification:</strong></p>
+<p>Confused why the returned value is an integer but your answer is an array?</p>
+<p>Note that the input array is passed in by <strong>reference</strong>, which means modification to the input array will be known to the caller as well.</p>
+<p>Internally you can think of this:</p>
+<pre><code>// nums is passed in by reference. (i.e., without making a copy)
+int len = removeDuplicates(nums);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i &lt; len; i++) {
+    print(nums[i]);
+}
+</code></pre><pre><code class="java">class Solution {
+    public int removeDuplicates(int[] nums) {
+        int len = nums.length;
+        int k = 0;
+        for(int i = 0; i&lt;len; i++){
+            if(nums[i]!=nums[k])nums[++k]=nums[i];
+        }
+        return k+1;
+    }
+}
+</code></pre>
+<h2 id="80-Remove-Duplicates-from-Sorted-Array-II"><a href="#80-Remove-Duplicates-from-Sorted-Array-II" class="headerlink" title="80. Remove Duplicates from Sorted Array II"></a>80. Remove Duplicates from Sorted Array II</h2><p>Given a sorted array <em>nums</em>, remove the duplicates <a href="https://en.wikipedia.org/wiki/In-place_algorithm" target="_blank" rel="noopener"><strong>in-place</strong></a> such that duplicates appeared at most <em>twice</em> and return the new length.</p>
+<p>Do not allocate extra space for another array, you must do this by <strong>modifying the input array in-place</strong> with O(1) extra memory.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Given nums = [1,1,1,2,2,3],
+
+Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3 respectively.
+
+It doesn&#39;t matter what you leave beyond the returned length.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Given nums = [0,0,1,1,1,1,2,3,3],
+
+Your function should return length = 7, with the first seven elements of nums being modified to 0, 0, 1, 1, 2, 3 and 3 respectively.
+
+It doesn&#39;t matter what values are set beyond the returned length.
+</code></pre><p><strong>Clarification:</strong></p>
+<p>Confused why the returned value is an integer but your answer is an array?</p>
+<p>Note that the input array is passed in by <strong>reference</strong>, which means modification to the input array will be known to the caller as well.</p>
+<p>Internally you can think of this:</p>
+<pre><code>// nums is passed in by reference. (i.e., without making a copy)
+int len = removeDuplicates(nums);
+
+// any modification to nums in your function would be known by the caller.
+// using the length returned by your function, it prints the first len elements.
+for (int i = 0; i &lt; len; i++) {
+    print(nums[i]);
+}
+</code></pre><pre><code class="java">class Solution {
+    public int removeDuplicates(int[] nums) {
+        if (nums.length == 0) {return 0;}
+        int pointer = 0, flag = 0;
+        for (int i = 1; i &lt; nums.length; i++) {
+        if (nums[i] == nums[i - 1] &amp;&amp; flag == 0) {
+            flag = 1;
+            pointer++;
+        } else if (nums[i] != nums[i - 1]) {
+            flag = 0;
+            pointer++;
+        }
+        nums[pointer] = nums[i];
+      }
+    return pointer + 1;
+    }
+}
+</code></pre>
+<h2 id="75-Sort-Colors"><a href="#75-Sort-Colors" class="headerlink" title="75. Sort Colors"></a>75. Sort Colors</h2><p>Given an array with <em>n</em> objects colored red, white or blue, sort them <strong>in-place</strong> so that objects of the same color are adjacent, with the colors in the order red, white and blue.</p>
+<p>Here, we will use the integers 0, 1, and 2 to represent the color red, white, and blue respectively.</p>
+<p><strong>Note:</strong> You are not suppose to use the library’s sort function for this problem.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [2,0,2,1,1,0]
+Output: [0,0,1,1,2,2]
+</code></pre><p><strong>Follow up:</strong></p>
+<ul>
+<li>A rather straight forward solution is a two-pass algorithm using counting sort.<br>First, iterate the array counting number of 0’s, 1’s, and 2’s, then overwrite array with total number of 0’s, then 1’s and followed by 2’s.</li>
+<li>Could you come up with a one-pass algorithm using only constant space?</li>
+</ul>
+<p>count sort</p>
+<pre><code class="java">class Solution {
+    public void sortColors(int[] nums) {
+        int[] count = new int[3];
+        int len = nums.length;
+        for(int i = 0; i&lt;3; i++)count[i]=0;
+        for(int i = 0; i&lt;len; i++){
+            if(nums[i]==0)count[0]++;
+            else if(nums[i]==1)count[1]++;
+            else count[2]++;
+        }
+        int index = 0;
+        while(count[0]&gt;0){
+            nums[index]=0;
+            index++;
+            count[0]--;
+        }
+        while(count[1]&gt;0){
+            nums[index]=1;
+            index++;
+            count[1]--;
+        }
+        while(count[2]&gt;0){
+            nums[index]=2;
+            index++;
+            count[2]--;
+        }
+    }
+}
+</code></pre>
+<p>3-way quick sort</p>
+<pre><code class="java">class Solution {
+    public void sortColors(int[] nums) {
+        int len = nums.length;
+        int index1 = -1, index2 = len;
+        for(int i = 0; i&lt;index2; ){
+            if(nums[i]==1){
+                i++;
+            }else if(nums[i]==2){
+                index2--;
+                swap(nums,index2,i);
+            }else{
+                index1++;
+                swap(nums,index1,i);
+                i++;
+            }
+        }      
+    }
+    public void swap(int[] nums, int a, int b){
+        int tmp = nums[a];
+        nums[a] = nums[b];
+        nums[b] = tmp;
+    }
+}
+</code></pre>
+<h2 id="88-Merge-Sorted-Array"><a href="#88-Merge-Sorted-Array" class="headerlink" title="88. Merge Sorted Array"></a>88. Merge Sorted Array</h2><p>Given two sorted integer arrays <em>nums1</em> and <em>nums2</em>, merge <em>nums2</em> into <em>nums1</em> as one sorted array.</p>
+<p><strong>Note:</strong></p>
+<ul>
+<li>The number of elements initialized in <em>nums1</em> and <em>nums2</em> are <em>m</em> and <em>n</em> respectively.</li>
+<li>You may assume that <em>nums1</em> has enough space (size that is greater or equal to <em>m</em> + <em>n</em>) to hold additional elements from <em>nums2</em>.</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code>Input:
+nums1 = [1,2,3,0,0,0], m = 3
+nums2 = [2,5,6],       n = 3
+
+Output: [1,2,2,3,5,6]
+</code></pre><pre><code class="java">class Solution {
+     public void merge(int A[], int m, int B[], int n) {
+        int i = m - 1, j = n - 1, k = m + n - 1;
+        while(i &gt;= 0 &amp;&amp; j &gt;= 0) {
+            A[k--] = A[i] &gt; B[j] ? A[i--] : B[j--];
+        }
+        while(j &gt;= 0) {
+            A[k--] = B[j--];
+        }
+    }
+}
+</code></pre>
+<h2 id="215-Kth-Largest-Element-in-an-Array"><a href="#215-Kth-Largest-Element-in-an-Array" class="headerlink" title="215. Kth Largest Element in an Array"></a>215. Kth Largest Element in an Array</h2><p>Find the <strong>k</strong>th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [3,2,1,5,6,4] and k = 2
+Output: 5
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [3,2,3,1,2,4,5,5,6] and k = 4
+Output: 4
+</code></pre><p><strong>Note:</strong><br>You may assume k is always valid, 1 ≤ k ≤ array’s length.</p>
+<pre><code class="java">class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int len = nums.length;
+        int t = 0;
+        while(t&lt;k){
+            for(int i = t+1; i&lt;len; i++){
+            if(nums[i]&gt;nums[t]){
+                swap(nums,i,t);
+                }
+            }
+            t++;
+        }
+        return nums[k-1];
+    }
+    public void swap(int[] arr, int a, int b){
+        int tmp = arr[a];
+        arr[a] = arr[b];
+        arr[b] = tmp;
+    }
+}
+</code></pre>
+<pre><code class="java">public class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue&lt;Integer&gt; largeK = new PriorityQueue&lt;Integer&gt;(k + 1);
+        for(int el : nums) {
+            largeK.add(el);
+            if (largeK.size() &gt; k) {
+                largeK.poll();
+            }
+        }
+        return largeK.poll();
+    }
+}
+</code></pre>
+<h1 id="查找表"><a href="#查找表" class="headerlink" title="查找表"></a>查找表</h1><h2 id="349-Intersection-of-Two-Arrays"><a href="#349-Intersection-of-Two-Arrays" class="headerlink" title="349. Intersection of Two Arrays"></a>349. Intersection of Two Arrays</h2><p>Given two arrays, write a function to compute their intersection.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+</code></pre><p><strong>Note:</strong></p>
+<ul>
+<li>Each element in the result must be unique.</li>
+<li>The result can be in any order.</li>
+</ul>
+<pre><code class="java">class Solution {
+    public int[] intersection(int[] nums1, int[] nums2) {
+        HashSet&lt;Integer&gt; set = new HashSet&lt;&gt;();
+        HashSet&lt;Integer&gt; set1 = new HashSet&lt;&gt;();
+        for(int i = 0; i&lt;nums1.length; i++){
+            set.add(nums1[i]);
+        }
+        for(int i = 0; i&lt;nums2.length; i++){
+            if(set.contains(nums2[i]))set1.add(nums2[i]);
+        }
+        int size = set1.size();
+        int[] out = new int[size];
+        int i = 0;
+        for(Integer x : set1)out[i++]=x;
+        return out;
+    }
+}
+</code></pre>
+<h2 id="350-Intersection-of-Two-Arrays-II"><a href="#350-Intersection-of-Two-Arrays-II" class="headerlink" title="350. Intersection of Two Arrays II"></a>350. Intersection of Two Arrays II</h2><p>Given two arrays, write a function to compute their intersection.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2,2]
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [4,9]
+</code></pre><p><strong>Note:</strong></p>
+<ul>
+<li>Each element in the result should appear as many times as it shows in both arrays.</li>
+<li>The result can be in any order.</li>
+</ul>
+<p><strong>Follow up:</strong></p>
+<ul>
+<li>What if the given array is already sorted? How would you optimize your algorithm?</li>
+<li>What if <em>nums1</em>‘s size is small compared to <em>nums2</em>‘s size? Which algorithm is better?</li>
+<li>What if elements of <em>nums2</em> are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?</li>
+</ul>
+<pre><code class="java">class Solution {
+    public int[] intersect(int[] nums1, int[] nums2) {
+        HashMap&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
+        int start = 0;
+        for(int i = 0; i&lt;nums1.length; i++){
+            map.put(nums1[i],map.getOrDefault(nums1[i],0)+1);
+        }
+        for(int i = 0; i&lt;nums2.length; i++){
+            if(map.containsKey(nums2[i]) &amp;&amp; map.get(nums2[i])&gt;0){
+                nums1[start]=nums2[i];
+                start++;
+                map.put((nums2[i]),map.get(nums2[i])-1);
+            }else continue;    
+        }
+        return Arrays.copyOfRange(nums1,0,start);
+    }
+}
+</code></pre>
+<h2 id="202-Happy-Number"><a href="#202-Happy-Number" class="headerlink" title="202. Happy Number"></a>202. Happy Number</h2><p>Write an algorithm to determine if a number is “happy”.</p>
+<p>A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.</p>
+<p><strong>Example:</strong> </p>
+<pre><code>Input: 19
+Output: true
+Explanation: 
+12 + 92 = 82
+82 + 22 = 68
+62 + 82 = 100
+12 + 02 + 02 = 1
+</code></pre><pre><code class="java">class Solution {
+    public boolean isHappy(int n) {
+        int res = 0;
+        int result = n;
+        boolean flag = true;
+        HashSet&lt;Integer&gt; set = new HashSet&lt;&gt;();
+        while(result!=1){
+            while(result/10&gt;0 || result%10!=0){
+                res = res + (result%10)*(result%10);
+                result /= 10;
+            }
+            if(set.contains(res)){
+                flag = false;
+                break;
+            }
+            result = res;
+            res = 0;
+            set.add(result);
+        }
+        return flag;
+    }
+}
+</code></pre>
+<h2 id="454-4Sum-II"><a href="#454-4Sum-II" class="headerlink" title="454. 4Sum II"></a>454. 4Sum II</h2><p>Given four lists A, B, C, D of integer values, compute how many tuples <code>(i, j, k, l)</code> there are such that <code>A[i] + B[j] + C[k] + D[l]</code> is zero.</p>
+<p>To make problem a bit easier, all A, B, C, D have same length of N where 0 ≤ N ≤ 500. All integers are in the range of -228 to 228 - 1 and the result is guaranteed to be at most 231 - 1.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input:
+A = [ 1, 2]
+B = [-2,-1]
+C = [-1, 2]
+D = [ 0, 2]
+
+Output:
+2
+
+Explanation:
+The two tuples are:
+1. (0, 0, 0, 1) -&gt; A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+2. (1, 1, 0, 0) -&gt; A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+</code></pre><pre><code class="java">class Solution {
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        int len = A.length;
+        int res = 0;
+        HashMap&lt;Integer, Integer&gt; map = new HashMap&lt;Integer, Integer&gt;();
+        for(int i = 0; i&lt;len; i++){
+            for(int j = 0; j&lt;len; j++){
+                if(!map.containsKey(A[i]+B[j])){
+                    map.put(A[i]+B[j], 1);
+                }else{
+                    map.put(A[i]+B[j], map.get(A[i]+B[j])+1);
+                }
+            }
+        }
+        for(int i = 0; i&lt;len; i++)
+            for(int j = 0; j&lt;len; j++){
+                if(map.containsKey(0 - C[i] - D[j])){
+                    res += map.get(0 - C[i] - D[j]);
+                }
+            }
+        return res;
+    }
+}
+</code></pre>
+<h2 id="49-Group-Anagrams"><a href="#49-Group-Anagrams" class="headerlink" title="49. Group Anagrams"></a>49. Group Anagrams</h2><p>Given an array of strings, group anagrams together.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [&quot;eat&quot;, &quot;tea&quot;, &quot;tan&quot;, &quot;ate&quot;, &quot;nat&quot;, &quot;bat&quot;],
+Output:
+[
+  [&quot;ate&quot;,&quot;eat&quot;,&quot;tea&quot;],
+  [&quot;nat&quot;,&quot;tan&quot;],
+  [&quot;bat&quot;]
+]
+</code></pre><p><strong>Note:</strong></p>
+<ul>
+<li>All inputs will be in lowercase.</li>
+<li>The order of your output does not matter.</li>
+</ul>
+<pre><code class="java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; groupAnagrams(String[] strs) {
+        List&lt;List&lt;String&gt;&gt; list = new ArrayList&lt;List&lt;String&gt;&gt;();
+        HashMap&lt;String, List&lt;String&gt;&gt; map = new HashMap&lt;String, List&lt;String&gt;&gt;();
+        for(String str : strs){
+            char[] cs = str.toCharArray();
+            Arrays.sort(cs);
+            String ketstr = String.valueOf(cs);
+            if(!map.containsKey(ketstr))
+                map.put(ketstr, new ArrayList&lt;String&gt;());
+            map.get(ketstr).add(str);
+        }
+        for(String key : map.keySet()){
+            list.add(map.get(key));
+        }
+        return list;
+        return new ArrayList&lt;List&lt;String&gt;&gt;(map.values());
+    }
+}
+</code></pre>
+<h2 id="447-Number-of-Boomerangs"><a href="#447-Number-of-Boomerangs" class="headerlink" title="447. Number of Boomerangs"></a>447. Number of Boomerangs</h2><p>Given <em>n</em> points in the plane that are all pairwise distinct, a “boomerang” is a tuple of points <code>(i, j, k)</code> such that the distance between <code>i</code> and <code>j</code> equals the distance between <code>i</code> and <code>k</code> (<strong>the order of the tuple matters</strong>).</p>
+<p>Find the number of boomerangs. You may assume that <em>n</em> will be at most <strong>500</strong> and coordinates of points are all in the range <strong>[-10000, 10000]</strong> (inclusive).</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input:
+[[0,0],[1,0],[2,0]]
+
+Output:
+2
+
+Explanation:
+The two boomerangs are [[1,0],[0,0],[2,0]] and [[1,0],[2,0],[0,0]]
+</code></pre><pre><code class="java">class Solution {
+    public int numberOfBoomerangs(int[][] points) {
+        int len = points.length;
+        int count = 0;
+        double dis = 0;
+        for(int i = 0; i&lt;len; i++){
+            HashMap&lt;Double, Integer&gt; map = new HashMap&lt;Double, Integer&gt;();
+            for(int j = 0; j&lt;len; j++){
+                if(i != j){
+                    dis = Math.pow(points[i][0] - points[j][0], 2) + 
+                    Math.pow(points[i][1] - points[j][1], 2);
+                    if(!map.containsKey(dis))map.put(dis, 1);
+                    else map.put(dis, map.get(dis)+1);
+                }
+            }
+            for(Double x : map.keySet()){
+                if(map.get(x) == 1)continue;
+                int sum = map.get(x)*(map.get(x)-1);
+                count += sum;
+            }
+        }
+        return count;
+    }
+}
+</code></pre>
+<h1 id="Linked-List"><a href="#Linked-List" class="headerlink" title="Linked List"></a>Linked List</h1><h2 id="206-Reverse-Linked-List"><a href="#206-Reverse-Linked-List" class="headerlink" title="206. Reverse Linked List"></a>206. Reverse Linked List</h2><p>Reverse a singly linked list.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL
+Output: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL
+</code></pre><p><strong>Follow up:</strong></p>
+<p>A linked list can be reversed either iteratively or recursively. Could you implement both?</p>
+<pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode reverseList(ListNode head) {
+
+        if(head == null || head.next == null)
+            return head;
+        ListNode nextNode = head.next;
+        ListNode newHead = reverseList(head.next);
+        nextNode.next = head;
+        head.next = null;
+        return newHead;
+    }
+}
+</code></pre>
+<h2 id="203-Remove-Linked-List-Elements"><a href="#203-Remove-Linked-List-Elements" class="headerlink" title="203. Remove Linked List Elements"></a>203. Remove Linked List Elements</h2><p>Remove all elements from a linked list of integers that have value <strong>val</strong>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input:  1-&gt;2-&gt;6-&gt;3-&gt;4-&gt;5-&gt;6, val = 6
+Output: 1-&gt;2-&gt;3-&gt;4-&gt;5
+</code></pre><pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        if(head==null)return null;
+        head.next = removeElements(head.next,val);
+        if(head.val==val)return head.next;
+        else return head;   
+    }    
+}
+</code></pre>
+<pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy;
+        while(pre.next!=null){
+            if(pre.next.val==val)pre.next=pre.next.next;
+            else pre = pre.next;
+        }
+        return dummy.next;
+    }    
+}
+</code></pre>
+<h2 id="21-Merge-Two-Sorted-Lists"><a href="#21-Merge-Two-Sorted-Lists" class="headerlink" title="21. Merge Two Sorted Lists"></a>21. Merge Two Sorted Lists</h2><p>Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: 1-&gt;2-&gt;4, 1-&gt;3-&gt;4
+Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4
+</code></pre><pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1==null)return l2;
+        if(l2==null)return l1;
+        ListNode dummy = new ListNode(-1);
+        ListNode pre = dummy;
+        while(l1 != null &amp;&amp; l2 != null){
+            if(l1.val &gt; l2.val){
+                pre.next = l2;
+                l2 = l2.next;
+            }else {
+                pre.next = l1;
+                l1 = l1.next;
+            }
+            pre = pre.next;
+        }
+        while(l1 != null){
+            pre.next = l1;
+            l1 = l1.next;
+            pre = pre.next;
+        }
+        while(l2 != null){
+            pre.next = l2;
+            l2 = l2.next;
+            pre = pre.next;
+        }
+        /**
+        if (l1 != null) {
+            pre.next = l1;
+        }
+        if (l2 != null) {
+            pre.next = l2;
+        }
+        **/
+        return dummy.next;
+    }     
+}
+</code></pre>
+<pre><code class="java">public class Solution {
+    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        if(l1 == null)return l2;
+        if(l2 == null)return l1;
+        if(l1.val &gt; l2.val){
+            l2.next = mergeTwoLists(l1,l2.next);
+            return l2;
+        }
+        else {
+            l1.next = mergeTwoLists(l1.next,l2);
+            return l1;
+        }
+    }
+}
+</code></pre>
+<h2 id="24-Swap-Nodes-in-Pairs"><a href="#24-Swap-Nodes-in-Pairs" class="headerlink" title="24. Swap Nodes in Pairs"></a>24. Swap Nodes in Pairs</h2><p>Given a linked list, swap every two adjacent nodes and return its head.</p>
+<p>You may <strong>not</strong> modify the values in the list’s nodes, only nodes itself may be changed.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Given 1-&gt;2-&gt;3-&gt;4, you should return the list as 2-&gt;1-&gt;4-&gt;3.
+</code></pre><pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode start = head.next;
+        head.next = swapPairs(head.next.next);
+        start.next = head;
+        return start;
+    }
+}
+</code></pre>
+<pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        if(head == null || head.next == null){
+            return head;
+        }
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        ListNode pre = dummy; 
+        while(pre.next != null &amp;&amp; pre.next.next != null){
+            ListNode cur = pre.next;
+            ListNode fast = cur.next;
+            cur.next = fast.next;
+            fast.next = cur;
+            pre.next = fast;
+            pre = pre.next.next;
+        }
+        return dummy.next;
+    }
+}
+</code></pre>
+<h2 id="147-Insertion-Sort-List"><a href="#147-Insertion-Sort-List" class="headerlink" title="147. Insertion Sort List"></a>147. Insertion Sort List</h2><p>Sort a linked list using insertion sort.</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/0/0f/Insertion-sort-example-300px.gif" alt="img"><br>A graphical example of insertion sort. The partial sorted list (black) initially contains only the first element in the list.<br>With each iteration one element (red) is removed from the input data and inserted in-place into the sorted list</p>
+<p><strong>Algorithm of Insertion Sort:</strong></p>
+<ol>
+<li>Insertion sort iterates, consuming one input element each repetition, and growing a sorted output list.</li>
+<li>At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list, and inserts it there.</li>
+<li>It repeats until no input elements remain.</li>
+</ol>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: 4-&gt;2-&gt;1-&gt;3
+Output: 1-&gt;2-&gt;3-&gt;4
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: -1-&gt;5-&gt;3-&gt;4-&gt;0
+Output: -1-&gt;0-&gt;3-&gt;4-&gt;5
+</code></pre><pre><code class="java">/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if( head == null ){
+            return head;
+        }
+        ListNode helper = new ListNode(0); //new starter of the sorted list
+        ListNode cur = head; //the node will be inserted
+        ListNode pre = helper; //insert node between pre and pre.next
+        ListNode next = null; //the next node will be inserted
+        //not the end of input list
+        while( cur != null ){
+            next = cur.next;
+            //find the right place to insert
+            while( pre.next != null &amp;&amp; pre.next.val &lt; cur.val ){
+                pre = pre.next;
+            }
+            //insert between pre and pre.next
+            cur.next = pre.next;
+            pre.next = cur;
+            pre = helper;
+            cur = next;
+        }
+        return helper.next;
+    }
+}
+</code></pre>
+<h1 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h1><h2 id="20-Valid-Parentheses"><a href="#20-Valid-Parentheses" class="headerlink" title="20. Valid Parentheses"></a>20. Valid Parentheses</h2><p>Given a string containing just the characters <code>&#39;(&#39;</code>, <code>&#39;)&#39;</code>, <code>&#39;{&#39;</code>, <code>&#39;}&#39;</code>, <code>&#39;[&#39;</code> and <code>&#39;]&#39;</code>, determine if the input string is valid.</p>
+<p>An input string is valid if:</p>
+<ol>
+<li>Open brackets must be closed by the same type of brackets.</li>
+<li>Open brackets must be closed in the correct order.</li>
+</ol>
+<p>Note that an empty string is also considered valid.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: &quot;()&quot;
+Output: true
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: &quot;()[]{}&quot;
+Output: true
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: &quot;(]&quot;
+Output: false
+</code></pre><p><strong>Example 4:</strong></p>
+<pre><code>Input: &quot;([)]&quot;
+Output: false
+</code></pre><p><strong>Example 5:</strong></p>
+<pre><code>Input: &quot;{[]}&quot;
+Output: true
+</code></pre><pre><code class="java">public class Solution {
+    public boolean isValid(String s) {
+        Stack&lt;Character&gt; stack = new Stack&lt;&gt;();
+        for(int i = 0; i &lt; s.length(); i++) {
+            char a = s.charAt(i);
+            if(a == &#39;(&#39; || a == &#39;[&#39; || a == &#39;{&#39;) stack.push(a);
+            else if(stack.empty()) return false;
+            else if(a == &#39;)&#39; &amp;&amp; stack.pop() != &#39;(&#39;) return false;
+            else if(a == &#39;]&#39; &amp;&amp; stack.pop() != &#39;[&#39;) return false;
+            else if(a == &#39;}&#39; &amp;&amp; stack.pop() != &#39;{&#39;) return false;
+        }
+        return stack.empty();
+    }
+}
+</code></pre>
+<h2 id="150-Evaluate-Reverse-Polish-Notation"><a href="#150-Evaluate-Reverse-Polish-Notation" class="headerlink" title="150. Evaluate Reverse Polish Notation"></a>150. Evaluate Reverse Polish Notation</h2><p>Evaluate the value of an arithmetic expression in <a href="http://en.wikipedia.org/wiki/Reverse_Polish_notation" target="_blank" rel="noopener">Reverse Polish Notation</a>.</p>
+<p>Valid operators are <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>. Each operand may be an integer or another expression.</p>
+<p><strong>Note:</strong></p>
+<ul>
+<li>Division between two integers should truncate toward zero.</li>
+<li>The given RPN expression is always valid. That means the expression would always evaluate to a result and there won’t be any divide by zero operation.</li>
+</ul>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [&quot;2&quot;, &quot;1&quot;, &quot;+&quot;, &quot;3&quot;, &quot;*&quot;]
+Output: 9
+Explanation: ((2 + 1) * 3) = 9
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [&quot;4&quot;, &quot;13&quot;, &quot;5&quot;, &quot;/&quot;, &quot;+&quot;]
+Output: 6
+Explanation: (4 + (13 / 5)) = 6
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: [&quot;10&quot;, &quot;6&quot;, &quot;9&quot;, &quot;3&quot;, &quot;+&quot;, &quot;-11&quot;, &quot;*&quot;, &quot;/&quot;, &quot;*&quot;, &quot;17&quot;, &quot;+&quot;, &quot;5&quot;, &quot;+&quot;]
+Output: 22
+Explanation: 
+  ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+= ((10 * (6 / (12 * -11))) + 17) + 5
+= ((10 * (6 / -132)) + 17) + 5
+= ((10 * 0) + 17) + 5
+= (0 + 17) + 5
+= 17 + 5
+= 22
+</code></pre><pre><code class="java">public class Solution {
+    public int evalRPN(String[] tokens) {
+        int a,b;
+        Stack&lt;Integer&gt; S = new Stack&lt;Integer&gt;();
+        for (String s : tokens) {
+            if(s.equals(&quot;+&quot;)) {
+                S.add(S.pop()+S.pop());
+            }
+            else if(s.equals(&quot;/&quot;)) {
+                b = S.pop();
+                a = S.pop();
+                S.add(a / b);
+            }
+            else if(s.equals(&quot;*&quot;)) {
+                S.add(S.pop() * S.pop());
+            }
+            else if(s.equals(&quot;-&quot;)) {
+                b = S.pop();
+                a = S.pop();
+                S.add(a - b);
+            }
+            else {
+                S.add(Integer.parseInt(s));
+            }
+        }    
+        return S.pop();
+    }
+}
+</code></pre>
+<h2 id="71-Simplify-Path"><a href="#71-Simplify-Path" class="headerlink" title="71. Simplify Path"></a>71. Simplify Path</h2><p>Given an <strong>absolute path</strong> for a file (Unix-style), simplify it. Or in other words, convert it to the <strong>canonical path</strong>.</p>
+<p>In a UNIX-style file system, a period <code>.</code> refers to the current directory. Furthermore, a double period <code>..</code> moves the directory up a level. For more information, see: <a href="https://www.linuxnix.com/abslute-path-vs-relative-path-in-linuxunix/" target="_blank" rel="noopener">Absolute path vs relative path in Linux/Unix</a></p>
+<p>Note that the returned canonical path must always begin with a slash <code>/</code>, and there must be only a single slash <code>/</code> between two directory names. The last directory name (if it exists) <strong>must not</strong> end with a trailing <code>/</code>. Also, the canonical path must be the <strong>shortest</strong> string representing the absolute path.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: &quot;/home/&quot;
+Output: &quot;/home&quot;
+Explanation: Note that there is no trailing slash after the last directory name.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: &quot;/../&quot;
+Output: &quot;/&quot;
+Explanation: Going one level up from the root directory is a no-op, as the root level is the highest level you can go.
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: &quot;/home//foo/&quot;
+Output: &quot;/home/foo&quot;
+Explanation: In the canonical path, multiple consecutive slashes are replaced by a single one.
+</code></pre><p><strong>Example 4:</strong></p>
+<pre><code>Input: &quot;/a/./b/../../c/&quot;
+Output: &quot;/c&quot;
+</code></pre><p><strong>Example 5:</strong></p>
+<pre><code>Input: &quot;/a/../../b/../c//.//&quot;
+Output: &quot;/c&quot;
+</code></pre><p><strong>Example 6:</strong></p>
+<pre><code>Input: &quot;/a//b////c/d//././/..&quot;
+Output: &quot;/a/b/c&quot;
+</code></pre><pre><code class="java">public String simplifyPath(String path) {
+    Stack&lt;String&gt; stack = new Stack&lt;&gt;();
+    String[] p = path.split(&quot;/&quot;);
+    for (int i = 0; i &lt; p.length; i++) {
+        if (!stack.empty() &amp;&amp; p[i].equals(&quot;..&quot;))
+            stack.pop();
+        else if (!p[i].equals(&quot;.&quot;) &amp;&amp; !p[i].equals(&quot;&quot;) &amp;&amp; !p[i].equals(&quot;..&quot;))
+            stack.push(p[i]);
+    }
+    List&lt;String&gt; list = new ArrayList(stack);
+    return &quot;/&quot;+String.join(&quot;/&quot;, list);
+}
+</code></pre>
+<h1 id="Queue"><a href="#Queue" class="headerlink" title="Queue"></a>Queue</h1><h2 id="102-Binary-Tree-Level-Order-Traversal"><a href="#102-Binary-Tree-Level-Order-Traversal" class="headerlink" title="102. Binary Tree Level Order Traversal"></a>102. Binary Tree Level Order Traversal</h2><p>Given a binary tree, return the <em>level order</em> traversal of its nodes’ values. (ie, from left to right, level by level).</p>
+<p>For example:<br>Given binary tree <code>[3,9,20,null,null,15,7]</code>,</p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre><p>return its level order traversal as:</p>
+<pre><code>[
+  [3],
+  [9,20],
+  [15,7]
+]
+</code></pre><pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) {
+        Queue&lt;TreeNode&gt; queue = new LinkedList&lt;TreeNode&gt;();
+        List&lt;List&lt;Integer&gt;&gt; wrapList = new LinkedList&lt;List&lt;Integer&gt;&gt;();
+
+        if(root == null) return wrapList;
+
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int levelNum = queue.size();
+            List&lt;Integer&gt; subList = new LinkedList&lt;Integer&gt;();
+            for(int i=0; i&lt;levelNum; i++) {
+                if(queue.peek().left != null) queue.offer(queue.peek().left);
+                if(queue.peek().right != null) queue.offer(queue.peek().right);
+                subList.add(queue.poll().val);
+            }
+            wrapList.add(subList);
+        }
+        return wrapList;
+    }
+}
+</code></pre>
+<h2 id="103-Binary-Tree-Zigzag-Level-Order-Traversal"><a href="#103-Binary-Tree-Zigzag-Level-Order-Traversal" class="headerlink" title="103. Binary Tree Zigzag Level Order Traversal"></a>103. Binary Tree Zigzag Level Order Traversal</h2><p>Given a binary tree, return the <em>zigzag level order</em> traversal of its nodes’ values. (ie, from left to right, then right to left for the next level and alternate between).</p>
+<p>For example:<br>Given binary tree <code>[3,9,20,null,null,15,7]</code>,</p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre><p>return its zigzag level order traversal as:</p>
+<pre><code>[
+  [3],
+  [20,9],
+  [15,7]
+]
+</code></pre><pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; zigzagLevelOrder(TreeNode root) {
+    List&lt;List&lt;Integer&gt;&gt; result = new ArrayList&lt;List&lt;Integer&gt;&gt;();
+    if(root == null){ return result;}
+    Queue&lt;TreeNode&gt; queue = new LinkedList&lt;TreeNode&gt;();
+    queue.add(root);
+    boolean reverseOrder = false;
+    while(!queue.isEmpty()){
+        int size = queue.size();
+        List&lt;Integer&gt; levelResult = new ArrayList&lt;Integer&gt;();
+        for(int i = 0; i &lt; size; i++){
+            TreeNode temp = queue.remove();
+            levelResult.add(temp.val);
+            if(temp.left != null){ queue.add(temp.left);}
+            if(temp.right != null){ queue.add(temp.right);}
+        }
+        if(reverseOrder){
+            Collections.reverse(levelResult);
+        }
+        result.add(levelResult);
+        reverseOrder = !reverseOrder;
+    }
+    return result;
+}
+}
+</code></pre>
+<h2 id="199-Binary-Tree-Right-Side-View"><a href="#199-Binary-Tree-Right-Side-View" class="headerlink" title="199. Binary Tree Right Side View"></a>199. Binary Tree Right Side View</h2><p>Given a binary tree, imagine yourself standing on the <em>right</em> side of it, return the values of the nodes you can see ordered from top to bottom.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [1,2,3,null,5,null,4]
+Output: [1, 3, 4]
+Explanation:
+
+   1            &lt;---
+ /   \
+2     3         &lt;---
+ \     \
+  5     4       &lt;---
+</code></pre><pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List&lt;Integer&gt; rightSideView(TreeNode root) {
+        List&lt;Integer&gt; list = new LinkedList&lt;Integer&gt;();
+        Queue&lt;TreeNode&gt; queue = new LinkedList&lt;TreeNode&gt;();
+        if(root == null)return list;
+        queue.offer(root);
+        while(!queue.isEmpty()){
+            int num = queue.size();
+            for(int i = 0; i&lt;num; i++){
+                if(queue.peek().left!=null)queue.offer(queue.peek().left);
+                if(queue.peek().right!=null)queue.offer(queue.peek().right);
+                if(i == num-1)list.add(queue.poll().val);
+                else queue.poll();
+            }
+        }
+        return list;
+    }
+}
+</code></pre>
+<h2 id="347-Top-K-Frequent-Elements"><a href="#347-Top-K-Frequent-Elements" class="headerlink" title="347. Top K Frequent Elements"></a>347. Top K Frequent Elements</h2><p>Given a non-empty array of integers, return the <strong>k</strong> most frequent elements.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: nums = [1], k = 1
+Output: [1]
+</code></pre><p><strong>Note:</strong></p>
+<ul>
+<li>You may assume <em>k</em> is always valid, 1 ≤ <em>k</em> ≤ number of unique elements.</li>
+<li>Your algorithm’s time complexity <strong>must be</strong> better than O(<em>n</em> log <em>n</em>), where <em>n</em> is the array’s size.</li>
+</ul>
+<pre><code class="java">class Solution {
+    public List&lt;Integer&gt; topKFrequent(int[] nums, int k) {
+
+        HashMap&lt;Integer, Integer&gt; map = new HashMap&lt;Integer, Integer&gt;();
+
+        // count frequency
+        for(int n : nums){
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+
+        // create priority queue, ordering map entries with respect to the frequency
+        PriorityQueue&lt;Map.Entry&lt;Integer, Integer&gt;&gt; queue = 
+        new PriorityQueue&lt;Map.Entry&lt;Integer, Integer&gt;&gt;(new Comparator&lt;Map.Entry&lt;Integer, Integer&gt;&gt;()
+        {
+           @Override
+           public int compare(Map.Entry&lt;Integer, Integer&gt; entry1, Map.Entry&lt;Integer, Integer&gt; entry2)
+             {
+                return entry2.getValue() - entry1.getValue();
+             }
+        });
+        /*PriorityQueue&lt;Map.Entry&lt;Integer, Integer&gt;&gt; maxHeap = 
+        new PriorityQueue&lt;&gt;((a,b)-&gt;(b.getValue()-a.getValue()));
+        */
+
+
+        // insert in the queue
+        for(Map.Entry&lt;Integer, Integer&gt; entry : map.entrySet()){
+            queue.offer(entry);
+        }
+
+        // poll the top k
+        List&lt;Integer&gt; list = new LinkedList&lt;Integer&gt;();
+        for(int i = 0; i &lt; k; i ++){
+            // Map.Entry&lt;Integer, Integer&gt; entry = queue.poll();
+            list.add(queue.poll().getKey());
+        }
+        return list;
+    } 
+}
+</code></pre>
+<h1 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h1><h2 id="104-Maximum-Depth-of-Binary-Tree"><a href="#104-Maximum-Depth-of-Binary-Tree" class="headerlink" title="104. Maximum Depth of Binary Tree"></a>104. Maximum Depth of Binary Tree</h2><p>Given a binary tree, find its maximum depth.</p>
+<p>The maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.</p>
+<p><strong>Note:</strong> A leaf is a node with no children.</p>
+<p><strong>Example:</strong></p>
+<p>Given binary tree <code>[3,9,20,null,null,15,7]</code>,</p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre><p>return its depth = 3.</p>
+<pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null)return 0;
+
+        return Math.max(maxDepth(root.left),maxDepth(root.right)) + 1;
+    }
+}
+</code></pre>
+<h2 id="111-Minimum-Depth-of-Binary-Tree"><a href="#111-Minimum-Depth-of-Binary-Tree" class="headerlink" title="111. Minimum Depth of Binary Tree"></a>111. Minimum Depth of Binary Tree</h2><p>Given a binary tree, find its minimum depth.</p>
+<p>The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.</p>
+<p><strong>Note:</strong> A leaf is a node with no children.</p>
+<p><strong>Example:</strong></p>
+<p>Given binary tree <code>[3,9,20,null,null,15,7]</code>,</p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre><p>return its minimum depth = 2.</p>
+<pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null)return 0;
+        if(root.left == null &amp;&amp; root.right == null)return 1;
+        else if(root.left == null) return minDepth(root.right)+1;
+        else if(root.right == null) return minDepth(root.left)+1;
+        else
+        return Math.min(minDepth(root.left),minDepth(root.right)) + 1;
+    }
+}
+</code></pre>
+<h2 id="226-Invert-Binary-Tree"><a href="#226-Invert-Binary-Tree" class="headerlink" title="226. Invert Binary Tree"></a>226. Invert Binary Tree</h2><p>Invert a binary tree.</p>
+<p><strong>Example:</strong></p>
+<p>Input:</p>
+<pre><code>     4
+   /   \
+  2     7
+ / \   / \
+1   3 6   9
+</code></pre><p>Output:</p>
+<pre><code>     4
+   /   \
+  7     2
+ / \   / \
+9   6 3   1
+</code></pre><p><strong>Trivia:</strong><br>This problem was inspired by <a href="https://twitter.com/mxcl/status/608682016205344768" target="_blank" rel="noopener">this original tweet</a> by <a href="https://twitter.com/mxcl" target="_blank" rel="noopener">Max Howell</a>:</p>
+<blockquote>
+<p>Google: 90% of our engineers use the software you wrote (Homebrew), but you can’t invert a binary tree on a whiteboard so f*** off.</p>
+</blockquote>
+<p>很逗哈哈</p>
+<pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+
+        if(root == null)return root;
+        TreeNode tmp = root.left;
+        root.left = invertTree(root.right);
+        root.right = invertTree(tmp);
+        return root;
+    }
+}
+</code></pre>
+<h2 id="Symmetric-Tree"><a href="#Symmetric-Tree" class="headerlink" title="Symmetric Tree"></a>Symmetric Tree</h2><p>Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).</p>
+<p>For example, this binary tree <code>[1,2,2,3,4,4,3]</code> is symmetric:</p>
+<pre><code>    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+</code></pre><p>But the following <code>[1,2,2,null,3,null,3]</code> is not:</p>
+<pre><code>    1
+   / \
+  2   2
+   \   \
+   3    3
+</code></pre><p><strong>Note:</strong><br>Bonus points if you could solve it both recursively and iteratively.</p>
+<pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean isSymmetric(TreeNode root) {
+    return root==null || isSymmetricHelp(root.left, root.right);
+    }
+
+    private boolean isSymmetricHelp(TreeNode left, TreeNode right){
+        if(left==null || right==null)
+            return left==right;
+        if(left.val!=right.val)
+            return false;
+        return 
+            isSymmetricHelp(left.left, right.right) &amp;&amp; 
+            isSymmetricHelp(left.right, right.left);
+    }
+}
+</code></pre>
+<h2 id="222-Count-Complete-Tree-Nodes"><a href="#222-Count-Complete-Tree-Nodes" class="headerlink" title="222. Count Complete Tree Nodes"></a>222. Count Complete Tree Nodes</h2><p>Given a <strong>complete</strong> binary tree, count the number of nodes.</p>
+<p><strong>Note:</strong></p>
+<p><strong>Definition of a complete binary tree from Wikipedia:</strong><br>In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: 
+    1
+   / \
+  2   3
+ / \  /
+4  5 6
+
+Output: 6
+</code></pre><pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int countNodes(TreeNode root) {
+        if(root == null)return 0;
+        return countNodes(root.left) + countNodes(root.right) + 1;
+    }
+}
+</code></pre>
+<h2 id="110-Balanced-Binary-Tree"><a href="#110-Balanced-Binary-Tree" class="headerlink" title="110. Balanced Binary Tree"></a>110. Balanced Binary Tree</h2><p>Given a binary tree, determine if it is height-balanced.</p>
+<p>For this problem, a height-balanced binary tree is defined as:</p>
+<blockquote>
+<p>a binary tree in which the depth of the two subtrees of <em>every</em> node never differ by more than 1.</p>
+</blockquote>
+<p><strong>Example 1:</strong></p>
+<p>Given the following tree <code>[3,9,20,null,null,15,7]</code>:</p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre><p>Return true.</p>
+<p><strong>Example 2:</strong></p>
+<p>Given the following tree <code>[1,2,2,3,3,null,null,4,4]</code>:</p>
+<pre><code>       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+</code></pre><p>Return false.</p>
+<pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private boolean result = true;
+
+    public boolean isBalanced(TreeNode root) {
+        maxDepth(root);
+        return result;
+    }
+
+    public int maxDepth(TreeNode root) {
+        if (root == null)
+            return 0;
+        int l = maxDepth(root.left);
+        int r = maxDepth(root.right);
+        if (Math.abs(l - r) &gt; 1)
+            result = false;
+        return 1 + Math.max(l, r);
+    }
+}
+</code></pre>
+<h2 id="112-Path-Sum"><a href="#112-Path-Sum" class="headerlink" title="112. Path Sum"></a>112. Path Sum</h2><p>Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.</p>
+<p><strong>Note:</strong> A leaf is a node with no children.</p>
+<p><strong>Example:</strong></p>
+<p>Given the below binary tree and <code>sum = 22</code>,</p>
+<pre><code>      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \      \
+7    2      1
+</code></pre><p>return true, as there exist a root-to-leaf path <code>5-&gt;4-&gt;11-&gt;2</code> which sum is 22.</p>
+<pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null)return false;
+        sum = sum - root.val;
+        if(root.left == null &amp;&amp; root.right == null)
+            return sum == 0;
+        return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
+    }
+}
+</code></pre>
+<h2 id="404-Sum-of-Left-Leaves"><a href="#404-Sum-of-Left-Leaves" class="headerlink" title="404. Sum of Left Leaves"></a>404. Sum of Left Leaves</h2><p>Find the sum of all left leaves in a given binary tree.</p>
+<p><strong>Example:</strong></p>
+<pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+
+There are two left leaves in the binary tree, with values 9 and 15 respectively. Return 24.
+</code></pre><pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int sumOfLeftLeaves(TreeNode root) {
+        if(root == null)return 0;
+        if(root.left == null)return sumOfLeftLeaves(root.right);
+        TreeNode next = root.left;
+        if(next.left == null &amp;&amp; next.right == null)
+            return next.val + sumOfLeftLeaves(root.right);
+        return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+    }
+}
+</code></pre>
+<h2 id="257-Binary-Tree-Paths"><a href="#257-Binary-Tree-Paths" class="headerlink" title="257. Binary Tree Paths"></a>257. Binary Tree Paths</h2><p>Given a binary tree, return all root-to-leaf paths.</p>
+<p><strong>Note:</strong> A leaf is a node with no children.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input:
+
+   1
+ /   \
+2     3
+ \
+  5
+
+Output: [&quot;1-&gt;2-&gt;5&quot;, &quot;1-&gt;3&quot;]
+
+Explanation: All root-to-leaf paths are: 1-&gt;2-&gt;5, 1-&gt;3
+</code></pre><pre><code class="java">/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List&lt;String&gt; binaryTreePaths(TreeNode root) {
+        List&lt;String&gt; list = new ArrayList&lt;String&gt;();
+        if(root == null)return list;
+        treePath(root, &quot;&quot;, list);
+        return list;
+    }
+
+    public void treePath(TreeNode root, String path, List&lt;String&gt; list){
+        if(root.left == null &amp;&amp; root.right == null)
+            list.add(path + root.val);
+        else if(root.left == null)
+            treePath(root.right, path + root.val + &quot;-&gt;&quot;, list);
+        else if(root.right == null)
+            treePath(root.left, path + root.val + &quot;-&gt;&quot;, list);
+        else {
+            treePath(root.right, path + root.val + &quot;-&gt;&quot;, list);
+            treePath(root.left, path + root.val + &quot;-&gt;&quot;, list);
+        }
+    }
+}
+</code></pre>
+<h1 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h1><h2 id="131-Palindrome-Partitioning"><a href="#131-Palindrome-Partitioning" class="headerlink" title="131. Palindrome Partitioning"></a>131. Palindrome Partitioning</h2><p>Given a string <em>s</em>, partition <em>s</em> such that every substring of the partition is a palindrome.</p>
+<p>Return all possible palindrome partitioning of <em>s</em>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: &quot;aab&quot;
+Output:
+[
+  [&quot;aa&quot;,&quot;b&quot;],
+  [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]
+]
+</code></pre><pre><code class="java">class Solution {
+    public List&lt;List&lt;String&gt;&gt; partition(String s) {
+        List&lt;List&lt;String&gt;&gt; res = new ArrayList&lt;&gt;();
+        boolean[][] dp = new boolean[s.length()][s.length()];
+        for(int i = 0; i &lt; s.length(); i++) {
+            for(int j = 0; j &lt;= i; j++) {
+                if(s.charAt(i) == s.charAt(j) &amp;&amp; (i - j &lt;= 2 || dp[j+1][i-1])) {
+                    dp[j][i] = true;
+                }
+            }
+        }
+        helper(res, new ArrayList&lt;&gt;(), dp, s, 0);
+        return res;
+    }
+
+    private void helper(List&lt;List&lt;String&gt;&gt; res, List&lt;String&gt; path, boolean[][] dp, String s, int pos) {
+        if(pos == s.length()) {
+            res.add(new ArrayList&lt;&gt;(path));
+            return;
+        }
+
+        for(int i = pos; i &lt; s.length(); i++) {
+            if(dp[pos][i]) {
+                path.add(s.substring(pos,i+1));
+                helper(res, path, dp, s, i+1);
+                path.remove(path.size()-1);
+            }
+        }
+    }
+}
+</code></pre>
+<pre><code class="java">public class Solution {
+    public List&lt;List&lt;String&gt;&gt; partition(String s) {
+        List&lt;List&lt;String&gt;&gt; res=new ArrayList&lt;List&lt;String&gt;&gt;();
+        if(s.length()==0)return res;
+        recur(res,new ArrayList&lt;String&gt;(),s);
+        return res;
+    }
+
+    public void recur(List&lt;List&lt;String&gt;&gt; res,List&lt;String&gt; temp, String s){
+        if(s.length()==0){
+            res.add(new ArrayList&lt;String&gt;(temp));
+            return;
+        }
+        for(int i=0;i&lt;s.length();i++){
+            if(isPalin(s.substring(0,i+1))){
+                temp.add(s.substring(0,i+1));
+                recur(res,temp,s.substring(i+1));
+                temp.remove(temp.size()-1);
+            }
+        }
+    }
+
+    public boolean isPalin(String s){
+        for(int i=0;i&lt;s.length()/2;i++){
+            if(s.charAt(i)!=s.charAt(s.length()-1-i))return false;
+        }
+        return true;
+    }
+}
+</code></pre>
+<h2 id="46-Permutations"><a href="#46-Permutations" class="headerlink" title="46. Permutations"></a>46. Permutations</h2><p>Given a collection of <strong>distinct</strong> integers, return all possible permutations.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [1,2,3]
+Output:
+[
+  [1,2,3],
+  [1,3,2],
+  [2,1,3],
+  [2,3,1],
+  [3,1,2],
+  [3,2,1]
+]
+</code></pre><pre><code class="java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; permute(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; list = new ArrayList&lt;List&lt;Integer&gt;&gt;();
+        List&lt;Integer&gt; arr = new ArrayList&lt;Integer&gt;();
+        rec(list, nums, arr);
+        return list;
+    }
+
+    public void rec(List&lt;List&lt;Integer&gt;&gt; list, int[] nums, List&lt;Integer&gt; arr){
+        if(arr.size() == nums.length){
+            list.add(new ArrayList&lt;&gt;(arr));
+            // list.add(arr);
+            return;
+        }  
+        for(int i = 0; i&lt;nums.length; i++){
+            if(arr.contains(nums[i]))continue;
+            arr.add(nums[i]);
+            rec(list, nums, arr);
+            arr.remove(arr.size()-1);
+        }
+    }
+}
+</code></pre>
+<h2 id="77-Combinations"><a href="#77-Combinations" class="headerlink" title="77. Combinations"></a>77. Combinations</h2><p>Given two integers <em>n</em> and <em>k</em>, return all possible combinations of <em>k</em> numbers out of 1 … <em>n</em>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: n = 4, k = 2
+Output:
+[
+  [2,4],
+  [3,4],
+  [2,3],
+  [1,2],
+  [1,3],
+  [1,4],
+]
+</code></pre><pre><code class="java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; combine(int n, int k) {
+        List&lt;List&lt;Integer&gt;&gt; lists = new ArrayList&lt;List&lt;Integer&gt;&gt;();
+        List&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();
+        rec(lists, list, 1, n, k);
+        return lists;
+    }
+    public static void rec(List&lt;List&lt;Integer&gt;&gt; lists, List&lt;Integer&gt; list, int start, int n, int k){
+        if(k == 0){
+            lists.add(new ArrayList&lt;Integer&gt;(list));
+            return;
+        }
+        for(int i = start; i &lt;= n; i++){
+            list.add(i);
+            rec(lists, list, i+1, n, k-1);
+            list.remove(list.size()-1);
+        }
+    } 
+}
+</code></pre>
+<h2 id="78-Subsets"><a href="#78-Subsets" class="headerlink" title="78. Subsets"></a>78. Subsets</h2><p>Given a set of <strong>distinct</strong> integers, <em>nums</em>, return all possible subsets (the power set).</p>
+<p><strong>Note:</strong> The solution set must not contain duplicate subsets.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: nums = [1,2,3]
+Output:
+[
+  [3],
+  [1],
+  [2],
+  [1,2,3],
+  [1,3],
+  [2,3],
+  [1,2],
+  []
+]
+</code></pre><pre><code class="java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; subsets(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; lists = new ArrayList&lt;List&lt;Integer&gt;&gt;();
+        List&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();
+        rec(lists, list, nums, 0);
+        return lists;
+    }
+    public static void rec(List&lt;List&lt;Integer&gt;&gt; lists, List&lt;Integer&gt; list, int[] nums, int start){
+        lists.add(new ArrayList&lt;Integer&gt;(list));
+        for(int i = start; i&lt;nums.length; i++){
+            list.add(nums[i]);
+            rec(lists, list, nums, i+1);
+            list.remove(list.size()-1);
+        }
+    }
+}
+</code></pre>
+<h2 id="90-Subsets-II"><a href="#90-Subsets-II" class="headerlink" title="90. Subsets II"></a>90. Subsets II</h2><p>Given a collection of integers that might contain duplicates, <strong>nums</strong>, return all possible subsets (the power set).</p>
+<p><strong>Note:</strong> The solution set must not contain duplicate subsets.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [1,2,2]
+Output:
+[
+  [2],
+  [1],
+  [1,2,2],
+  [2,2],
+  [1,2],
+  []
+]
+</code></pre><pre><code class="java">class Solution {
+    public List&lt;List&lt;Integer&gt;&gt; subsetsWithDup(int[] nums) {
+        List&lt;List&lt;Integer&gt;&gt; lists = new ArrayList&lt;List&lt;Integer&gt;&gt;();
+        List&lt;Integer&gt; list = new ArrayList&lt;Integer&gt;();
+        Arrays.sort(nums);
+        rec(lists, list, nums, 0);
+        return lists;
+    }
+    public static void rec(List&lt;List&lt;Integer&gt;&gt; lists, List&lt;Integer&gt; list, int[] nums, int start){
+        if(!lists.contains(new ArrayList&lt;Integer&gt;(list)))
+            lists.add(new ArrayList&lt;Integer&gt;(list));
+        for(int i = start; i&lt;nums.length; i++){
+            list.add(nums[i]);
+            rec(lists, list, nums, i+1);
+            list.remove(list.size()-1);
+        }
+    }
+}
+</code></pre>
+<h2 id="79-Word-Search"><a href="#79-Word-Search" class="headerlink" title="79. Word Search"></a>79. Word Search</h2><p>Given a 2D board and a word, find if the word exists in the grid.</p>
+<p>The word can be constructed from letters of sequentially adjacent cell, where “adjacent” cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.</p>
+<p><strong>Example:</strong></p>
+<pre><code>board =
+[
+  [&#39;A&#39;,&#39;B&#39;,&#39;C&#39;,&#39;E&#39;],
+  [&#39;S&#39;,&#39;F&#39;,&#39;C&#39;,&#39;S&#39;],
+  [&#39;A&#39;,&#39;D&#39;,&#39;E&#39;,&#39;E&#39;]
+]
+
+Given word = &quot;ABCCED&quot;, return true.
+Given word = &quot;SEE&quot;, return true.
+Given word = &quot;ABCB&quot;, return false.
+</code></pre><pre><code class="java">class Solution {
+    public boolean exist(char[][] board, String word) {
+        for(int i = 0; i&lt;board.length; i++){
+            for(int j = 0; j&lt;board[0].length; j++){
+                if(search(board, word, i, j, 0))
+                    return true;
+            }
+        }
+        return false;
+    }
+    public static boolean search(char[][] board, String word, int x, int y, int pos){
+        int high = board.length;
+        int width = board[0].length;
+
+        if(x &gt;= high || x &lt; 0 || y &gt;= width || y &lt; 0)
+            return false;
+        if(pos == word.length()-1)
+           return board[x][y] == word.charAt(pos);
+        if(!(board[x][y] == word.charAt(pos)))
+            return false;
+
+        char save = board[x][y];
+        board[x][y] = &#39;1&#39;;
+        boolean res =    
+            search(board, word, x - 1, y, pos + 1) || 
+            search(board, word, x, y - 1, pos + 1) ||
+            search(board, word, x + 1, y, pos + 1) ||
+            search(board, word, x, y + 1, pos + 1);
+        board[x][y] = save;
+        return res;
+    }
+}
+</code></pre>
+<h1 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h1><h2 id="70-Climbing-Stairs"><a href="#70-Climbing-Stairs" class="headerlink" title="70. Climbing Stairs"></a>70. Climbing Stairs</h2><p>You are climbing a stair case. It takes <em>n</em> steps to reach to the top.</p>
+<p>Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?</p>
+<p><strong>Note:</strong> Given <em>n</em> will be a positive integer.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: 2
+Output: 2
+Explanation: There are two ways to climb to the top.
+1. 1 step + 1 step
+2. 2 steps
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: 3
+Output: 3
+Explanation: There are three ways to climb to the top.
+1. 1 step + 1 step + 1 step
+2. 1 step + 2 steps
+3. 2 steps + 1 step
+</code></pre><pre><code class="java">class Solution {
+    public int climbStairs(int n) {
+        if(n==1)return 1;
+        if(n==2)return 2;
+        return climbStairs(n-1)+climbStairs(n-2);
+    }
+}
+</code></pre>
+<p>递归实现</p>
+<pre><code class="java">class Solution {
+    public int climbStairs(int n) {
+        if(n==1)return 1;
+        if(n==2)return 2;
+        int[] tmp = new int[n];
+        tmp[0]=1;
+        tmp[1]=2;
+        for(int i = 2; i&lt;n; i++){
+            tmp[i]=tmp[i-1]+tmp[i-2];
+        }
+        return tmp[n-1];
+    }
+}
+</code></pre>
+<p>动态规划实现</p>
+<h2 id="背包问题"><a href="#背包问题" class="headerlink" title="背包问题"></a>背包问题</h2><p><img src="/2019/07/03/algo/dp0.jpg" alt="dp0"></p>
+<p>贪心算法无法得到最优解</p>
+<p><img src="/2019/07/03/algo/dp1.jpg" alt="dp1"></p>
+<p>递归解决</p>
+<pre><code class="java">public static int maxbag(int[] w, int[] v, int index, int c){
+        if(index &lt; 0 || c &lt;=0)return 0;
+        int res = maxbag(w,v,index-1,c);
+        if(c&gt;=w[index])
+            res = Math.max(res, v[index]+maxbag(w,v,index-1,c-w[index]));
+        return res;
+    }
+
+    public static void main(String[] args) {
+        int[] w = new int[]{1,2,5};
+        int[] v = new int[]{4,5,5};
+        int index = w.length;
+        int max = maxbag(w,v,index-1,1);
+        System.out.println(max);
+    }
+</code></pre>
+<p>记忆化</p>
+<pre><code class="java">    private static int[][] memo;
+
+    public static int maxbag(int[] w, int[] v, int index, int c){
+
+        if(index &lt; 0 || c &lt;=0)return 0;
+        if(memo[index][c]!=-1)return memo[index][c];
+        int res = maxbag(w,v,index-1,c);
+        if(c&gt;=w[index])
+            res = Math.max(res, v[index]+maxbag(w,v,index-1,c-w[index]));
+        memo[index][c] = res;
+        return res;
+    }
+
+    public static void main(String[] args) {
+        int[] w = new int[]{1,2,5};
+        int[] v = new int[]{4,5,5};
+        int index = w.length;
+        int c = 8;
+        memo= new int[index][c+1];
+        for (int i = 0; i&lt;index; i++)
+            for(int j = 0; j&lt;c+1; j++)
+                memo[i][j] = -1;
+        int max = maxbag(w,v,index-1,c);
+        System.out.println(max);
+    }
+</code></pre>
+<p>动态规划</p>
+<pre><code class="java">public static void main(String[] args) {
+        int[] w = new int[]{1,2,5};
+        int[] v = new int[]{4,5,5};
+        int index = w.length;
+        int c = 8;
+        int[][] memo= new int[index][c+1];
+
+        for (int j = 0; j&lt;=c; j++)
+            memo[0][j] = j&gt;=w[0] ? v[0] : 0;
+        for (int i = 1; i&lt;index; i++)
+            for (int j = 0; j&lt;=c; j++){
+                memo[i][j] = memo[i-1][j];
+                if(j&gt;=w[i]) memo[i][j] = Math.max(memo[i][j],v[i]+memo[i-1][j-w[i]]);
+            }
+        System.out.println(memo[index-1][c]);
+}
+</code></pre>
+<h2 id="416-Partition-Equal-Subset-Sum"><a href="#416-Partition-Equal-Subset-Sum" class="headerlink" title="416. Partition Equal Subset Sum"></a>416. Partition Equal Subset Sum</h2><p>Given a <strong>non-empty</strong> array containing <strong>only positive integers</strong>, find if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal.</p>
+<p><strong>Note:</strong></p>
+<ol>
+<li>Each of the array element will not exceed 100.</li>
+<li>The array size will not exceed 200.</li>
+</ol>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [1, 5, 11, 5]
+
+Output: true
+
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [1, 2, 3, 5]
+
+Output: false
+
+Explanation: The array cannot be partitioned into equal sum subsets.
+</code></pre><p>动态规划</p>
+<pre><code class="java">class Solution {
+    public boolean canPartition(int[] nums) {
+
+        int len = nums.length;
+        int sum = 0;
+        for(int i = 0; i&lt;len; i++)sum += nums[i];
+        if(sum%2!=0)return false;
+        sum /= 2;
+
+        boolean[][] memo = new boolean[len][sum+1];
+        for(int j = 0; j&lt;=sum; j++) memo[0][j] = (nums[0]==j ? true : false);
+        for(int i = 1; i&lt;len; i++)
+            for(int j = 0; j&lt;=sum; j++){
+                memo[i][j] = memo[i-1][j];
+                if(j&gt;=nums[i])
+                memo[i][j] = memo[i-1][j] || memo[i-1][j-nums[i]]; 
+            }
+        return memo[len-1][sum];       
+    }
+}
+</code></pre>
+<p>递归</p>
+<pre><code class="java">class Solution {
+    public boolean canPartition(int[] nums) {
+
+        int len = nums.length;
+        int sum = 0;
+        for(int i = 0; i&lt;len; i++)sum += nums[i];
+        if(sum%2!=0)return false;
+        sum /= 2;
+        return asPart(nums, len-1, sum);
+    }
+
+    public boolean asPart(int[] nums,int index, int sum){
+        if(sum==0)return true;
+        if(sum&lt;0)return false;
+        if(index &lt;= 0)return false;
+        return 
+            asPart(nums, index-1, sum) || asPart(nums, index-1, sum-nums[index]); 
+    }    
+}
+</code></pre>
+<p>记忆化递归</p>
+<pre><code class="java">class Solution {
+    private static int[][] memo;
+    public boolean canPartition(int[] nums) {
+
+        int len = nums.length;
+        int sum = 0;
+        for(int i = 0; i&lt;len; i++)sum += nums[i];
+        if(sum%2!=0)return false;
+        sum /= 2;
+        memo = new int[len][sum+1];
+        for(int i = 0; i&lt;len; i++)
+            for(int j = 0; j&lt;=sum; j++)
+                memo[i][j]=-1;
+        return asPart(nums, len-1, sum);
+    }
+
+    public boolean asPart(int[] nums,int index, int sum){
+        if(sum==0)return true;
+        if(sum&lt;0)return false;
+        if(index &lt;= 0)return false;
+        if(memo[index][sum]!=-1)return memo[index][sum]==1;
+        memo[index][sum] = 
+            asPart(nums,index-1,sum)||asPart(nums,index-1,sum-nums[index])?1:0;
+        return memo[index][sum]==1; 
+    }    
+}
+</code></pre>
+<h2 id="322-Coin-Change"><a href="#322-Coin-Change" class="headerlink" title="322. Coin Change"></a>322. Coin Change</h2><p>You are given coins of different denominations and a total amount of money <em>amount</em>. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return <code>-1</code>.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: coins = [1, 2, 5], amount = 11
+Output: 3 
+Explanation: 11 = 5 + 5 + 1
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: coins = [2], amount = 3
+Output: -1
+</code></pre><p><strong>Note</strong>:<br>You may assume that you have an infinite number of each kind of coin.</p>
+<pre><code class="java">class Solution {
+    public int coinChange(int[] coins, int amount) {
+        int min = Integer.MAX_VALUE;
+        int total = 1;
+        int[] dp = new int[amount + 1];
+        dp[0] = 0;
+        while (total &lt;= amount) {
+            min = Integer.MAX_VALUE;
+            for (int i = 0; i &lt; coins.length; i++) {
+                int diff = total - coins[i];
+                if (diff &gt; 0 &amp;&amp; dp[diff] &gt; 0 || diff == 0) {
+                    min = Math.min(min, dp[diff] + 1);
+                }
+            }
+            dp[total++] = (min == Integer.MAX_VALUE ? -1 : min);
+        }
+        return dp[amount];
+    }
+}
+</code></pre>
+<p>总量和元素的内外循环，要看清界定条件，比如所有同一总量结果比较，或者所有同一元素结果比较。</p>
+<h2 id="300-Longest-Increasing-Subsequence"><a href="#300-Longest-Increasing-Subsequence" class="headerlink" title="300. Longest Increasing Subsequence"></a>300. Longest Increasing Subsequence</h2><p>Given an unsorted array of integers, find the length of longest increasing subsequence.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Input: [10,9,2,5,3,7,101,18]
+Output: 4 
+Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4. 
+</code></pre><p><strong>Note:</strong></p>
+<ul>
+<li>There may be more than one LIS combination, it is only necessary for you to return the length.</li>
+<li>Your algorithm should run in O(<em>n2</em>) complexity.</li>
+</ul>
+<p><strong>Follow up:</strong> Could you improve it to O(<em>n</em> log <em>n</em>) time complexity?</p>
+<pre><code class="java">class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int len = nums.length;
+        if(len&lt;1)return 0;
+        int[] dp = new int[len];
+        for(int i = 0; i&lt;len; i++)dp[i]=1;
+        for(int i = 1; i&lt;len; i++){
+            for(int j = 0; j&lt;i; j++){
+                if(nums[i]&gt;nums[j])dp[i]=Math.max(dp[j]+1,dp[i]);
+            }
+        }
+        int max = 0;
+        for(int x : dp)
+            max = Math.max(max,x);
+        return max;
+    }
+}
+</code></pre>
+<h2 id="279-Perfect-Squares"><a href="#279-Perfect-Squares" class="headerlink" title="279. Perfect Squares"></a>279. Perfect Squares</h2><p>Given a positive integer <em>n</em>, find the least number of perfect square numbers (for example, <code>1, 4, 9, 16, ...</code>) which sum to <em>n</em>.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: n = 12
+Output: 3 
+Explanation: 12 = 4 + 4 + 4.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: n = 13
+Output: 2
+Explanation: 13 = 4 + 9.
+</code></pre><pre><code class="java">public class Solution {
+    public int numSquares(int n) {
+       int[] dp = new int[n + 1];
+       Arrays.fill(dp, Integer.MAX_VALUE);
+       dp[0] = 0;
+       for(int i = 0; i &lt;= n; i++){
+           for(int j = 1; i + j * j &lt;= n; j++){
+               dp[i  + j * j] = Math.min(dp[i + j * j], dp[i] + 1);
+            }
+       }
+       return dp[n];
+    }
+}
+</code></pre>
+<h1 id="Greedy-Algorithm"><a href="#Greedy-Algorithm" class="headerlink" title="Greedy Algorithm"></a>Greedy Algorithm</h1><h2 id="455-Assign-Cookies"><a href="#455-Assign-Cookies" class="headerlink" title="455. Assign Cookies"></a>455. Assign Cookies</h2><p>Assume you are an awesome parent and want to give your children some cookies. But, you should give each child at most one cookie. Each child i has a greed factor gi, which is the minimum size of a cookie that the child will be content with; and each cookie j has a size sj. If sj &gt;= gi, we can assign the cookie j to the child i, and the child i will be content. Your goal is to maximize the number of your content children and output the maximum number.</p>
+<p><strong>Note:</strong><br>You may assume the greed factor is always positive.<br>You cannot assign more than one cookie to one child.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [1,2,3], [1,1]
+
+Output: 1
+
+Explanation: You have 3 children and 2 cookies. The greed factors of 3 children are 1, 2, 3. 
+And even though you have 2 cookies, since their size is both 1, you could only make the child whose greed factor is 1 content.
+You need to output 1.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [1,2], [1,2,3]
+
+Output: 2
+
+Explanation: You have 2 children and 3 cookies. The greed factors of 2 children are 1, 2. 
+You have 3 cookies and their sizes are big enough to gratify all of the children, 
+You need to output 2.
+</code></pre><pre><code class="java">class Solution {
+    public int findContentChildren(int[] g, int[] s) {
+        int leng = g.length-1; //children
+        int lens = s.length-1; //cookies
+        Arrays.sort(g);
+        Arrays.sort(s);
+        int out = 0;
+        while(lens&gt;-1&amp;&amp;leng&gt;-1){
+            if(s[lens]&gt;=g[leng]){
+                lens--;
+                out++;
+                leng--;
+            }
+            else leng--;
+        }
+        return out;      
+    }
+}
+</code></pre>
+<h2 id="435-Non-overlapping-Intervals"><a href="#435-Non-overlapping-Intervals" class="headerlink" title="435. Non-overlapping Intervals"></a>435. Non-overlapping Intervals</h2><p>Given a collection of intervals, find the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping.</p>
+<p><strong>Note:</strong></p>
+<ol>
+<li>You may assume the interval’s end point is always bigger than its start point.</li>
+<li>Intervals like [1,2] and [2,3] have borders “touching” but they don’t overlap each other.</li>
+</ol>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [ [1,2], [2,3], [3,4], [1,3] ]
+
+Output: 1
+
+Explanation: [1,3] can be removed and the rest of intervals are non-overlapping.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [ [1,2], [1,2], [1,2] ]
+
+Output: 2
+
+Explanation: You need to remove two [1,2] to make the rest of intervals non-overlapping.
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: [ [1,2], [2,3] ]
+
+Output: 0
+
+Explanation: You don&#39;t need to remove any of the intervals since they&#39;re already non-overlapping.
+</code></pre><p>DP：</p>
+<pre><code class="java">/**
+ * Definition for an interval.
+ * public class Interval {
+ *     int start;
+ *     int end;
+ *     Interval() { start = 0; end = 0; }
+ *     Interval(int s, int e) { start = s; end = e; }
+ * }
+ */
+class Solution {
+    public int eraseOverlapIntervals(Interval[] intervals) {
+        if(intervals.length&lt;=1)return 0;
+        Arrays.sort(intervals, new Comparator&lt;Interval&gt;() {
+            @Override
+            public int compare(Interval o1, Interval o2) {
+                if(o1.start != o2.start)
+                return o1.start - o2.start;
+                return o1.end - o2.end;
+            }
+        });
+        int[] dp = new int[intervals.length];
+        for(int i = 0; i&lt;dp.length; i++) dp[i]=1;
+        for(int i = 1; i&lt;intervals.length; i++){
+            for(int j = 0; j&lt;i; j++){
+                if(intervals[i].start&gt;=intervals[j].end)
+                    dp[i] = Math.max(dp[j]+1,dp[i]);
+            }
+        }
+        int max = 0;
+        for(int x : dp)max = Math.max(max,x);
+        return intervals.length-max;          
+    }
+}
+</code></pre>
+<p>Greedy </p>
+<pre><code class="java">public class Solution {
+    public int eraseOverlapIntervals(Interval[] intervals) {
+        if(intervals.length &lt;= 0) return 0;
+        Arrays.sort(intervals, (Interval a,Interval b) -&gt; a.end - b.end);
+        int border = intervals[0].end;
+        int erase = 0;
+        for(int i = 1; i &lt; intervals.length; i++) {
+            if(intervals[i].start &lt; border) erase++;
+            else {
+                border = intervals[i].end;
+            }
+        }
+        return erase;
+    }
+}
+</code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/07/03/algo/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Algorithm/">Algorithm</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Leetcode/">Leetcode</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/07/03/Network/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Network basic
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/06/25/react/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">React Basic</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

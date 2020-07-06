@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Golang Basic |  Hello Rex
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <link rel="stylesheet" href="/dist/main.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-golang"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Golang Basic
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2019/06/15/golang/" class="article-date">
+  <time datetime="2019-06-15T10:25:18.000Z" itemprop="datePublished">2019-06-15</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/study-note/">study note</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">14 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="Golang语法"><a href="#Golang语法" class="headerlink" title="Golang语法"></a>Golang语法</h1><ul>
+<li>无对象、无继承多态、无泛型</li>
+<li>有接口，函数式编程，CSP并发模型</li>
+</ul>
+<h2 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h2><ul>
+<li><p>(u)int,(u)int8,(u)int16,(u)int32,(u)int64</p>
+<p>有符号、无符号整数，默认长度同os</p>
+</li>
+<li><p>uintptr            指针</p>
+</li>
+<li>bool，string，byte</li>
+<li>rune字符型，相当于32位char</li>
+<li>float32，float64</li>
+<li>complex64，complex128复数</li>
+</ul>
+<p>强制转换方法相同</p>
+<p>常量类型：const</p>
+<p>枚举类型，iota：自增</p>
+<pre><code class="go">func enums()  {
+    const
+    (
+        cpp = iota
+        java
+        python
+        php
+    )
+    fmt.Println(cpp, java, python, php)
+}
+
+0 1 2 3
+</code></pre>
+<pre><code class="go">const (
+        b = 1&lt;&lt;(10*iota)
+        kb
+        mb
+        gb
+        tb
+        pb
+    )
+    fmt.Println(b,kb,mb,gb,tb,pb)
+
+1 1024 1048576 1073741824 1099511627776 1125899906842624
+</code></pre>
+<h2 id="条件语句"><a href="#条件语句" class="headerlink" title="条件语句"></a>条件语句</h2><p>go语言函数可以返回两个值</p>
+<p>条件语句 if 条件没有括号，条件可以定义变量</p>
+<pre><code class="go">import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+    )
+func main() {
+
+    const filename  = &quot;abc.txt&quot;
+    contents, err := ioutil.ReadFile(filename)
+    if err!= nil {
+        fmt.Println(err)
+    }else {
+        fmt.Println(&quot;%s\n&quot;,contents)
+    }
+}
+</code></pre>
+<pre><code class="go">import (
+    &quot;fmt&quot;
+    &quot;io/ioutil&quot;
+)
+func main() {
+
+    const filename  = &quot;abc.txt&quot;
+    if contents, err := ioutil.ReadFile(filename) ; err != nil{
+        fmt.Println(err)
+    }else {
+        fmt.Println(contents)
+    }
+}
+</code></pre>
+<p>switch,没有break</p>
+<p><img src="/2019/06/15/golang/g1.jpg" alt="g1"></p>
+<p>switch后可以没有表达式，在case中加入条件</p>
+<p><img src="/2019/06/15/golang/g2.jpg" alt="g2"></p>
+<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><p>golang没有while</p>
+<p>for循环</p>
+<pre><code class="go">func convert2bin(n int)  string{
+    result := &quot;&quot;
+    for ; n &gt; 0 ; n /= 2  {
+        lsb := n % 2
+        result = strconv.Itoa(lsb) + result
+    }
+    return result
+}
+</code></pre>
+<p><img src="/2019/06/15/golang/g3.jpg" alt="g3"></p>
+<p>死循环</p>
+<pre><code class="go">for{
+    fmt.Println(&quot;abc&quot;)
+}
+</code></pre>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><p>函数可以返回多个值</p>
+<pre><code class="go">func div(a,b int) (int, int) {
+    return a/b, a%b
+}
+</code></pre>
+<pre><code class="go">func divp(a,b int) (q,r int) {
+    q = a/b
+    r = a%b
+    return 
+}
+</code></pre>
+<p>定义的值必须用到，如果不想用则使用 _</p>
+<p>返回error，方便处理</p>
+<p><img src="/2019/06/15/golang/g4.jpg" alt="g4"></p>
+<p>函数式编程，参数可以是函数</p>
+<p><img src="/2019/06/15/golang/g5.jpg" alt="g5"></p>
+<p>其他用法：可变参数列表</p>
+<p><img src="/2019/06/15/golang/g6.jpg" alt="g6"></p>
+<h2 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h2><p>指针不能运算</p>
+<p><img src="/2019/06/15/golang/g7.jpg" alt="g7"></p>
+<p>go语言只有值传递，没有引用传递</p>
+<p>交换ab：</p>
+<pre><code class="go">func swap(a, b int){
+    b, a = a, b
+}
+swap(a,b)
+func swap(a, b *int){
+    *b, *a = *a, *b
+}
+swap(&amp;a,&amp;b)
+func swap(a, b int)(int, int){
+return b,a
+}
+a, b = swap(a,b)
+</code></pre>
+<h1 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h1><h2 id="Array"><a href="#Array" class="headerlink" title="Array"></a>Array</h2><p>定义数组</p>
+<pre><code class="go">package main
+
+import &quot;fmt&quot;
+func main() {
+    var arr1 [3]int
+    var arr2 = [3]int {1,2,3}
+    arr3 := [...]int {1,2,3,4,5}
+
+    fmt.Println(arr1,arr2,arr3)
+}
+
+[0 0 0] [1 2 3] [1 2 3 4 5]
+</code></pre>
+<pre><code class="go">import &quot;fmt&quot;
+
+func main() {
+    var grid [4][5]int
+    fmt.Println(grid)
+}
+
+[[0 0 0 0 0] [0 0 0 0 0] [0 0 0 0 0] [0 0 0 0 0]]
+</code></pre>
+<p>遍历数组</p>
+<pre><code class="go">func main() {
+    arr3 := [...]int {1,2,3,4,5}
+    for i := 0;i&lt;len(arr3) ;i++  {
+        fmt.Println(arr3[i])
+    }
+}
+</code></pre>
+<p>使用range遍历</p>
+<pre><code class="go">import &quot;fmt&quot;
+
+func main() {
+    arr3 := [...]int {1,2,3,4,5}
+    for i := range arr3  {
+        fmt.Println(arr3[i])
+    }
+}
+</code></pre>
+<p><img src="/2019/06/15/golang/g8.jpg" alt="g8"></p>
+<pre><code class="go">func main() {
+    arr3 := [...]int {1,2,3,4,5}
+    for i := range arr3  {
+        fmt.Println(i)
+    }
+    for _,v := range arr3  {
+        fmt.Println(v)
+    }
+}
+</code></pre>
+<p>数组是值类型，不会改变数组本身</p>
+<p>go语言一般不直接使用数组</p>
+<h2 id="Slice"><a href="#Slice" class="headerlink" title="Slice"></a>Slice</h2><p><img src="/2019/06/15/golang/g9.jpg" alt="g9"></p>
+<p>slice是原本array的一个view，array改变后，slice也跟着改变</p>
+<pre><code class="go">import &quot;fmt&quot;
+
+func updateSlice(s []int) {
+    s[0] = 100
+}
+
+func main() {
+    arr := [...]int{0, 1, 2, 3, 4, 5, 6, 7}
+
+    fmt.Println(&quot;arr[2:6] =&quot;, arr[2:6])
+    fmt.Println(&quot;arr[:6] =&quot;, arr[:6])
+    s1 := arr[2:]
+    fmt.Println(&quot;s1 =&quot;, s1)
+    s2 := arr[:]
+    fmt.Println(&quot;s2 =&quot;, s2)
+
+    fmt.Println(&quot;After updateSlice(s1)&quot;)
+    updateSlice(s1)
+    fmt.Println(s1)
+    fmt.Println(arr)
+
+    fmt.Println(&quot;After updateSlice(s2)&quot;)
+    updateSlice(s2)
+    fmt.Println(s2)
+    fmt.Println(arr)
+
+    fmt.Println(&quot;Reslice&quot;)
+    fmt.Println(s2)
+    s2 = s2[:5]
+    fmt.Println(s2)
+    s2 = s2[2:]
+    fmt.Println(s2)
+
+    fmt.Println(&quot;Extending slice&quot;)
+    arr[0], arr[2] = 0, 2
+    fmt.Println(&quot;arr =&quot;, arr)
+    s1 = arr[2:6]
+    s2 = s1[3:5] // [s1[3], s1[4]]
+    fmt.Printf(&quot;s1=%v, len(s1)=%d, cap(s1)=%d\n&quot;,
+        s1, len(s1), cap(s1))
+    fmt.Printf(&quot;s2=%v, len(s2)=%d, cap(s2)=%d\n&quot;,
+        s2, len(s2), cap(s2))
+
+    s3 := append(s2, 10)
+    s4 := append(s3, 11)
+    s5 := append(s4, 12)
+    fmt.Println(&quot;s3, s4, s5 =&quot;, s3, s4, s5)
+    // s4 and s5 no longer view arr.
+    fmt.Println(&quot;arr =&quot;, arr)
+
+    // Uncomment to run sliceOps demo.
+    // If we see undefined: sliceOps
+    // please try go run slices.go sliceops.go
+    fmt.Println(&quot;Uncomment to see sliceOps demo&quot;)
+    // sliceOps()
+}
+
+</code></pre>
+<p><img src="/2019/06/15/golang/g11.jpg" alt="g11"></p>
+<p>reslice</p>
+<p><img src="/2019/06/15/golang/g10.jpg" alt="g10"></p>
+<p>slice结构</p>
+<p><img src="/2019/06/15/golang/g12.jpg" alt="g12"></p>
+<p>s[i]超过len会报错越界，向后扩展不能超过cap</p>
+<p>slice可以向后扩展，不能向前扩展</p>
+<p>slice末尾追加元素，依次追加，但是原始arr到cap不再增加，会自动生成一个更大的数组</p>
+<p><img src="/2019/06/15/golang/g13.jpg" alt="g13"></p>
+<p>内建函数make，代表len，cap</p>
+<pre><code class="go">s2 := make([]int, 16)
+s3 := make([]int, 10, 32)
+</code></pre>
+<pre><code class="go">package main
+
+import &quot;fmt&quot;
+
+func printSlice(s []int) {
+    fmt.Printf(&quot;%v, len=%d, cap=%d\n&quot;,
+        s, len(s), cap(s))
+}
+
+func sliceOps() {
+    fmt.Println(&quot;Creating slice&quot;)
+    var s []int // Zero value for slice is nil
+
+    for i := 0; i &lt; 100; i++ {
+        printSlice(s)
+        s = append(s, 2*i+1)
+    }
+    fmt.Println(s)
+
+    s1 := []int{2, 4, 6, 8}
+    printSlice(s1)
+
+    s2 := make([]int, 16)
+    s3 := make([]int, 10, 32)
+    printSlice(s2)
+    printSlice(s3)
+
+    fmt.Println(&quot;Copying slice&quot;)
+    copy(s2, s1)
+    printSlice(s2)
+
+    fmt.Println(&quot;Deleting elements from slice&quot;)
+    s2 = append(s2[:3], s2[4:]...)
+    printSlice(s2)
+
+    fmt.Println(&quot;Popping from front&quot;)
+    front := s2[0]
+    s2 = s2[1:]
+
+    fmt.Println(front)
+    printSlice(s2)
+
+    fmt.Println(&quot;Popping from back&quot;)
+    tail := s2[len(s2)-1]
+    s2 = s2[:len(s2)-1]
+
+    fmt.Println(tail)
+    printSlice(s2)
+}
+</code></pre>
+<p><img src="/2019/06/15/golang/g14.jpg" alt="g14"></p>
+<h2 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h2><pre><code class="go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+    m := map[string]string{
+        &quot;name&quot;:    &quot;ccmouse&quot;,
+        &quot;course&quot;:  &quot;golang&quot;,
+        &quot;site&quot;:    &quot;imooc&quot;,
+        &quot;quality&quot;: &quot;notbad&quot;,
+    }
+
+    m2 := make(map[string]int) // m2 == empty map
+
+    var m3 map[string]int // m3 == nil
+
+    fmt.Println(&quot;m, m2, m3:&quot;)
+    fmt.Println(m, m2, m3)
+
+    fmt.Println(&quot;Traversing map m&quot;)
+    for k, v := range m {
+        fmt.Println(k, v)
+    }
+
+    fmt.Println(&quot;Getting values&quot;)
+    courseName := m[&quot;course&quot;]
+    fmt.Println(`m[&quot;course&quot;] =`, courseName)
+    if causeName, ok := m[&quot;cause&quot;]; ok {
+        fmt.Println(causeName)
+    } else {
+        fmt.Println(&quot;key &#39;cause&#39; does not exist&quot;)
+    }
+
+    fmt.Println(&quot;Deleting values&quot;)
+    name, ok := m[&quot;name&quot;]
+    fmt.Printf(&quot;m[%q] before delete: %q, %v\n&quot;,
+        &quot;name&quot;, name, ok)
+
+    delete(m, &quot;name&quot;)
+    name, ok = m[&quot;name&quot;]
+    fmt.Printf(&quot;m[%q] after delete: %q, %v\n&quot;,
+        &quot;name&quot;, name, ok)
+}
+</code></pre>
+<p><img src="/2019/06/15/golang/g15.jpg" alt="g15"></p>
+<p>遍历map是无序的</p>
+<p>去拿不存在的key，得到zero value空值</p>
+<p>可以用causeName, ok := m[“cause”]判断是否存在</p>
+<p>map使用哈希表，可以比较相等</p>
+<p>除了slice、map、function的内建类型都可以作为key</p>
+<p>struct类型也可以作为key</p>
+<h2 id="寻找最长不重复子串"><a href="#寻找最长不重复子串" class="headerlink" title="寻找最长不重复子串"></a>寻找最长不重复子串</h2><p>abcabcbb        -&gt;        abc</p>
+<p><img src="/2019/06/15/golang/g16.jpg" alt="g16"></p>
+<pre><code class="go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+func lengthOfNonRepeatingSubStr(s string) int {
+    lastOccurred := make(map[rune]int)
+    start := 0
+    maxLength := 0
+
+    for i, ch := range []rune(s) {
+        if lastI, ok := lastOccurred[ch]; ok &amp;&amp; lastI &gt;= start {
+            start = lastI + 1
+        }
+        if i-start+1 &gt; maxLength {
+            maxLength = i - start + 1
+        }
+        lastOccurred[ch] = i
+    }
+
+    return maxLength
+}
+
+func main() {
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;abcabcbb&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;bbbbb&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;pwwkew&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;b&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;abcdef&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;这里是慕课网&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(&quot;一二三二一&quot;))
+    fmt.Println(
+        lengthOfNonRepeatingSubStr(
+            &quot;黑化肥挥发发灰会花飞灰化肥挥发发黑会飞花&quot;))
+}
+</code></pre>
+<p>中文使用byte会出现问题，因而进行改进</p>
+<p>国际化支持:</p>
+<p>for i, ch := range []rune(s)</p>
+<p>使用range遍历pos，rune对，但是pos不连续</p>
+<p>真正的字符数量utf8.RuneCountInString可获得</p>
+<h1 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h1><h2 id="值接受和指针接受"><a href="#值接受和指针接受" class="headerlink" title="值接受和指针接受"></a>值接受和指针接受</h2><p>go对象仅支持封装、不支持继承多态</p>
+<pre><code class="go">package tree
+
+import &quot;fmt&quot;
+
+type Node struct {
+    Value       int
+    Left, Right *Node
+}
+
+func (node Node) Print() {
+    fmt.Print(node.Value, &quot; &quot;)
+}
+
+func (node *Node) SetValue(value int) {
+    if node == nil {
+        fmt.Println(&quot;Setting Value to nil &quot; +
+            &quot;node. Ignored.&quot;)
+        return
+    }
+    node.Value = value
+}
+
+func CreateNode(value int) *Node {
+    return &amp;Node{Value: value}
+}
+</code></pre>
+<pre><code class="go">package tree
+
+import &quot;fmt&quot;
+
+func (node *Node) Traverse() {
+    node.TraverseFunc(func(n *Node) {
+        n.Print()
+    })
+    fmt.Println()
+}
+
+func (node *Node) TraverseFunc(f func(*Node)) {
+    if node == nil {
+        return
+    }
+
+    node.Left.TraverseFunc(f)
+    f(node)
+    node.Right.TraverseFunc(f)
+}
+
+func (node *Node) TraverseWithChannel() chan *Node {
+    out := make(chan *Node)
+    go func() {
+        node.TraverseFunc(func(node *Node) {
+            out &lt;- node
+        })
+        close(out)
+    }()
+    return out
+}
+</code></pre>
+<p>无论是指针函数还是值函数，调用上都没有区别</p>
+<p>值接受者是go语言特有的</p>
+<p>使用指针接受者的情况：</p>
+<ul>
+<li>改变内容必须使用指针接收者</li>
+<li>结构过大考虑使用指针接收者</li>
+<li>如果有指针接收者，最好都采用指针接收者</li>
+</ul>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><p>一般采用驼峰规则</p>
+<p>首字母大写表示public，首字母小写表示private</p>
+<p>包：</p>
+<ul>
+<li>每个目录一个包</li>
+<li>main包包含可执行入口</li>
+<li>为结构定义的方法必须在同一个包内，可以在不同的文件</li>
+</ul>
+<p>如何扩充系统的类或者别人的类：</p>
+<ul>
+<li>定义别名</li>
+<li>使用组合</li>
+</ul>
+<p>使用组合：</p>
+<pre><code class="go">package main
+
+import (
+    &quot;fmt&quot;
+
+    &quot;imooc.com/ccmouse/learngo/tree&quot;
+)
+
+type myTreeNode struct {
+    node *tree.Node
+}
+
+func (myNode *myTreeNode) postOrder() {
+    if myNode == nil || myNode.node == nil {
+        return
+    }
+
+    left := myTreeNode{myNode.node.Left}
+    right := myTreeNode{myNode.node.Right}
+
+    left.postOrder()
+    right.postOrder()
+    myNode.node.Print()
+}
+
+func main() {
+    var root tree.Node
+
+    root = tree.Node{Value: 3}
+    root.Left = &amp;tree.Node{}
+    root.Right = &amp;tree.Node{5, nil, nil}
+    root.Right.Left = new(tree.Node)
+    root.Left.Right = tree.CreateNode(2)
+    root.Right.Left.SetValue(4)
+
+    fmt.Print(&quot;In-order traversal: &quot;)
+    root.Traverse()
+
+    fmt.Print(&quot;My own post-order traversal: &quot;)
+    myRoot := myTreeNode{&amp;root}
+    myRoot.postOrder()
+    fmt.Println()
+
+    nodeCount := 0
+    root.TraverseFunc(func(node *tree.Node) {
+        nodeCount++
+    })
+    fmt.Println(&quot;Node count:&quot;, nodeCount)
+
+    c := root.TraverseWithChannel()
+    maxNodeValue := 0
+    for node := range c {
+        if node.Value &gt; maxNodeValue {
+            maxNodeValue = node.Value
+        }
+    }
+    fmt.Println(&quot;Max node value:&quot;, maxNodeValue)
+}
+</code></pre>
+<p>通过别名方法：</p>
+<pre><code class="go">package queue
+
+// A FIFO queue.
+type Queue []int
+
+// Pushes the element into the queue.
+//         e.g. q.Push(123)
+func (q *Queue) Push(v int) {
+    *q = append(*q, v)
+}
+
+// Pops element from head.
+func (q *Queue) Pop() int {
+    head := (*q)[0]
+    *q = (*q)[1:]
+    return head
+}
+
+// Returns if the queue is empty or not.
+func (q *Queue) IsEmpty() bool {
+    return len(*q) == 0
+}
+</code></pre>
+<h2 id="GOPATH"><a href="#GOPATH" class="headerlink" title="GOPATH"></a>GOPATH</h2><p>src    源代码</p>
+<p>pkg    中间包</p>
+<p>bin    可执行文件</p>
+<p>建议所有项目和第三方库放在一个GOPATH下</p>
+<p>可以通过go get 获取第三方库</p>
+<p>墙内通过镜像拉取：</p>
+<blockquote>
+<p>go get -v github.com/gpmgo/gopm</p>
+</blockquote>
+<blockquote>
+<p>gopm update</p>
+</blockquote>
+<blockquote>
+<p>gopm get -g -v uri</p>
+</blockquote>
+<blockquote>
+<p>go build / install</p>
+</blockquote>
+<blockquote>
+<p>go run </p>
+</blockquote>
+<h1 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h1><p>duck typing 描述事物外部行为而非内部结构</p>
+<h2 id="接口的定义和实现"><a href="#接口的定义和实现" class="headerlink" title="接口的定义和实现"></a>接口的定义和实现</h2><p>接口的定义：接口由使用者定义（与传统相反）</p>
+<p>只要实现了相应方法，就被判定为实现了接口，不需要声明实现了哪个接口</p>
+<pre><code class="go">package main
+
+import (
+    &quot;fmt&quot;
+)
+
+type Phone interface {
+    call()
+}
+
+type NokiaPhone struct {
+}
+
+func (nokiaPhone NokiaPhone) call() {
+    fmt.Println(&quot;I am Nokia, I can call you!&quot;)
+}
+
+type IPhone struct {
+}
+
+func (iPhone IPhone) call() {
+    fmt.Println(&quot;I am iPhone, I can call you!&quot;)
+}
+
+func main() {
+    var phone Phone
+
+    phone = new(NokiaPhone)
+    phone.call()
+
+    phone = new(IPhone)
+    phone.call()
+
+}
+</code></pre>
+<h2 id="接口值类型"><a href="#接口值类型" class="headerlink" title="接口值类型"></a>接口值类型</h2><p>接口变量可以是实现者类型+实现者的值</p>
+<p>或者实现者类型+实现者的指针</p>
+<p><img src="/2019/06/15/golang/g17.jpg" alt="g17"></p>
+<p>所以不需要使用接口的指针</p>
+<p>interface{}代表支持任何类型</p>
+<pre><code class="go">type  Queue []interface{}
+</code></pre>
+<p>interface强制类型转换</p>
+<pre><code class="go">func (q *Queue) Pop() int {
+    head := (*q)[0]
+    *q = (*q)[1:]
+    return head.(int)
+}
+</code></pre>
+<h2 id="接口的组合"><a href="#接口的组合" class="headerlink" title="接口的组合"></a>接口的组合</h2><pre><code class="go">package main
+type Retriever interface {
+    Get(url string) string
+}
+
+type Poster interface {
+    Post(url string,
+        form map[string]string) string
+}
+
+const url = &quot;http://www.imooc.com&quot;
+
+func download(r Retriever) string {
+    return r.Get(url)
+}
+
+func post(poster Poster) {
+    poster.Post(url,
+        map[string]string{
+            &quot;name&quot;:   &quot;ccmouse&quot;,
+            &quot;course&quot;: &quot;golang&quot;,
+        })
+}
+
+type RetrieverPoster interface {
+    Retriever
+    Poster
+}
+
+func session(s RetrieverPoster) string {
+    s.Post(url, map[string]string{
+        &quot;contents&quot;: &quot;another faked imooc.com&quot;,
+    })
+    return s.Get(url)
+}
+
+func main() {
+    var r Retriever
+
+    mockRetriever := mock.Retriever{
+        Contents: &quot;this is a fake imooc.com&quot;}
+    r = &amp;mockRetriever
+    inspect(r)
+
+    r = &amp;real.Retriever{
+        UserAgent: &quot;Mozilla/5.0&quot;,
+        TimeOut:   time.Minute,
+    }
+    inspect(r)
+
+    // Type assertion
+    if mockRetriever, ok := r.(*mock.Retriever); ok {
+        fmt.Println(mockRetriever.Contents)
+    } else {
+        fmt.Println(&quot;r is not a mock retriever&quot;)
+    }
+
+    fmt.Println(
+        &quot;Try a session with mockRetriever&quot;)
+    fmt.Println(session(&amp;mockRetriever))
+}
+
+func inspect(r Retriever) {
+    fmt.Println(&quot;Inspecting&quot;, r)
+    fmt.Printf(&quot; &gt; Type:%T Value:%v\n&quot;, r, r)
+    fmt.Print(&quot; &gt; Type switch: &quot;)
+    switch v := r.(type) {
+    case *mock.Retriever:
+        fmt.Println(&quot;Contents:&quot;, v.Contents)
+    case *real.Retriever:
+        fmt.Println(&quot;UserAgent:&quot;, v.UserAgent)
+    }
+    fmt.Println()
+}
+</code></pre>
+<pre><code class="go">package mock
+
+import &quot;fmt&quot;
+
+type Retriever struct {
+    Contents string
+}
+
+func (r *Retriever) String() string {
+    return fmt.Sprintf(
+        &quot;Retriever: {Contents=%s}&quot;, r.Contents)
+}
+
+func (r *Retriever) Post(url string,
+    form map[string]string) string {
+    r.Contents = form[&quot;contents&quot;]
+    return &quot;ok&quot;
+}
+
+func (r *Retriever) Get(url string) string {
+    return r.Contents
+}
+
+</code></pre>
+<pre><code class="go">package real
+
+import (
+    &quot;net/http&quot;
+    &quot;net/http/httputil&quot;
+    &quot;time&quot;
+)
+
+type Retriever struct {
+    UserAgent string
+    TimeOut   time.Duration
+}
+
+func (r *Retriever) Get(url string) string {
+    resp, err := http.Get(url)
+    if err != nil {
+        panic(err)
+    }
+
+    result, err := httputil.DumpResponse(
+        resp, true)
+
+    resp.Body.Close()
+
+    if err != nil {
+        panic(err)
+    }
+
+    return string(result)
+}
+</code></pre>
+<p>常用接口stringer，reader，writer等</p>
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        share
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://yoursite.com/2019/06/15/golang/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Golang/">Golang</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2019/06/19/redisdeep/" class="article-nav-link">
+        <strong class="article-nav-caption">prev</strong>
+        <div class="article-nav-title">
+          
+            Redis Study Note
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2019/06/11/nettydemo/" class="article-nav-link">
+        <strong class="article-nav-caption">next</strong>
+        <div class="article-nav-title">Netty Demo</div>
+      </a>
+    
+  </nav>
+
+  
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2015-2020
+        <i class="ri-heart-fill heart_icon"></i> Rex
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Hello Rex"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">HelloRex</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">archives</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">categorie</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">tags</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">about</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i></p>
+  <div class="reward-box">
+    
+    
+  </div>
+</div>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/lazyload.min.js"></script>
+<!-- Tocbot -->
+
+<script src="/js/tocbot.min.js"></script>
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+<script src="/dist/main.js"></script>
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+<link rel="stylesheet" href="/css/clipboard.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>
