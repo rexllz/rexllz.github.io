@@ -285,6 +285,96 @@ volumes:
       </tags>
   </entry>
   <entry>
+    <title>FTP note</title>
+    <url>/2019/01/01/FTP/</url>
+    <content><![CDATA[<h1 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a>FTP</h1><h2 id="ftp-ftps-sftp区别"><a href="#ftp-ftps-sftp区别" class="headerlink" title="ftp, ftps, sftp区别"></a>ftp, ftps, sftp区别</h2><ul>
+<li>ftp</li>
+</ul>
+<p>FTP 是File Transfer Protocol（文件传输协议）的英文简称，而中文简称为“文传协议”。用于Internet上的控制文件的双向传输。同时，它也是一个应用程序（Application）。基于不同的操作系统有不同的FTP应用程序，而所有这些应用程序都遵守同一种协议以传输文件。在FTP的使用当中，用户经常遇到两个概念：”下载”（Download）和”上传”（Upload）。”下载”文件就是从远程主机拷贝文件至自己的计算机上；”上传”文件就是将文件从自己的计算机中拷贝至远程主机上。用Internet语言来说，用户可通过客户机程序向（从）远程主机上传（下载）文件。</p>
+<ul>
+<li>ftps</li>
+</ul>
+<p>一种多传输协议，相当于加密版的FTP。当你在FTP服务器上收发文件的时候，你面临两个风险。第一个风险是在上载文件的时候为文件加密。第二个风险是，这些文件在你等待接收方下载的时候将停留在FTP服务器上，这时你如何保证这些文件的安全。你的第二个选择（创建一个支持SSL的FTP服务器）能够让你的主机使用一个FTPS连接上载这些文件。这包括使用一个在FTP协议下面的SSL层加密控制和数据通道。一种替代FTPS的协议是安全文件传输协议(SFTP)。这个协议使用SSH文件传输协议加密从客户机到服务器的FTP连接。</p>
+<p>FTPS是在安全套接层使用标准的FTP协议和指令的一种增强型FTP协议，为FTP协议和数据通道增加了SSL安全功能。FTPS也称作“FTP-SSL”和“FTP-over-SSL”。SSL是一个在客户机和具有SSL功能的服务器之间的安全连接中对数据进行加密和解密的协议。</p>
+<p>和sftp连接方法类似，在windows中可以使用FileZilla等传输软件来连接FTPS进行上传，下载文件，建立，删除目录等操作,在FileZilla连接时，有显式和隐式TLS/SSL连接之分，连接时也有指纹提示。</p>
+<ul>
+<li>sftp</li>
+</ul>
+<p>Sftp是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。sftp 与 ftp 有着几乎一样的语法和功能。SFTP 为 SSH的一部分，是一种传输档案至 Blogger 伺服器的安全方式。其实在SSH软件包中，已经包含了一个叫作SFTP(Secure File Transfer Protocol)的安全文件传输子系统，SFTP本身没有单独的守护进程，它必须使用sshd守护进程（端口号默认是22）来完成相应的连接操作，所以从某种意义上来说，SFTP并不像一个服务器程序，而更像是一个客户端程序。SFTP同样是使用加密传输认证信息和传输的数据，所以，使用SFTP是非常安全的。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多，如果您对网络安全性要求更高时，可以使用SFTP代替FTP。</p>
+<ul>
+<li>sftp vs ftps</li>
+</ul>
+<p>SFTP 和FTPS都是为ftp连接加密，协议非常相似。</p>
+<p>一个是借助ssl协议加密，一个时借助ssh加密。</p>
+<p>ssl是为http/smtp等加密设计的，ssh是为telnet/ftp等加密、建立传输通道而设计的。</p>
+<p>其实ssh建立传输通道就是为了加密和传输，而且这个通道是可以用来远程登录。如果只说它们的功能，通俗的讲，ssh就像铺管子，ssl就像打包裹，铺管子和打包裹都会使数据安全，都是一个制作密钥的过程，而因为ssh是一个管子所以它很适合ftp的安全传输。</p>
+<ul>
+<li>ssl</li>
+</ul>
+<p>SSL证书是HTTP明文协议升级HTTPS加密协议的重要渠道，是网络安全传输的加密到通道。</p>
+<h2 id="ftp-cmd"><a href="#ftp-cmd" class="headerlink" title="ftp cmd"></a>ftp cmd</h2><ul>
+<li><p>“开始”→“运行”→输入“FTP”</p>
+</li>
+<li><p>open ftp.test.com</p>
+</li>
+<li><p>dir</p>
+</li>
+</ul>
+<p>注意：你成功登陆后就可以用dir查看查看FTP服务器中的文件及目录，用ls命令只可以查看文件。</p>
+<ul>
+<li>mkdir qint</li>
+</ul>
+<p>注意：在FTP服务器上根目录下建立qint目录</p>
+<ul>
+<li>cd qint</li>
+</ul>
+<p>注意：进入目录qint,用“cd 你的目录名”可以进入当前目录的下一级目录，这跟DOS一样。</p>
+<ul>
+<li>bin</li>
+</ul>
+<p>注意：采用二进制传输。如果你要上传下载，这一步很重要，不先执行这个命令，上传下载会很慢。大多数系统(包括UNIX系统)只有两种模式：文本模式和二进制模式。文本传输器使用ASCII字符，并由回车键和换行符分开，而二进制不用转换或格式化就可传字符，二进制模式比文本模式更快，并且可以传输所有ASCII值，所以系统管理员一般将FTP设置成二进制模式。一般来说，我们最好都用binary方式，这样可以保证不出错。</p>
+<ul>
+<li>lcd d:\qint</li>
+</ul>
+<p>注意：定位本地默认文件夹，在前面已事先在D：盘创建</p>
+<ul>
+<li>!dir</li>
+</ul>
+<p>注意：查看本地文件夹中的文件及目录</p>
+<ul>
+<li>put i001.jpg</li>
+</ul>
+<p>注意：将当前目录(d:\qint)中的文件i001.jpg上传到FTP服务器默认目录。可以用“mput <em>.</em>”将所有文件上传到FTP服务器上。</p>
+<ul>
+<li>get d123.jpg</li>
+</ul>
+<p>注意：将FTP服务器默认目录中的文件d123.jpg下载到当前目录下(d:\qint)。可以用“mget <em>.</em>”将所有文件下载到d:\qint</p>
+<ul>
+<li>delete <em> . </em></li>
+</ul>
+<p>注意：删除服务器对应目录qint中的所有文件。</p>
+<ul>
+<li>cd ..</li>
+</ul>
+<p>注意：返回至上一级目录，即根目录。返回上一级目录用“cd ..”要注意，中间有空格。返回根目录用“cd \”。</p>
+<ul>
+<li>mrdir qint</li>
+</ul>
+<p>注意：删除目录qint。删除目录，在此目录下不能有文件及目录，不然将无法删除。</p>
+<ul>
+<li>bye</li>
+</ul>
+<p>注意：退出FTP服务器。</p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>FTP</tag>
+        <tag>SSL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Network basic</title>
     <url>/2019/07/03/Network/</url>
     <content><![CDATA[<h1 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h1><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="OSI-7-Level"><a href="#OSI-7-Level" class="headerlink" title="OSI -  7 Level"></a>OSI -  7 Level</h3><ul>
@@ -449,96 +539,6 @@ volumes:
       <tags>
         <tag>Network</tag>
         <tag>TCP/IP</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>FTP note</title>
-    <url>/2019/01/01/FTP/</url>
-    <content><![CDATA[<h1 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a>FTP</h1><h2 id="ftp-ftps-sftp区别"><a href="#ftp-ftps-sftp区别" class="headerlink" title="ftp, ftps, sftp区别"></a>ftp, ftps, sftp区别</h2><ul>
-<li>ftp</li>
-</ul>
-<p>FTP 是File Transfer Protocol（文件传输协议）的英文简称，而中文简称为“文传协议”。用于Internet上的控制文件的双向传输。同时，它也是一个应用程序（Application）。基于不同的操作系统有不同的FTP应用程序，而所有这些应用程序都遵守同一种协议以传输文件。在FTP的使用当中，用户经常遇到两个概念：”下载”（Download）和”上传”（Upload）。”下载”文件就是从远程主机拷贝文件至自己的计算机上；”上传”文件就是将文件从自己的计算机中拷贝至远程主机上。用Internet语言来说，用户可通过客户机程序向（从）远程主机上传（下载）文件。</p>
-<ul>
-<li>ftps</li>
-</ul>
-<p>一种多传输协议，相当于加密版的FTP。当你在FTP服务器上收发文件的时候，你面临两个风险。第一个风险是在上载文件的时候为文件加密。第二个风险是，这些文件在你等待接收方下载的时候将停留在FTP服务器上，这时你如何保证这些文件的安全。你的第二个选择（创建一个支持SSL的FTP服务器）能够让你的主机使用一个FTPS连接上载这些文件。这包括使用一个在FTP协议下面的SSL层加密控制和数据通道。一种替代FTPS的协议是安全文件传输协议(SFTP)。这个协议使用SSH文件传输协议加密从客户机到服务器的FTP连接。</p>
-<p>FTPS是在安全套接层使用标准的FTP协议和指令的一种增强型FTP协议，为FTP协议和数据通道增加了SSL安全功能。FTPS也称作“FTP-SSL”和“FTP-over-SSL”。SSL是一个在客户机和具有SSL功能的服务器之间的安全连接中对数据进行加密和解密的协议。</p>
-<p>和sftp连接方法类似，在windows中可以使用FileZilla等传输软件来连接FTPS进行上传，下载文件，建立，删除目录等操作,在FileZilla连接时，有显式和隐式TLS/SSL连接之分，连接时也有指纹提示。</p>
-<ul>
-<li>sftp</li>
-</ul>
-<p>Sftp是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。sftp 与 ftp 有着几乎一样的语法和功能。SFTP 为 SSH的一部分，是一种传输档案至 Blogger 伺服器的安全方式。其实在SSH软件包中，已经包含了一个叫作SFTP(Secure File Transfer Protocol)的安全文件传输子系统，SFTP本身没有单独的守护进程，它必须使用sshd守护进程（端口号默认是22）来完成相应的连接操作，所以从某种意义上来说，SFTP并不像一个服务器程序，而更像是一个客户端程序。SFTP同样是使用加密传输认证信息和传输的数据，所以，使用SFTP是非常安全的。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多，如果您对网络安全性要求更高时，可以使用SFTP代替FTP。</p>
-<ul>
-<li>sftp vs ftps</li>
-</ul>
-<p>SFTP 和FTPS都是为ftp连接加密，协议非常相似。</p>
-<p>一个是借助ssl协议加密，一个时借助ssh加密。</p>
-<p>ssl是为http/smtp等加密设计的，ssh是为telnet/ftp等加密、建立传输通道而设计的。</p>
-<p>其实ssh建立传输通道就是为了加密和传输，而且这个通道是可以用来远程登录。如果只说它们的功能，通俗的讲，ssh就像铺管子，ssl就像打包裹，铺管子和打包裹都会使数据安全，都是一个制作密钥的过程，而因为ssh是一个管子所以它很适合ftp的安全传输。</p>
-<ul>
-<li>ssl</li>
-</ul>
-<p>SSL证书是HTTP明文协议升级HTTPS加密协议的重要渠道，是网络安全传输的加密到通道。</p>
-<h2 id="ftp-cmd"><a href="#ftp-cmd" class="headerlink" title="ftp cmd"></a>ftp cmd</h2><ul>
-<li><p>“开始”→“运行”→输入“FTP”</p>
-</li>
-<li><p>open ftp.test.com</p>
-</li>
-<li><p>dir</p>
-</li>
-</ul>
-<p>注意：你成功登陆后就可以用dir查看查看FTP服务器中的文件及目录，用ls命令只可以查看文件。</p>
-<ul>
-<li>mkdir qint</li>
-</ul>
-<p>注意：在FTP服务器上根目录下建立qint目录</p>
-<ul>
-<li>cd qint</li>
-</ul>
-<p>注意：进入目录qint,用“cd 你的目录名”可以进入当前目录的下一级目录，这跟DOS一样。</p>
-<ul>
-<li>bin</li>
-</ul>
-<p>注意：采用二进制传输。如果你要上传下载，这一步很重要，不先执行这个命令，上传下载会很慢。大多数系统(包括UNIX系统)只有两种模式：文本模式和二进制模式。文本传输器使用ASCII字符，并由回车键和换行符分开，而二进制不用转换或格式化就可传字符，二进制模式比文本模式更快，并且可以传输所有ASCII值，所以系统管理员一般将FTP设置成二进制模式。一般来说，我们最好都用binary方式，这样可以保证不出错。</p>
-<ul>
-<li>lcd d:\qint</li>
-</ul>
-<p>注意：定位本地默认文件夹，在前面已事先在D：盘创建</p>
-<ul>
-<li>!dir</li>
-</ul>
-<p>注意：查看本地文件夹中的文件及目录</p>
-<ul>
-<li>put i001.jpg</li>
-</ul>
-<p>注意：将当前目录(d:\qint)中的文件i001.jpg上传到FTP服务器默认目录。可以用“mput <em>.</em>”将所有文件上传到FTP服务器上。</p>
-<ul>
-<li>get d123.jpg</li>
-</ul>
-<p>注意：将FTP服务器默认目录中的文件d123.jpg下载到当前目录下(d:\qint)。可以用“mget <em>.</em>”将所有文件下载到d:\qint</p>
-<ul>
-<li>delete <em> . </em></li>
-</ul>
-<p>注意：删除服务器对应目录qint中的所有文件。</p>
-<ul>
-<li>cd ..</li>
-</ul>
-<p>注意：返回至上一级目录，即根目录。返回上一级目录用“cd ..”要注意，中间有空格。返回根目录用“cd \”。</p>
-<ul>
-<li>mrdir qint</li>
-</ul>
-<p>注意：删除目录qint。删除目录，在此目录下不能有文件及目录，不然将无法删除。</p>
-<ul>
-<li>bye</li>
-</ul>
-<p>注意：退出FTP服务器。</p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>FTP</tag>
-        <tag>SSL</tag>
       </tags>
   </entry>
   <entry>
@@ -1709,283 +1709,6 @@ public class SingletonExample4 {
         <tag>MapReduce</tag>
         <tag>Hadoop</tag>
         <tag>Yarn</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Database Basic</title>
-    <url>/2019/03/04/database/</url>
-    <content><![CDATA[<h1 id="数据库架构"><a href="#数据库架构" class="headerlink" title="数据库架构"></a>数据库架构</h1><h2 id="如何设计一个关系型数据库"><a href="#如何设计一个关系型数据库" class="headerlink" title="如何设计一个关系型数据库"></a>如何设计一个关系型数据库</h2><p><img src="/2019/03/04/database/design.jpg" alt="design"></p>
-<ul>
-<li>实例与os文件系统相对应</li>
-<li>io时间长，io一次将块和页至于内存，相近数据访问概率高</li>
-</ul>
-<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><ul>
-<li>数据量很大时，避免全表扫描</li>
-<li>类似字典</li>
-<li>提升查询速度</li>
-<li>主键，唯一键，普通键作为索引</li>
-</ul>
-<h3 id="如何生成索引"><a href="#如何生成索引" class="headerlink" title="如何生成索引"></a>如何生成索引</h3><h4 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h4><ul>
-<li>左小右大</li>
-<li>对半搜索，O(logn)</li>
-</ul>
-<p><img src="/2019/03/04/database/twotree.jpg" alt="twotree"></p>
-<ul>
-<li>查找速度快</li>
-<li>可能会很深，导致IO增多，速度降低（每深一层一次IO）</li>
-</ul>
-<h4 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h4><ul>
-<li><p>平衡多路查找树</p>
-<p><img src="/2019/03/04/database/btree.jpg" alt="btree"></p>
-</li>
-<li><p>平衡</p>
-</li>
-</ul>
-<h4 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+-Tree"></a>B+-Tree</h4><p><img src="/2019/03/04/database/bplustree.jpg" alt="bplustree"></p>
-<p>B+TREE更有优势</p>
-<ul>
-<li>磁盘读写代价低</li>
-<li>查询效率稳定（所有查询路径相同）</li>
-<li>有利于数据库的扫描，范围查询（叶子相连）</li>
-</ul>
-<h4 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h4><p><img src="/2019/03/04/database/hash.jpg" alt="hash"></p>
-<ul>
-<li>只能满足=，不满足IN（hash运算前后关系不确定）</li>
-<li>无法避免排序运算</li>
-<li>不能利用部分索引</li>
-<li>不能避免行扫描</li>
-<li>大量hash相等，性能低下，变为线性</li>
-</ul>
-<h4 id="BitMap索引"><a href="#BitMap索引" class="headerlink" title="BitMap索引"></a>BitMap索引</h4><p><img src="/2019/03/04/database/bitmap.jpg" alt="bitmap"></p>
-<ul>
-<li>锁力度大</li>
-<li>应用范围小，关键字有限</li>
-</ul>
-<h3 id="密集索引-amp-稀疏索引"><a href="#密集索引-amp-稀疏索引" class="headerlink" title="密集索引&amp;稀疏索引"></a>密集索引&amp;稀疏索引</h3><ul>
-<li>密集索引：每个搜索码值对应一个索引</li>
-<li>稀疏索引：只为索引码的某些值建立索引项</li>
-</ul>
-<p><img src="/2019/03/04/database/mijixishu.jpg" alt="mijixishu"></p>
-<p>代表：（mysql两个引擎）</p>
-<ul>
-<li>InnoDB：密集索引（数据索引存储在.ibd文件）</li>
-<li>MyISAM：稀疏索引（数据索引分开存储.MYI.MYD）</li>
-</ul>
-<p><img src="/2019/03/04/database/innodb.jpg" alt="innodb"></p>
-<p>检索过程：</p>
-<p><img src="/2019/03/04/database/jiansuo.jpg" alt="jiansuo"></p>
-<h3 id="如何调优sql"><a href="#如何调优sql" class="headerlink" title="如何调优sql"></a>如何调优sql</h3><ul>
-<li>根据慢日志定位慢查询sql</li>
-</ul>
-<blockquote>
-<p>show variables like ‘%quer%’;        //查看相关变量</p>
-</blockquote>
-<p><img src="/2019/03/04/database/slowlog.jpg" alt="slowlog"></p>
-<blockquote>
-<p>show status like ‘%slow_queries’;        //慢查询数量</p>
-</blockquote>
-<blockquote>
-<p>set global slow_query_log = on;</p>
-<p>set global long_query_time = 1;    //需要重连</p>
-</blockquote>
-<ul>
-<li>Explain分析sql</li>
-</ul>
-<p>加在执行语句前，查看结果项</p>
-<p>type：index，all需要优化</p>
-<p>extra：Using filesort/Using temporary</p>
-<ul>
-<li>修改sql尽量让sql走索引</li>
-</ul>
-<h3 id="mysql联合索引最左匹配原则"><a href="#mysql联合索引最左匹配原则" class="headerlink" title="mysql联合索引最左匹配原则"></a>mysql联合索引最左匹配原则</h3><p>index（a，b）</p>
-<p>只用b select 不走索引</p>
-<p><img src="/2019/03/04/database/unionindex.jpg" alt="unionindex"></p>
-<h3 id="索引越多越好吗"><a href="#索引越多越好吗" class="headerlink" title="索引越多越好吗"></a>索引越多越好吗</h3><ul>
-<li>数据量小不需要建立索引</li>
-<li>数据变更需要维护索引，维护成本变高</li>
-<li>更多索引占用更多空间</li>
-</ul>
-<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="数据库锁的分类"><a href="#数据库锁的分类" class="headerlink" title="数据库锁的分类"></a>数据库锁的分类</h3><h4 id="按粒度划分"><a href="#按粒度划分" class="headerlink" title="按粒度划分"></a>按粒度划分</h4><ul>
-<li>表级锁</li>
-<li>行级锁</li>
-<li>页级锁</li>
-</ul>
-<h4 id="按锁级别划分"><a href="#按锁级别划分" class="headerlink" title="按锁级别划分"></a>按锁级别划分</h4><ul>
-<li>共享锁</li>
-<li>排他锁</li>
-</ul>
-<h4 id="按枷锁方式划分"><a href="#按枷锁方式划分" class="headerlink" title="按枷锁方式划分"></a>按枷锁方式划分</h4><ul>
-<li>自动锁</li>
-<li>显式锁</li>
-</ul>
-<h4 id="按操作划分"><a href="#按操作划分" class="headerlink" title="按操作划分"></a>按操作划分</h4><ul>
-<li>DML锁（对数据操作）</li>
-<li>DDL锁（对表结构操作）</li>
-</ul>
-<h4 id="按使用方式划分"><a href="#按使用方式划分" class="headerlink" title="按使用方式划分"></a>按使用方式划分</h4><ul>
-<li>乐观锁（基于数据版本）</li>
-<li>悲观锁（对外界修改保守态度）</li>
-</ul>
-<h3 id="MyISAM-amp-InnoDB锁的区别"><a href="#MyISAM-amp-InnoDB锁的区别" class="headerlink" title="MyISAM&amp;InnoDB锁的区别"></a>MyISAM&amp;InnoDB锁的区别</h3><ul>
-<li>MyISAM默认表级锁，不支持行级锁</li>
-</ul>
-<p>对一个表进行操作时，会将表锁，其他session不能操作</p>
-<p>读锁（共享锁）不释放，无法增加写锁</p>
-<p>读锁（共享锁）不释放，可以增加读锁</p>
-<p>写锁（排他锁）不释放，无法增加读锁</p>
-<p>写锁不释放，无法增加写锁</p>
-<blockquote>
-<p>lock tables table_name read;</p>
-<p>unlock tables;</p>
-</blockquote>
-<ul>
-<li>InnoDB默认行级锁，也支持表级锁</li>
-</ul>
-<p>InnoDB采用二段锁</p>
-<p>行级锁只锁一行数据</p>
-<p>但是不走索引时，整张表都会被锁住</p>
-<h4 id="MyISAM适合的场景"><a href="#MyISAM适合的场景" class="headerlink" title="MyISAM适合的场景"></a>MyISAM适合的场景</h4><ul>
-<li>频繁执行全表count语句（保存行数变量）</li>
-<li>对数据增删改频率低，查询频率高（增删改锁表）</li>
-<li>没有事务</li>
-</ul>
-<h4 id="InnoDB适合的场景"><a href="#InnoDB适合的场景" class="headerlink" title="InnoDB适合的场景"></a>InnoDB适合的场景</h4><ul>
-<li>数据增删改查都频繁（行级锁）</li>
-<li>可靠性要求高</li>
-<li>支持事务</li>
-</ul>
-<h3 id="数据库事务四大特性"><a href="#数据库事务四大特性" class="headerlink" title="数据库事务四大特性"></a>数据库事务四大特性</h3><p>ACID</p>
-<ul>
-<li>原子性（Atomic）操作一体化</li>
-<li>一致性（Consistency）总体一致eg转账</li>
-<li>隔离性（Isolation）并发互不影响</li>
-<li>持久性（Durability）可恢复，储存持久</li>
-</ul>
-<h3 id="事务隔离级别以及各级别下并发访问"><a href="#事务隔离级别以及各级别下并发访问" class="headerlink" title="事务隔离级别以及各级别下并发访问"></a>事务隔离级别以及各级别下并发访问</h3><h4 id="事务并发访问可能引起的问题"><a href="#事务并发访问可能引起的问题" class="headerlink" title="事务并发访问可能引起的问题"></a>事务并发访问可能引起的问题</h4><ul>
-<li>更新丢失</li>
-</ul>
-<p>一个事务的更新覆盖了另一个事务的更新</p>
-<p><img src="/2019/03/04/database/updatelost.jpg" alt="updatelost"></p>
-<p>（mysql所有事务隔离级别已经避免）</p>
-<ul>
-<li>Dirty Read</li>
-</ul>
-<p>一个事务读到另一个事务未提交的更新数据（回滚发生问题）</p>
-<blockquote>
-<p>select @@tx_isolation;        //查看事务隔离级别</p>
-<p>set session transaction isolation level read uncommitted;    //设置隔离级别</p>
-</blockquote>
-<p>（READ-COMMITTED事务隔离级别以上可避免）</p>
-<ul>
-<li>不可重复读</li>
-</ul>
-<p>A多次读取数据，B在过程中更新数据，导致事务A读取数据不一致</p>
-<p>（REPEATABLE-READ事务隔离级别以上可避免）InnoDB default</p>
-<ul>
-<li>幻读</li>
-</ul>
-<p>事务A读取与搜索条件匹配的若干行，事务B插入或删除行的方式修改了A的结果集，导致事务A像出现幻觉</p>
-<p>（SERIALIZABLE事务隔离级别以上可避免）Top Level</p>
-<h4 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h4><p><img src="/2019/03/04/database/level.jpg" alt="level"></p>
-<p>事务隔离级别越高，串行程度越高，并行化越低，效率越低</p>
-<p>Oracle默认为READ-COMMITTED，MySQL默认为REPEATABLE-READ</p>
-<h4 id="InnoDB可重复读隔离级别下避免幻读"><a href="#InnoDB可重复读隔离级别下避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下避免幻读"></a>InnoDB可重复读隔离级别下避免幻读</h4><h5 id="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"><a href="#表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）" class="headerlink" title="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"></a>表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）</h5><ul>
-<li>当前读：select…lock in share mode, select…for update</li>
-</ul>
-<p>update, delete, insert（）</p>
-<p>加了锁的增删改查，读取最新版本，并且锁住避免其他事务修改当前记录</p>
-<p><img src="/2019/03/04/database/dangqian.jpg" alt="dangqian"></p>
-<ul>
-<li>快照读：不加锁（SERIALIZABLE事务隔离级别不成立）</li>
-</ul>
-<p>可能读到的是历史版本数据</p>
-<h5 id="内在：next-key锁（行锁-gap锁）"><a href="#内在：next-key锁（行锁-gap锁）" class="headerlink" title="内在：next-key锁（行锁+gap锁）"></a>内在：next-key锁（行锁+gap锁）</h5><p>RR级别以上支持gap锁，防止两次当前读出现幻读</p>
-<p>不锁内容本身，锁周围数据</p>
-<p>对主键和唯一键索引时：</p>
-<ul>
-<li>where条件全部命中，不会加gap锁，只加记录锁</li>
-</ul>
-<p><img src="/2019/03/04/database/recordlock.jpg" alt="recordlock"></p>
-<ul>
-<li>where条件部分命中或全不命中，加gap锁</li>
-</ul>
-<p>gap锁用在非唯一索引或不走索引的当前读中</p>
-<p>1、非唯一索引</p>
-<p><img src="/2019/03/04/database/gaplock1.jpg" alt="gaplock1"></p>
-<p>(6,9], (9,11] 被锁住（不仅id在范围内，而是范围内所有数据，可能id是20也会被锁住）</p>
-<p>官方定义：</p>
-<p><img src="/2019/03/04/database/gaplock2.jpg" alt="gaplock2"></p>
-<p>2、不走索引</p>
-<p><img src="/2019/03/04/database/gaplock3.jpg" alt="gaplock3"></p>
-<p>对所有gap上锁</p>
-<h3 id="RC、RR级别下InnoDB的非阻塞读的实现"><a href="#RC、RR级别下InnoDB的非阻塞读的实现" class="headerlink" title="RC、RR级别下InnoDB的非阻塞读的实现"></a>RC、RR级别下InnoDB的非阻塞读的实现</h3><ul>
-<li>数据行里DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID字段</li>
-</ul>
-<p>DB_TRX_ID：最后一次对本行数据做修改的事务ID</p>
-<p>DB_ROLL_PTR：回滚指针，undo日志记录</p>
-<p>DB_ROW_ID：行号</p>
-<ul>
-<li>undo log，提交后丢弃</li>
-<li>update undo log，回滚，快照都需要此log</li>
-</ul>
-<p><img src="/2019/03/04/database/undolog.jpg" alt="undolog"></p>
-<ul>
-<li>read view，能看到的数据，根据算法处理</li>
-</ul>
-<h2 id="关键语法"><a href="#关键语法" class="headerlink" title="关键语法"></a>关键语法</h2><h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><ul>
-<li>SELECT子句中的列名必须为分组列或列函数</li>
-<li>列函数对于GROUP BY子句定义的每个组返回一个结果</li>
-</ul>
-<p><img src="/2019/03/04/database/groupby.jpg" alt="groupby"></p>
-<p>1、查询所有同学的学号、选课数、总成绩</p>
-<pre><code class="sql">select student_id,count(course_id),sum(score)
-
-from score
-
-group by student_id
-</code></pre>
-<p>GROUP BY会缓存临时数据表</p>
-<p>2、查询所有同学的学号、姓名、选课数、总成绩</p>
-<pre><code class="sql">select s.student_id,stu.name,count(s.course_id),sum(s.score)
-from
-    score s,
-    student stu
-where
-s.student_id = stu.student_id
-group by s.student_id;
-</code></pre>
-<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><ul>
-<li>通常与GROUP BY子句一起使用</li>
-<li>WHERE过滤行，HAVING过滤组</li>
-<li>出现顺序：WHERE&gt;GROUP BY&gt;HAVING</li>
-</ul>
-<p>3、查询平均成绩大于60的同学的学号和平均成绩</p>
-<pre><code class="sql">select student_id,avg(score)
-from score
-group by student_id
-having avg(score)&gt;60
-</code></pre>
-<p>4、查询没有学全所有课的同学的学号、姓名</p>
-<pre><code class="sql">select stu.student_id,stu.name
-from
-student stu,
-score s
-where stu.student_id = s.student_id
-group by s.student_id
-having count(*) &lt;
-(select count(*) from course)
-</code></pre>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>Lock</tag>
-        <tag>MySQL</tag>
-        <tag>MyISAM</tag>
-        <tag>InnoDB</tag>
-        <tag>SQL</tag>
       </tags>
   </entry>
   <entry>
@@ -4005,6 +3728,283 @@ class Solution {
       </tags>
   </entry>
   <entry>
+    <title>Database Basic</title>
+    <url>/2019/03/04/database/</url>
+    <content><![CDATA[<h1 id="数据库架构"><a href="#数据库架构" class="headerlink" title="数据库架构"></a>数据库架构</h1><h2 id="如何设计一个关系型数据库"><a href="#如何设计一个关系型数据库" class="headerlink" title="如何设计一个关系型数据库"></a>如何设计一个关系型数据库</h2><p><img src="/2019/03/04/database/design.jpg" alt="design"></p>
+<ul>
+<li>实例与os文件系统相对应</li>
+<li>io时间长，io一次将块和页至于内存，相近数据访问概率高</li>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><ul>
+<li>数据量很大时，避免全表扫描</li>
+<li>类似字典</li>
+<li>提升查询速度</li>
+<li>主键，唯一键，普通键作为索引</li>
+</ul>
+<h3 id="如何生成索引"><a href="#如何生成索引" class="headerlink" title="如何生成索引"></a>如何生成索引</h3><h4 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h4><ul>
+<li>左小右大</li>
+<li>对半搜索，O(logn)</li>
+</ul>
+<p><img src="/2019/03/04/database/twotree.jpg" alt="twotree"></p>
+<ul>
+<li>查找速度快</li>
+<li>可能会很深，导致IO增多，速度降低（每深一层一次IO）</li>
+</ul>
+<h4 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h4><ul>
+<li><p>平衡多路查找树</p>
+<p><img src="/2019/03/04/database/btree.jpg" alt="btree"></p>
+</li>
+<li><p>平衡</p>
+</li>
+</ul>
+<h4 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+-Tree"></a>B+-Tree</h4><p><img src="/2019/03/04/database/bplustree.jpg" alt="bplustree"></p>
+<p>B+TREE更有优势</p>
+<ul>
+<li>磁盘读写代价低</li>
+<li>查询效率稳定（所有查询路径相同）</li>
+<li>有利于数据库的扫描，范围查询（叶子相连）</li>
+</ul>
+<h4 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h4><p><img src="/2019/03/04/database/hash.jpg" alt="hash"></p>
+<ul>
+<li>只能满足=，不满足IN（hash运算前后关系不确定）</li>
+<li>无法避免排序运算</li>
+<li>不能利用部分索引</li>
+<li>不能避免行扫描</li>
+<li>大量hash相等，性能低下，变为线性</li>
+</ul>
+<h4 id="BitMap索引"><a href="#BitMap索引" class="headerlink" title="BitMap索引"></a>BitMap索引</h4><p><img src="/2019/03/04/database/bitmap.jpg" alt="bitmap"></p>
+<ul>
+<li>锁力度大</li>
+<li>应用范围小，关键字有限</li>
+</ul>
+<h3 id="密集索引-amp-稀疏索引"><a href="#密集索引-amp-稀疏索引" class="headerlink" title="密集索引&amp;稀疏索引"></a>密集索引&amp;稀疏索引</h3><ul>
+<li>密集索引：每个搜索码值对应一个索引</li>
+<li>稀疏索引：只为索引码的某些值建立索引项</li>
+</ul>
+<p><img src="/2019/03/04/database/mijixishu.jpg" alt="mijixishu"></p>
+<p>代表：（mysql两个引擎）</p>
+<ul>
+<li>InnoDB：密集索引（数据索引存储在.ibd文件）</li>
+<li>MyISAM：稀疏索引（数据索引分开存储.MYI.MYD）</li>
+</ul>
+<p><img src="/2019/03/04/database/innodb.jpg" alt="innodb"></p>
+<p>检索过程：</p>
+<p><img src="/2019/03/04/database/jiansuo.jpg" alt="jiansuo"></p>
+<h3 id="如何调优sql"><a href="#如何调优sql" class="headerlink" title="如何调优sql"></a>如何调优sql</h3><ul>
+<li>根据慢日志定位慢查询sql</li>
+</ul>
+<blockquote>
+<p>show variables like ‘%quer%’;        //查看相关变量</p>
+</blockquote>
+<p><img src="/2019/03/04/database/slowlog.jpg" alt="slowlog"></p>
+<blockquote>
+<p>show status like ‘%slow_queries’;        //慢查询数量</p>
+</blockquote>
+<blockquote>
+<p>set global slow_query_log = on;</p>
+<p>set global long_query_time = 1;    //需要重连</p>
+</blockquote>
+<ul>
+<li>Explain分析sql</li>
+</ul>
+<p>加在执行语句前，查看结果项</p>
+<p>type：index，all需要优化</p>
+<p>extra：Using filesort/Using temporary</p>
+<ul>
+<li>修改sql尽量让sql走索引</li>
+</ul>
+<h3 id="mysql联合索引最左匹配原则"><a href="#mysql联合索引最左匹配原则" class="headerlink" title="mysql联合索引最左匹配原则"></a>mysql联合索引最左匹配原则</h3><p>index（a，b）</p>
+<p>只用b select 不走索引</p>
+<p><img src="/2019/03/04/database/unionindex.jpg" alt="unionindex"></p>
+<h3 id="索引越多越好吗"><a href="#索引越多越好吗" class="headerlink" title="索引越多越好吗"></a>索引越多越好吗</h3><ul>
+<li>数据量小不需要建立索引</li>
+<li>数据变更需要维护索引，维护成本变高</li>
+<li>更多索引占用更多空间</li>
+</ul>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="数据库锁的分类"><a href="#数据库锁的分类" class="headerlink" title="数据库锁的分类"></a>数据库锁的分类</h3><h4 id="按粒度划分"><a href="#按粒度划分" class="headerlink" title="按粒度划分"></a>按粒度划分</h4><ul>
+<li>表级锁</li>
+<li>行级锁</li>
+<li>页级锁</li>
+</ul>
+<h4 id="按锁级别划分"><a href="#按锁级别划分" class="headerlink" title="按锁级别划分"></a>按锁级别划分</h4><ul>
+<li>共享锁</li>
+<li>排他锁</li>
+</ul>
+<h4 id="按枷锁方式划分"><a href="#按枷锁方式划分" class="headerlink" title="按枷锁方式划分"></a>按枷锁方式划分</h4><ul>
+<li>自动锁</li>
+<li>显式锁</li>
+</ul>
+<h4 id="按操作划分"><a href="#按操作划分" class="headerlink" title="按操作划分"></a>按操作划分</h4><ul>
+<li>DML锁（对数据操作）</li>
+<li>DDL锁（对表结构操作）</li>
+</ul>
+<h4 id="按使用方式划分"><a href="#按使用方式划分" class="headerlink" title="按使用方式划分"></a>按使用方式划分</h4><ul>
+<li>乐观锁（基于数据版本）</li>
+<li>悲观锁（对外界修改保守态度）</li>
+</ul>
+<h3 id="MyISAM-amp-InnoDB锁的区别"><a href="#MyISAM-amp-InnoDB锁的区别" class="headerlink" title="MyISAM&amp;InnoDB锁的区别"></a>MyISAM&amp;InnoDB锁的区别</h3><ul>
+<li>MyISAM默认表级锁，不支持行级锁</li>
+</ul>
+<p>对一个表进行操作时，会将表锁，其他session不能操作</p>
+<p>读锁（共享锁）不释放，无法增加写锁</p>
+<p>读锁（共享锁）不释放，可以增加读锁</p>
+<p>写锁（排他锁）不释放，无法增加读锁</p>
+<p>写锁不释放，无法增加写锁</p>
+<blockquote>
+<p>lock tables table_name read;</p>
+<p>unlock tables;</p>
+</blockquote>
+<ul>
+<li>InnoDB默认行级锁，也支持表级锁</li>
+</ul>
+<p>InnoDB采用二段锁</p>
+<p>行级锁只锁一行数据</p>
+<p>但是不走索引时，整张表都会被锁住</p>
+<h4 id="MyISAM适合的场景"><a href="#MyISAM适合的场景" class="headerlink" title="MyISAM适合的场景"></a>MyISAM适合的场景</h4><ul>
+<li>频繁执行全表count语句（保存行数变量）</li>
+<li>对数据增删改频率低，查询频率高（增删改锁表）</li>
+<li>没有事务</li>
+</ul>
+<h4 id="InnoDB适合的场景"><a href="#InnoDB适合的场景" class="headerlink" title="InnoDB适合的场景"></a>InnoDB适合的场景</h4><ul>
+<li>数据增删改查都频繁（行级锁）</li>
+<li>可靠性要求高</li>
+<li>支持事务</li>
+</ul>
+<h3 id="数据库事务四大特性"><a href="#数据库事务四大特性" class="headerlink" title="数据库事务四大特性"></a>数据库事务四大特性</h3><p>ACID</p>
+<ul>
+<li>原子性（Atomic）操作一体化</li>
+<li>一致性（Consistency）总体一致eg转账</li>
+<li>隔离性（Isolation）并发互不影响</li>
+<li>持久性（Durability）可恢复，储存持久</li>
+</ul>
+<h3 id="事务隔离级别以及各级别下并发访问"><a href="#事务隔离级别以及各级别下并发访问" class="headerlink" title="事务隔离级别以及各级别下并发访问"></a>事务隔离级别以及各级别下并发访问</h3><h4 id="事务并发访问可能引起的问题"><a href="#事务并发访问可能引起的问题" class="headerlink" title="事务并发访问可能引起的问题"></a>事务并发访问可能引起的问题</h4><ul>
+<li>更新丢失</li>
+</ul>
+<p>一个事务的更新覆盖了另一个事务的更新</p>
+<p><img src="/2019/03/04/database/updatelost.jpg" alt="updatelost"></p>
+<p>（mysql所有事务隔离级别已经避免）</p>
+<ul>
+<li>Dirty Read</li>
+</ul>
+<p>一个事务读到另一个事务未提交的更新数据（回滚发生问题）</p>
+<blockquote>
+<p>select @@tx_isolation;        //查看事务隔离级别</p>
+<p>set session transaction isolation level read uncommitted;    //设置隔离级别</p>
+</blockquote>
+<p>（READ-COMMITTED事务隔离级别以上可避免）</p>
+<ul>
+<li>不可重复读</li>
+</ul>
+<p>A多次读取数据，B在过程中更新数据，导致事务A读取数据不一致</p>
+<p>（REPEATABLE-READ事务隔离级别以上可避免）InnoDB default</p>
+<ul>
+<li>幻读</li>
+</ul>
+<p>事务A读取与搜索条件匹配的若干行，事务B插入或删除行的方式修改了A的结果集，导致事务A像出现幻觉</p>
+<p>（SERIALIZABLE事务隔离级别以上可避免）Top Level</p>
+<h4 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h4><p><img src="/2019/03/04/database/level.jpg" alt="level"></p>
+<p>事务隔离级别越高，串行程度越高，并行化越低，效率越低</p>
+<p>Oracle默认为READ-COMMITTED，MySQL默认为REPEATABLE-READ</p>
+<h4 id="InnoDB可重复读隔离级别下避免幻读"><a href="#InnoDB可重复读隔离级别下避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下避免幻读"></a>InnoDB可重复读隔离级别下避免幻读</h4><h5 id="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"><a href="#表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）" class="headerlink" title="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"></a>表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）</h5><ul>
+<li>当前读：select…lock in share mode, select…for update</li>
+</ul>
+<p>update, delete, insert（）</p>
+<p>加了锁的增删改查，读取最新版本，并且锁住避免其他事务修改当前记录</p>
+<p><img src="/2019/03/04/database/dangqian.jpg" alt="dangqian"></p>
+<ul>
+<li>快照读：不加锁（SERIALIZABLE事务隔离级别不成立）</li>
+</ul>
+<p>可能读到的是历史版本数据</p>
+<h5 id="内在：next-key锁（行锁-gap锁）"><a href="#内在：next-key锁（行锁-gap锁）" class="headerlink" title="内在：next-key锁（行锁+gap锁）"></a>内在：next-key锁（行锁+gap锁）</h5><p>RR级别以上支持gap锁，防止两次当前读出现幻读</p>
+<p>不锁内容本身，锁周围数据</p>
+<p>对主键和唯一键索引时：</p>
+<ul>
+<li>where条件全部命中，不会加gap锁，只加记录锁</li>
+</ul>
+<p><img src="/2019/03/04/database/recordlock.jpg" alt="recordlock"></p>
+<ul>
+<li>where条件部分命中或全不命中，加gap锁</li>
+</ul>
+<p>gap锁用在非唯一索引或不走索引的当前读中</p>
+<p>1、非唯一索引</p>
+<p><img src="/2019/03/04/database/gaplock1.jpg" alt="gaplock1"></p>
+<p>(6,9], (9,11] 被锁住（不仅id在范围内，而是范围内所有数据，可能id是20也会被锁住）</p>
+<p>官方定义：</p>
+<p><img src="/2019/03/04/database/gaplock2.jpg" alt="gaplock2"></p>
+<p>2、不走索引</p>
+<p><img src="/2019/03/04/database/gaplock3.jpg" alt="gaplock3"></p>
+<p>对所有gap上锁</p>
+<h3 id="RC、RR级别下InnoDB的非阻塞读的实现"><a href="#RC、RR级别下InnoDB的非阻塞读的实现" class="headerlink" title="RC、RR级别下InnoDB的非阻塞读的实现"></a>RC、RR级别下InnoDB的非阻塞读的实现</h3><ul>
+<li>数据行里DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID字段</li>
+</ul>
+<p>DB_TRX_ID：最后一次对本行数据做修改的事务ID</p>
+<p>DB_ROLL_PTR：回滚指针，undo日志记录</p>
+<p>DB_ROW_ID：行号</p>
+<ul>
+<li>undo log，提交后丢弃</li>
+<li>update undo log，回滚，快照都需要此log</li>
+</ul>
+<p><img src="/2019/03/04/database/undolog.jpg" alt="undolog"></p>
+<ul>
+<li>read view，能看到的数据，根据算法处理</li>
+</ul>
+<h2 id="关键语法"><a href="#关键语法" class="headerlink" title="关键语法"></a>关键语法</h2><h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><ul>
+<li>SELECT子句中的列名必须为分组列或列函数</li>
+<li>列函数对于GROUP BY子句定义的每个组返回一个结果</li>
+</ul>
+<p><img src="/2019/03/04/database/groupby.jpg" alt="groupby"></p>
+<p>1、查询所有同学的学号、选课数、总成绩</p>
+<pre><code class="sql">select student_id,count(course_id),sum(score)
+
+from score
+
+group by student_id
+</code></pre>
+<p>GROUP BY会缓存临时数据表</p>
+<p>2、查询所有同学的学号、姓名、选课数、总成绩</p>
+<pre><code class="sql">select s.student_id,stu.name,count(s.course_id),sum(s.score)
+from
+    score s,
+    student stu
+where
+s.student_id = stu.student_id
+group by s.student_id;
+</code></pre>
+<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><ul>
+<li>通常与GROUP BY子句一起使用</li>
+<li>WHERE过滤行，HAVING过滤组</li>
+<li>出现顺序：WHERE&gt;GROUP BY&gt;HAVING</li>
+</ul>
+<p>3、查询平均成绩大于60的同学的学号和平均成绩</p>
+<pre><code class="sql">select student_id,avg(score)
+from score
+group by student_id
+having avg(score)&gt;60
+</code></pre>
+<p>4、查询没有学全所有课的同学的学号、姓名</p>
+<pre><code class="sql">select stu.student_id,stu.name
+from
+student stu,
+score s
+where stu.student_id = s.student_id
+group by s.student_id
+having count(*) &lt;
+(select count(*) from course)
+</code></pre>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>Lock</tag>
+        <tag>MySQL</tag>
+        <tag>MyISAM</tag>
+        <tag>InnoDB</tag>
+        <tag>SQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Golang Advanced Features</title>
     <url>/2019/06/23/goad/</url>
     <content><![CDATA[<h1 id="面向函数编程"><a href="#面向函数编程" class="headerlink" title="面向函数编程"></a>面向函数编程</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>变量、参数、返回值可以是函数</p>
@@ -4937,148 +4937,6 @@ func main() {
       </tags>
   </entry>
   <entry>
-    <title>Hadoop basic concept</title>
-    <url>/2019/02/01/hadoop/</url>
-    <content><![CDATA[<h1 id="HADOOP"><a href="#HADOOP" class="headerlink" title="HADOOP"></a>HADOOP</h1><h2 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
-<li>master/slave architecture</li>
-</ul>
-<ul>
-<li>an HDFS cluster has one master(NameNode/NN)  -  N slaves(DataNode/DN)</li>
-<li>一个文件拆分成多个block，分散存储</li>
-<li>NN：负责客户端请求响应，元数据管理（文件名称、副本系数、DN地址）</li>
-<li>DN：存储对应Block，心跳信息，健康状况</li>
-<li>一个文件的Block只有最后一个可能大小不同</li>
-<li>Files in HDFS are write-once  and have strictly one writer at any time</li>
-</ul>
-<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><ul>
-<li><p>CDH download <a href="http://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/</a> + filename</p>
-</li>
-<li><p>JDK</p>
-</li>
-<li><p>SSH 免密</p>
-</li>
-<li><p>下载hadoop解压</p>
-</li>
-<li><p>修改java_home, core-site.xml, hdfs-site.xml, slave</p>
-</li>
-<li><pre><code>$ bin/hdfs namenode -format
-</code></pre></li>
-<li><pre><code> $ sbin/start-dfs.sh
-</code></pre><h3 id="shell操作"><a href="#shell操作" class="headerlink" title="shell操作"></a>shell操作</h3></li>
-<li><p>hadoop fs -command</p>
-</li>
-<li>hdfs dfs -command</li>
-<li>添加hadoop/bin到环境变量~/.bash_profile     source</li>
-</ul>
-<h3 id="Java-API操作"><a href="#Java-API操作" class="headerlink" title="Java API操作"></a>Java API操作</h3><ul>
-<li>maven导入对应版本依赖</li>
-</ul>
-<h2 id="YARN"><a href="#YARN" class="headerlink" title="YARN"></a>YARN</h2><h3 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h3><ul>
-<li><p>ResourceManager: RM</p>
-<p>同一时间一个集群只有一个（有备份）</p>
-<p>处理客户端请求：提交作业，杀死作业</p>
-<p>监控NM，挂了重新处理</p>
-</li>
-<li><p>NodeManager: NM</p>
-<p>集群中有多个，负责本身节点资源管理</p>
-<p>定时向RM汇报本节点资源使用情况</p>
-<p>接受并处理来自RM的命令：启动Container</p>
-<p>处理来自AM的命令</p>
-</li>
-<li><p>ApplicationMaster: AM</p>
-<p>每个应用程序对应一个：MapReduce, Spark，负责应用程序管理</p>
-<p>为应用程序向RM申请资源（core, memory），分配给内部Task</p>
-<p>需要与NM通信：启动，停止task，task运行于container中</p>
-</li>
-<li><p>Container</p>
-<p>封装CPU，Memory等资源的容器</p>
-</li>
-<li><p>Client</p>
-<p>提交、查看、杀死作业</p>
-</li>
-</ul>
-<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><h3 id="编程模型"><a href="#编程模型" class="headerlink" title="编程模型"></a>编程模型</h3><ul>
-<li>Input</li>
-<li>Splitting</li>
-<li>Mapping</li>
-<li>Shuffling</li>
-<li>Reducing</li>
-<li>Final Result</li>
-</ul>
-<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul>
-<li><p>Split：交由MapReduce作业处理的最小计算单元</p>
-<p>默认与HDFS blocksize（最小存储单元）对应</p>
-</li>
-<li><p>InputFormat：将输入的数据进行分片（split）</p>
-<p>TextInputFormat：处理文本格式数据</p>
-</li>
-<li><p>OutputFormat：结果数据</p>
-</li>
-<li><p>Combiner：本地的Reduce，减少MapTask输出数据量</p>
-</li>
-<li><p>Partitioner：规定MapTask输出的数据交由哪个ReduceTask处理</p>
-</li>
-</ul>
-<h3 id="MapReduce1-x架构"><a href="#MapReduce1-x架构" class="headerlink" title="MapReduce1.x架构"></a>MapReduce1.x架构</h3><ul>
-<li><p>JobTracker：JT</p>
-<p>作业管理者</p>
-<p>将作业分解成多个任务：Task（MapTask，ReduceTaask）</p>
-<p>将任务分派给TaskTracker运行</p>
-<p>作业的监控、容错处理（Task作业挂了，重新指派）</p>
-<p>接受TT心跳</p>
-</li>
-<li><p>TaskTracker：TT</p>
-<p>任务执行者</p>
-<p>与JT交互</p>
-</li>
-<li><p>MapTask</p>
-<p>解析数据，交给自己的map方法</p>
-<p>将map输出结果写到本地磁盘（如果没有Reduce，则写入HDFS）</p>
-</li>
-<li><p>ReduceTask</p>
-<p>将MapTask输出的数据进行读取</p>
-<p>按照数据进行分组传给自己的reduce方法处理</p>
-<p>输出结果到HDFS</p>
-</li>
-</ul>
-<h3 id="MapReduce2-x架构"><a href="#MapReduce2-x架构" class="headerlink" title="MapReduce2.x架构"></a>MapReduce2.x架构</h3><ul>
-<li>同YARN</li>
-</ul>
-<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="日志数据内容"><a href="#日志数据内容" class="headerlink" title="日志数据内容"></a>日志数据内容</h3><ul>
-<li>访问系统属性</li>
-<li>访问特征：URL，停留时间</li>
-<li>访问信息：session_id，ip</li>
-<li>Nginx记录</li>
-</ul>
-<h3 id="数据处理流程"><a href="#数据处理流程" class="headerlink" title="数据处理流程"></a>数据处理流程</h3><ul>
-<li><p>数据采集</p>
-<p>Flume：web日志写入HDFS</p>
-</li>
-<li><p>数据清洗</p>
-<p>剔除脏数据：Spark，Hive，MapReduce</p>
-</li>
-<li><p>数据处理</p>
-<p>Spark，Hive，MapReduce</p>
-</li>
-<li><p>处理结果入库</p>
-<p>RDBMS，NoSQL</p>
-</li>
-<li><p>数据可视化</p>
-<p>图形化展示，渲染：ECharts、HUE、Zeppelin</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>MapReduce</tag>
-        <tag>Hadoop</tag>
-        <tag>Yarn</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Golang Basic</title>
     <url>/2019/06/15/golang/</url>
     <content><![CDATA[<h1 id="Golang语法"><a href="#Golang语法" class="headerlink" title="Golang语法"></a>Golang语法</h1><ul>
@@ -5870,247 +5728,145 @@ func (r *Retriever) Get(url string) string {
       </tags>
   </entry>
   <entry>
-    <title>Java GC</title>
-    <url>/2019/02/22/javagc/</url>
-    <content><![CDATA[<h1 id="垃圾判定"><a href="#垃圾判定" class="headerlink" title="垃圾判定"></a>垃圾判定</h1><ul>
-<li>没有被其他对象引用</li>
+    <title>Hadoop basic concept</title>
+    <url>/2019/02/01/hadoop/</url>
+    <content><![CDATA[<h1 id="HADOOP"><a href="#HADOOP" class="headerlink" title="HADOOP"></a>HADOOP</h1><h2 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>master/slave architecture</li>
 </ul>
-<h2 id="判定算法"><a href="#判定算法" class="headerlink" title="判定算法"></a>判定算法</h2><h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><ul>
-<li>判断对象的引用数量</li>
-<li>每个对象都有一个引用计数器，被引用+1，完成引用-1</li>
-<li>任何引用计数为0的对象实例可以被当作垃圾收集</li>
-</ul>
-<p>优点：执行效率高，程序执行受影响小</p>
-<p>缺点：无法检测出循环引用，导致内存泄露（引用计数永不为0）</p>
-<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><ul>
-<li>通过判断对象的引用链是否可达来决定对象是否被回收</li>
-</ul>
-<p><img src="/2019/02/22/javagc/access.jpg" alt="access"></p>
-<h4 id="GC-Root对象"><a href="#GC-Root对象" class="headerlink" title="GC Root对象"></a>GC Root对象</h4><ul>
-<li>虚拟机栈中引用的对象</li>
-<li>方法区中常量引用的对象</li>
-<li>方法区中类静态属性引用的对象</li>
-<li>本地方法栈中JNI（Native方法）的引用对象</li>
-<li>活跃线程的引用对象</li>
-</ul>
-<h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h1><h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><h3 id="标记-清除算法（Mark-amp-Sweep）"><a href="#标记-清除算法（Mark-amp-Sweep）" class="headerlink" title="标记-清除算法（Mark &amp; Sweep）"></a>标记-清除算法（Mark &amp; Sweep）</h3><ul>
-<li>标记：从根集合扫描，对存活对象进行标记</li>
-<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象</li>
-</ul>
-<p><img src="/2019/02/22/javagc/sweep.jpg" alt="sweep"></p>
 <ul>
-<li>缺点：碎片化严重</li>
+<li>an HDFS cluster has one master(NameNode/NN)  -  N slaves(DataNode/DN)</li>
+<li>一个文件拆分成多个block，分散存储</li>
+<li>NN：负责客户端请求响应，元数据管理（文件名称、副本系数、DN地址）</li>
+<li>DN：存储对应Block，心跳信息，健康状况</li>
+<li>一个文件的Block只有最后一个可能大小不同</li>
+<li>Files in HDFS are write-once  and have strictly one writer at any time</li>
 </ul>
-<h3 id="复制算法（Copying）"><a href="#复制算法（Copying）" class="headerlink" title="复制算法（Copying）"></a>复制算法（Copying）</h3><ul>
-<li>内存被分为对象面和空闲面</li>
-<li>对象在对象面创建</li>
-<li>对象面用完，将存活的对象复制到空闲面</li>
-<li>将对象面所有对象清理</li>
+<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><ul>
+<li><p>CDH download <a href="http://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/</a> + filename</p>
+</li>
+<li><p>JDK</p>
+</li>
+<li><p>SSH 免密</p>
+</li>
+<li><p>下载hadoop解压</p>
+</li>
+<li><p>修改java_home, core-site.xml, hdfs-site.xml, slave</p>
+</li>
+<li><pre><code>$ bin/hdfs namenode -format
+</code></pre></li>
+<li><pre><code> $ sbin/start-dfs.sh
+</code></pre><h3 id="shell操作"><a href="#shell操作" class="headerlink" title="shell操作"></a>shell操作</h3></li>
+<li><p>hadoop fs -command</p>
+</li>
+<li>hdfs dfs -command</li>
+<li>添加hadoop/bin到环境变量~/.bash_profile     source</li>
 </ul>
-<p><img src="/2019/02/22/javagc/copy.jpg" alt="copy"></p>
-<ul>
-<li>解决碎片化问题</li>
-<li>顺序分配内存，简单高效</li>
-<li>适合存活率低的场景（不适合老年代）</li>
+<h3 id="Java-API操作"><a href="#Java-API操作" class="headerlink" title="Java API操作"></a>Java API操作</h3><ul>
+<li>maven导入对应版本依赖</li>
 </ul>
-<h3 id="标记-整理算法（Compacting）"><a href="#标记-整理算法（Compacting）" class="headerlink" title="标记-整理算法（Compacting）"></a>标记-整理算法（Compacting）</h3><ul>
-<li>标记：从根集合扫描，对存活对象进行标记</li>
-<li>清除：移动所有存活对象，按照内存地址重新依次排列，将末端内存地址以后的内存全部回收</li>
+<h2 id="YARN"><a href="#YARN" class="headerlink" title="YARN"></a>YARN</h2><h3 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h3><ul>
+<li><p>ResourceManager: RM</p>
+<p>同一时间一个集群只有一个（有备份）</p>
+<p>处理客户端请求：提交作业，杀死作业</p>
+<p>监控NM，挂了重新处理</p>
+</li>
+<li><p>NodeManager: NM</p>
+<p>集群中有多个，负责本身节点资源管理</p>
+<p>定时向RM汇报本节点资源使用情况</p>
+<p>接受并处理来自RM的命令：启动Container</p>
+<p>处理来自AM的命令</p>
+</li>
+<li><p>ApplicationMaster: AM</p>
+<p>每个应用程序对应一个：MapReduce, Spark，负责应用程序管理</p>
+<p>为应用程序向RM申请资源（core, memory），分配给内部Task</p>
+<p>需要与NM通信：启动，停止task，task运行于container中</p>
+</li>
+<li><p>Container</p>
+<p>封装CPU，Memory等资源的容器</p>
+</li>
+<li><p>Client</p>
+<p>提交、查看、杀死作业</p>
+</li>
 </ul>
-<p><img src="/2019/02/22/javagc/sc.png" alt="compact"></p>
-<ul>
-<li>避免了碎片化</li>
-<li>不用设置两块内存空间</li>
-<li>适用于存活率高的场景（老年代）</li>
+<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><h3 id="编程模型"><a href="#编程模型" class="headerlink" title="编程模型"></a>编程模型</h3><ul>
+<li>Input</li>
+<li>Splitting</li>
+<li>Mapping</li>
+<li>Shuffling</li>
+<li>Reducing</li>
+<li>Final Result</li>
 </ul>
-<h3 id="分代收集算法（Generational-Collector）"><a href="#分代收集算法（Generational-Collector）" class="headerlink" title="分代收集算法（Generational Collector）"></a>分代收集算法（Generational Collector）</h3><ul>
-<li>回收算法组合拳</li>
-<li>按照对象生命周期不同划分区域采取不同算法</li>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul>
+<li><p>Split：交由MapReduce作业处理的最小计算单元</p>
+<p>默认与HDFS blocksize（最小存储单元）对应</p>
+</li>
+<li><p>InputFormat：将输入的数据进行分片（split）</p>
+<p>TextInputFormat：处理文本格式数据</p>
+</li>
+<li><p>OutputFormat：结果数据</p>
+</li>
+<li><p>Combiner：本地的Reduce，减少MapTask输出数据量</p>
+</li>
+<li><p>Partitioner：规定MapTask输出的数据交由哪个ReduceTask处理</p>
+</li>
 </ul>
-<p><img src="/2019/02/22/javagc/gcold.jpg" alt="gcold"></p>
-<ul>
-<li>jdk8以后取消永久代</li>
+<h3 id="MapReduce1-x架构"><a href="#MapReduce1-x架构" class="headerlink" title="MapReduce1.x架构"></a>MapReduce1.x架构</h3><ul>
+<li><p>JobTracker：JT</p>
+<p>作业管理者</p>
+<p>将作业分解成多个任务：Task（MapTask，ReduceTaask）</p>
+<p>将任务分派给TaskTracker运行</p>
+<p>作业的监控、容错处理（Task作业挂了，重新指派）</p>
+<p>接受TT心跳</p>
+</li>
+<li><p>TaskTracker：TT</p>
+<p>任务执行者</p>
+<p>与JT交互</p>
+</li>
+<li><p>MapTask</p>
+<p>解析数据，交给自己的map方法</p>
+<p>将map输出结果写到本地磁盘（如果没有Reduce，则写入HDFS）</p>
+</li>
+<li><p>ReduceTask</p>
+<p>将MapTask输出的数据进行读取</p>
+<p>按照数据进行分组传给自己的reduce方法处理</p>
+<p>输出结果到HDFS</p>
+</li>
 </ul>
-<p><img src="/2019/02/22/javagc/gcnow.jpg" alt="gcnow"></p>
-<ul>
-<li>年轻代存活率低，采用复制算法</li>
-<li>老年代存活率高，采用标记清除/整理算法</li>
+<h3 id="MapReduce2-x架构"><a href="#MapReduce2-x架构" class="headerlink" title="MapReduce2.x架构"></a>MapReduce2.x架构</h3><ul>
+<li>同YARN</li>
 </ul>
-<h4 id="Minor-GC"><a href="#Minor-GC" class="headerlink" title="Minor GC"></a>Minor GC</h4><ul>
-<li>年轻代GC</li>
-<li>复制算法</li>
-<li>频繁</li>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="日志数据内容"><a href="#日志数据内容" class="headerlink" title="日志数据内容"></a>日志数据内容</h3><ul>
+<li>访问系统属性</li>
+<li>访问特征：URL，停留时间</li>
+<li>访问信息：session_id，ip</li>
+<li>Nginx记录</li>
 </ul>
-<p>年轻代分为两个区域</p>
-<ul>
-<li>Eden</li>
-<li>两个Survivor：From，To</li>
-<li>8：1：1</li>
+<h3 id="数据处理流程"><a href="#数据处理流程" class="headerlink" title="数据处理流程"></a>数据处理流程</h3><ul>
+<li><p>数据采集</p>
+<p>Flume：web日志写入HDFS</p>
+</li>
+<li><p>数据清洗</p>
+<p>剔除脏数据：Spark，Hive，MapReduce</p>
+</li>
+<li><p>数据处理</p>
+<p>Spark，Hive，MapReduce</p>
+</li>
+<li><p>处理结果入库</p>
+<p>RDBMS，NoSQL</p>
+</li>
+<li><p>数据可视化</p>
+<p>图形化展示，渲染：ECharts、HUE、Zeppelin</p>
+</li>
 </ul>
-<p><img src="/2019/02/22/javagc/young.jpg" alt="young"></p>
-<p>对象在Eden出生，确定存活转移到s0</p>
-<p><img src="/2019/02/22/javagc/y1.jpg" alt="y1"></p>
-<p>清除所有eden区对象，并将存活对象年龄设置为1</p>
-<p><img src="/2019/02/22/javagc/y2.jpg" alt="y2"></p>
-<p>Eden重新加载对象，重复上述过程到s2，年龄+1</p>
-<p><img src="/2019/02/22/javagc/y3.jpg" alt="y2"></p>
-<p>清空Eden和s0</p>
-<p><img src="/2019/02/22/javagc/y4.jpg" alt="y2"></p>
-<p>周而复始</p>
-<p><img src="/2019/02/22/javagc/y5.jpg" alt="y2"></p>
-<p>年龄达到某值，进入老年区</p>
-<blockquote>
-<p>-XX:MaxTenuringThreshold     //可调整此年龄</p>
-</blockquote>
-<p>年轻代溢出对象也会转移至老年代</p>
-<p>晋升到老年代的对象：</p>
-<ul>
-<li>经理多数Minor GC，年龄超过一定数值</li>
-<li>Survivor中放不下的对象</li>
-<li>新生成的大对象</li>
-</ul>
-<blockquote>
-<p>-XX:+PretenuerSizeThreshold</p>
-</blockquote>
-<h4 id="调优参数"><a href="#调优参数" class="headerlink" title="调优参数"></a>调优参数</h4><blockquote>
-<p>-XX:SurvivorRatio        //Eden,Survivor比例，默认8：1</p>
-<p>-XX:NewRatio            //年轻代与老年代比例，默认1：2</p>
-</blockquote>
-<h4 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h4><ul>
-<li>老年代存放周期较长的对象</li>
-<li>采用标记清理/整理算法GC</li>
-<li>速度慢</li>
-<li>频率低</li>
-</ul>
-<p>触发条件：</p>
-<ul>
-<li>老年代空间不足</li>
-<li>永久代空间不足（JDK7以后取消）</li>
-<li>CMS GC出现promotion/concurrent mode fail</li>
-<li>Minor GC晋升老年代平均大小大于剩余空间</li>
-<li>调用System.gc() 显式但不强制</li>
-<li>使用RMI进行RPC或管理的JDK应用，一小时执行一次</li>
-</ul>
-<h2 id="年轻代垃圾回收器"><a href="#年轻代垃圾回收器" class="headerlink" title="年轻代垃圾回收器"></a>年轻代垃圾回收器</h2><h3 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop-the-World"></a>Stop-the-World</h3><ul>
-<li>JVM由于要执行GC而停止应用程序的执行</li>
-<li>任何GC算法都会发生</li>
-<li>减少stop-the-world实现GC优化</li>
-</ul>
-<h3 id="Safepoint"><a href="#Safepoint" class="headerlink" title="Safepoint"></a>Safepoint</h3><ul>
-<li>GC时不再产生垃圾</li>
-<li>分析过程中对象引用关系不会发生变化的点</li>
-<li>到达安全点程序才会暂停</li>
-<li>多在方法调用，循环跳转，异常跳转等</li>
-<li>安全点数量适中</li>
-</ul>
-<h3 id="JVM运行模式"><a href="#JVM运行模式" class="headerlink" title="JVM运行模式"></a>JVM运行模式</h3><ul>
-<li>server，启动慢运行快</li>
-<li>client，启动快运行慢</li>
-</ul>
-<blockquote>
-<p>java -version</p>
-</blockquote>
-<h3 id="垃圾收集器关系"><a href="#垃圾收集器关系" class="headerlink" title="垃圾收集器关系"></a>垃圾收集器关系</h3><p><img src="/2019/02/22/javagc/collector.jpg" alt="collector"></p>
-<h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><blockquote>
-<p>-XX:+UseSerialGC        //复制算法</p>
-</blockquote>
-<ul>
-<li>单线程收集，GC时，必须暂停所有工作线程</li>
-<li>简单高效，client默认年轻代收集器</li>
-</ul>
-<h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><blockquote>
-<p>-XX:+UserParNewGC        //复制算法</p>
-</blockquote>
-<ul>
-<li>多线程收集</li>
-<li>单核执行效率不及Serial，多核下有优势</li>
-</ul>
-<h3 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h3><blockquote>
-<p>-XX:+UserParallelGC        //复制算法</p>
-</blockquote>
-<ul>
-<li>吞吐量=运行用户代码时间/(运行用户代码时间+GC时间)</li>
-<li>关注吞吐量，忽视用户线程卡顿</li>
-<li>Server模式下默认的年轻代收集器</li>
-</ul>
-<h2 id="老年代垃圾回收器"><a href="#老年代垃圾回收器" class="headerlink" title="老年代垃圾回收器"></a>老年代垃圾回收器</h2><h3 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h3><blockquote>
-<p>-XX:+UseSerialOldGC        //标记整理算法</p>
-</blockquote>
-<ul>
-<li>单线程收集，必须停止工作线程</li>
-<li>简单高效</li>
-</ul>
-<h3 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h3><blockquote>
-<p>-XX:+UseParallelOldGC        //标记整理算法</p>
-</blockquote>
-<ul>
-<li>多线程，吞吐量优先</li>
-</ul>
-<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a><strong>CMS收集器</strong></h3><blockquote>
-<p>-XX:UseConcMarkSweepGC        //标记清除算法</p>
-</blockquote>
-<ul>
-<li>初始标记：stop-the-world，JVM停顿，时间短</li>
-<li>并发标记：并发追溯标记，程序不停顿</li>
-<li>并发预处理：查找执行并发标记时晋升老年代的对象，不停顿</li>
-<li>重新标记：暂停虚拟机，扫描CMS堆中剩余对象</li>
-<li>并发清理：清理垃圾对象，程序不卡顿</li>
-<li>并发重置：重置CMS收集器的数据结构</li>
-</ul>
-<p>特点：边产生边回收、碎片化严重</p>
-<h3 id="Garbage-First"><a href="#Garbage-First" class="headerlink" title="Garbage First"></a>Garbage First</h3><ul>
-<li>并行和并发</li>
-<li>分代收集</li>
-<li>空间整合</li>
-<li>可预测停顿</li>
-</ul>
-<p>1、将整个Java堆内存划分为多个大小相等的Region</p>
-<p>2、年轻代老年代不再物理隔阂</p>
-<p><img src="/2019/02/22/javagc/gf.jpg" alt="gf"></p>
-<h3 id="收集器结合情况"><a href="#收集器结合情况" class="headerlink" title="收集器结合情况"></a>收集器结合情况</h3><p><img src="/2019/02/22/javagc/gclink.jpg" alt="gclink"></p>
-<h2 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h2><ul>
-<li>Object.finalize()是否与C++析构函数作用相同</li>
-</ul>
-<p>不同</p>
-<p>析构函数调用确定，finalize()不确定，也就是还未运行完已经被GC</p>
-<ul>
-<li>Java中的强引用、软引用、弱引用和虚引用</li>
-</ul>
-<p>强引用：</p>
-<blockquote>
-<p>Object obj = new Object();</p>
-</blockquote>
-<p>1、即使抛出OutOfMemoryError也不会回收该对象</p>
-<p>2、可以通过设置为null来弱化作用，使其被回收</p>
-<p>软引用：</p>
-<blockquote>
-<p>SoftReference<string> softRef=new SoftReference<string>(str);</string></string></p>
-</blockquote>
-<p>1、对象有用但非必须状态</p>
-<p>2、只有当内存不足，GC才会回收</p>
-<p>3、可用来实现高速缓存</p>
-<p>弱引用</p>
-<blockquote>
-<p>WeakReference<string> weakRef=new WeakReference<string>(str);</string></string></p>
-</blockquote>
-<p>1、比软引用更弱</p>
-<p>2、GC时被回收</p>
-<p>3、GC优先级低，所以被回收概率也不大</p>
-<p>虚引用：</p>
-<p>1、形同虚设</p>
-<p>2、任何时候都可能被回收</p>
-<p>3、跟踪对象被GC的活动，起哨兵作用</p>
-<p>4、必须和引用队列ReferenceQueue联合使用</p>
-<p><img src="/2019/02/22/javagc/ref.jpg" alt="ref"></p>
-<p>四种引用的关系：</p>
-<p><img src="/2019/02/22/javagc/ref4.jpg" alt="ref4"></p>
 ]]></content>
       <categories>
         <category>study note</category>
       </categories>
       <tags>
         <tag>Java</tag>
-        <tag>JVM</tag>
+        <tag>MapReduce</tag>
+        <tag>Hadoop</tag>
+        <tag>Yarn</tag>
       </tags>
   </entry>
   <entry>
@@ -7068,62 +6824,240 @@ func init(){
       </tags>
   </entry>
   <entry>
-    <title>JVM basic</title>
-    <url>/2019/02/21/jvm/</url>
-    <content><![CDATA[<h1 id="JVM-basic"><a href="#JVM-basic" class="headerlink" title="JVM basic"></a>JVM basic</h1><h2 id="Compile-Once-Run-Anywhere"><a href="#Compile-Once-Run-Anywhere" class="headerlink" title="Compile Once, Run Anywhere"></a>Compile Once, Run Anywhere</h2><ul>
-<li>平台无关性</li>
+    <title>Java GC</title>
+    <url>/2019/02/22/javagc/</url>
+    <content><![CDATA[<h1 id="垃圾判定"><a href="#垃圾判定" class="headerlink" title="垃圾判定"></a>垃圾判定</h1><ul>
+<li>没有被其他对象引用</li>
 </ul>
-<p><img src="/2019/02/21/jvm/javaclass.jpg" alt="javaclass"></p>
+<h2 id="判定算法"><a href="#判定算法" class="headerlink" title="判定算法"></a>判定算法</h2><h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><ul>
+<li>判断对象的引用数量</li>
+<li>每个对象都有一个引用计数器，被引用+1，完成引用-1</li>
+<li>任何引用计数为0的对象实例可以被当作垃圾收集</li>
+</ul>
+<p>优点：执行效率高，程序执行受影响小</p>
+<p>缺点：无法检测出循环引用，导致内存泄露（引用计数永不为0）</p>
+<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><ul>
+<li>通过判断对象的引用链是否可达来决定对象是否被回收</li>
+</ul>
+<p><img src="/2019/02/22/javagc/access.jpg" alt="access"></p>
+<h4 id="GC-Root对象"><a href="#GC-Root对象" class="headerlink" title="GC Root对象"></a>GC Root对象</h4><ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>本地方法栈中JNI（Native方法）的引用对象</li>
+<li>活跃线程的引用对象</li>
+</ul>
+<h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h1><h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><h3 id="标记-清除算法（Mark-amp-Sweep）"><a href="#标记-清除算法（Mark-amp-Sweep）" class="headerlink" title="标记-清除算法（Mark &amp; Sweep）"></a>标记-清除算法（Mark &amp; Sweep）</h3><ul>
+<li>标记：从根集合扫描，对存活对象进行标记</li>
+<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象</li>
+</ul>
+<p><img src="/2019/02/22/javagc/sweep.jpg" alt="sweep"></p>
 <ul>
-<li>查看字节码.class</li>
+<li>缺点：碎片化严重</li>
 </ul>
-<p>反编译工具</p>
+<h3 id="复制算法（Copying）"><a href="#复制算法（Copying）" class="headerlink" title="复制算法（Copying）"></a>复制算法（Copying）</h3><ul>
+<li>内存被分为对象面和空闲面</li>
+<li>对象在对象面创建</li>
+<li>对象面用完，将存活的对象复制到空闲面</li>
+<li>将对象面所有对象清理</li>
+</ul>
+<p><img src="/2019/02/22/javagc/copy.jpg" alt="copy"></p>
+<ul>
+<li>解决碎片化问题</li>
+<li>顺序分配内存，简单高效</li>
+<li>适合存活率低的场景（不适合老年代）</li>
+</ul>
+<h3 id="标记-整理算法（Compacting）"><a href="#标记-整理算法（Compacting）" class="headerlink" title="标记-整理算法（Compacting）"></a>标记-整理算法（Compacting）</h3><ul>
+<li>标记：从根集合扫描，对存活对象进行标记</li>
+<li>清除：移动所有存活对象，按照内存地址重新依次排列，将末端内存地址以后的内存全部回收</li>
+</ul>
+<p><img src="/2019/02/22/javagc/sc.png" alt="compact"></p>
+<ul>
+<li>避免了碎片化</li>
+<li>不用设置两块内存空间</li>
+<li>适用于存活率高的场景（老年代）</li>
+</ul>
+<h3 id="分代收集算法（Generational-Collector）"><a href="#分代收集算法（Generational-Collector）" class="headerlink" title="分代收集算法（Generational Collector）"></a>分代收集算法（Generational Collector）</h3><ul>
+<li>回收算法组合拳</li>
+<li>按照对象生命周期不同划分区域采取不同算法</li>
+</ul>
+<p><img src="/2019/02/22/javagc/gcold.jpg" alt="gcold"></p>
+<ul>
+<li>jdk8以后取消永久代</li>
+</ul>
+<p><img src="/2019/02/22/javagc/gcnow.jpg" alt="gcnow"></p>
+<ul>
+<li>年轻代存活率低，采用复制算法</li>
+<li>老年代存活率高，采用标记清除/整理算法</li>
+</ul>
+<h4 id="Minor-GC"><a href="#Minor-GC" class="headerlink" title="Minor GC"></a>Minor GC</h4><ul>
+<li>年轻代GC</li>
+<li>复制算法</li>
+<li>频繁</li>
+</ul>
+<p>年轻代分为两个区域</p>
+<ul>
+<li>Eden</li>
+<li>两个Survivor：From，To</li>
+<li>8：1：1</li>
+</ul>
+<p><img src="/2019/02/22/javagc/young.jpg" alt="young"></p>
+<p>对象在Eden出生，确定存活转移到s0</p>
+<p><img src="/2019/02/22/javagc/y1.jpg" alt="y1"></p>
+<p>清除所有eden区对象，并将存活对象年龄设置为1</p>
+<p><img src="/2019/02/22/javagc/y2.jpg" alt="y2"></p>
+<p>Eden重新加载对象，重复上述过程到s2，年龄+1</p>
+<p><img src="/2019/02/22/javagc/y3.jpg" alt="y2"></p>
+<p>清空Eden和s0</p>
+<p><img src="/2019/02/22/javagc/y4.jpg" alt="y2"></p>
+<p>周而复始</p>
+<p><img src="/2019/02/22/javagc/y5.jpg" alt="y2"></p>
+<p>年龄达到某值，进入老年区</p>
 <blockquote>
-<p>javap</p>
+<p>-XX:MaxTenuringThreshold     //可调整此年龄</p>
+</blockquote>
+<p>年轻代溢出对象也会转移至老年代</p>
+<p>晋升到老年代的对象：</p>
+<ul>
+<li>经理多数Minor GC，年龄超过一定数值</li>
+<li>Survivor中放不下的对象</li>
+<li>新生成的大对象</li>
+</ul>
+<blockquote>
+<p>-XX:+PretenuerSizeThreshold</p>
+</blockquote>
+<h4 id="调优参数"><a href="#调优参数" class="headerlink" title="调优参数"></a>调优参数</h4><blockquote>
+<p>-XX:SurvivorRatio        //Eden,Survivor比例，默认8：1</p>
+<p>-XX:NewRatio            //年轻代与老年代比例，默认1：2</p>
+</blockquote>
+<h4 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h4><ul>
+<li>老年代存放周期较长的对象</li>
+<li>采用标记清理/整理算法GC</li>
+<li>速度慢</li>
+<li>频率低</li>
+</ul>
+<p>触发条件：</p>
+<ul>
+<li>老年代空间不足</li>
+<li>永久代空间不足（JDK7以后取消）</li>
+<li>CMS GC出现promotion/concurrent mode fail</li>
+<li>Minor GC晋升老年代平均大小大于剩余空间</li>
+<li>调用System.gc() 显式但不强制</li>
+<li>使用RMI进行RPC或管理的JDK应用，一小时执行一次</li>
+</ul>
+<h2 id="年轻代垃圾回收器"><a href="#年轻代垃圾回收器" class="headerlink" title="年轻代垃圾回收器"></a>年轻代垃圾回收器</h2><h3 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop-the-World"></a>Stop-the-World</h3><ul>
+<li>JVM由于要执行GC而停止应用程序的执行</li>
+<li>任何GC算法都会发生</li>
+<li>减少stop-the-world实现GC优化</li>
+</ul>
+<h3 id="Safepoint"><a href="#Safepoint" class="headerlink" title="Safepoint"></a>Safepoint</h3><ul>
+<li>GC时不再产生垃圾</li>
+<li>分析过程中对象引用关系不会发生变化的点</li>
+<li>到达安全点程序才会暂停</li>
+<li>多在方法调用，循环跳转，异常跳转等</li>
+<li>安全点数量适中</li>
+</ul>
+<h3 id="JVM运行模式"><a href="#JVM运行模式" class="headerlink" title="JVM运行模式"></a>JVM运行模式</h3><ul>
+<li>server，启动慢运行快</li>
+<li>client，启动快运行慢</li>
+</ul>
+<blockquote>
+<p>java -version</p>
+</blockquote>
+<h3 id="垃圾收集器关系"><a href="#垃圾收集器关系" class="headerlink" title="垃圾收集器关系"></a>垃圾收集器关系</h3><p><img src="/2019/02/22/javagc/collector.jpg" alt="collector"></p>
+<h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><blockquote>
+<p>-XX:+UseSerialGC        //复制算法</p>
 </blockquote>
 <ul>
-<li>为何不直接解析为机器码</li>
+<li>单线程收集，GC时，必须暂停所有工作线程</li>
+<li>简单高效，client默认年轻代收集器</li>
 </ul>
-<p>1、可将准备工作提前做好，.class文件不存在语法等错误，无需再校验</p>
-<p>2、可将其他语言解析成字节码实现，提高平台兼容性</p>
-<h2 id="JVM-架构"><a href="#JVM-架构" class="headerlink" title="JVM 架构"></a>JVM 架构</h2><p><img src="/2019/02/21/jvm/jvm.jpg" alt="jvm"></p>
-<h2 id="类从编译到执行过程"><a href="#类从编译到执行过程" class="headerlink" title="类从编译到执行过程"></a>类从编译到执行过程</h2><ul>
-<li>编译器将***.java源文件编译为.class字节码文件</li>
-<li>ClassLoader将字节码转化为JVM的Class<robot>对象</robot></li>
-<li>JVM利用Class<robot>对象实例化Robot对象</robot></li>
-</ul>
-<h2 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h2><ul>
-<li>负责将class问及结案的二进制数据流装载进JVM，进行连接，初始化等操作</li>
-</ul>
-<h3 id="ClassLoader种类"><a href="#ClassLoader种类" class="headerlink" title="ClassLoader种类"></a>ClassLoader种类</h3><ul>
-<li>BootStrapClassLoader：C++编写，加载核心库java.*</li>
-<li>ExtClassLoader：Java编写，加载扩展库javax.*</li>
-<li>AppClassLoader：Java编写，加载程序所在目录，类路径</li>
-<li>自定义ClassLoader：Java编写，定制化加载</li>
-</ul>
-<h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p><img src="/2019/02/21/jvm/classloader.jpg" alt="classloader"></p>
+<h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><blockquote>
+<p>-XX:+UserParNewGC        //复制算法</p>
+</blockquote>
 <ul>
-<li>可避免重复加载相同字节码</li>
+<li>多线程收集</li>
+<li>单核执行效率不及Serial，多核下有优势</li>
 </ul>
-<h2 id="LoadClass-amp-forName"><a href="#LoadClass-amp-forName" class="headerlink" title="LoadClass &amp; forName"></a>LoadClass &amp; forName</h2><h3 id="类的加载方式"><a href="#类的加载方式" class="headerlink" title="类的加载方式"></a>类的加载方式</h3><ul>
-<li>隐式加载：new</li>
-<li>显示加载：loadClass，forName</li>
+<h3 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h3><blockquote>
+<p>-XX:+UserParallelGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>吞吐量=运行用户代码时间/(运行用户代码时间+GC时间)</li>
+<li>关注吞吐量，忽视用户线程卡顿</li>
+<li>Server模式下默认的年轻代收集器</li>
 </ul>
-<h3 id="类的装载过程"><a href="#类的装载过程" class="headerlink" title="类的装载过程"></a>类的装载过程</h3><ul>
-<li><p>加载：通过ClassLoader加载class字节码，生成class对象</p>
-</li>
-<li><p>链接：</p>
-<p>1、校验：检查加载的class正确性和安全性</p>
-<p>2、准备：为类变量分配存储空间并设置类变量初始值</p>
-<p>3、解析：JVM将常量池内的符号引用转换为直接引用</p>
-</li>
-<li><p>初始化：执行类变量赋值和静态代码块</p>
-</li>
+<h2 id="老年代垃圾回收器"><a href="#老年代垃圾回收器" class="headerlink" title="老年代垃圾回收器"></a>老年代垃圾回收器</h2><h3 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h3><blockquote>
+<p>-XX:+UseSerialOldGC        //标记整理算法</p>
+</blockquote>
+<ul>
+<li>单线程收集，必须停止工作线程</li>
+<li>简单高效</li>
 </ul>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
-<li>Class.forName得到的class是已经初始化的</li>
-<li>Classloder.loadClass得到的class是还没有链接的</li>
+<h3 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h3><blockquote>
+<p>-XX:+UseParallelOldGC        //标记整理算法</p>
+</blockquote>
+<ul>
+<li>多线程，吞吐量优先</li>
 </ul>
+<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a><strong>CMS收集器</strong></h3><blockquote>
+<p>-XX:UseConcMarkSweepGC        //标记清除算法</p>
+</blockquote>
+<ul>
+<li>初始标记：stop-the-world，JVM停顿，时间短</li>
+<li>并发标记：并发追溯标记，程序不停顿</li>
+<li>并发预处理：查找执行并发标记时晋升老年代的对象，不停顿</li>
+<li>重新标记：暂停虚拟机，扫描CMS堆中剩余对象</li>
+<li>并发清理：清理垃圾对象，程序不卡顿</li>
+<li>并发重置：重置CMS收集器的数据结构</li>
+</ul>
+<p>特点：边产生边回收、碎片化严重</p>
+<h3 id="Garbage-First"><a href="#Garbage-First" class="headerlink" title="Garbage First"></a>Garbage First</h3><ul>
+<li>并行和并发</li>
+<li>分代收集</li>
+<li>空间整合</li>
+<li>可预测停顿</li>
+</ul>
+<p>1、将整个Java堆内存划分为多个大小相等的Region</p>
+<p>2、年轻代老年代不再物理隔阂</p>
+<p><img src="/2019/02/22/javagc/gf.jpg" alt="gf"></p>
+<h3 id="收集器结合情况"><a href="#收集器结合情况" class="headerlink" title="收集器结合情况"></a>收集器结合情况</h3><p><img src="/2019/02/22/javagc/gclink.jpg" alt="gclink"></p>
+<h2 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h2><ul>
+<li>Object.finalize()是否与C++析构函数作用相同</li>
+</ul>
+<p>不同</p>
+<p>析构函数调用确定，finalize()不确定，也就是还未运行完已经被GC</p>
+<ul>
+<li>Java中的强引用、软引用、弱引用和虚引用</li>
+</ul>
+<p>强引用：</p>
+<blockquote>
+<p>Object obj = new Object();</p>
+</blockquote>
+<p>1、即使抛出OutOfMemoryError也不会回收该对象</p>
+<p>2、可以通过设置为null来弱化作用，使其被回收</p>
+<p>软引用：</p>
+<blockquote>
+<p>SoftReference<string> softRef=new SoftReference<string>(str);</string></string></p>
+</blockquote>
+<p>1、对象有用但非必须状态</p>
+<p>2、只有当内存不足，GC才会回收</p>
+<p>3、可用来实现高速缓存</p>
+<p>弱引用</p>
+<blockquote>
+<p>WeakReference<string> weakRef=new WeakReference<string>(str);</string></string></p>
+</blockquote>
+<p>1、比软引用更弱</p>
+<p>2、GC时被回收</p>
+<p>3、GC优先级低，所以被回收概率也不大</p>
+<p>虚引用：</p>
+<p>1、形同虚设</p>
+<p>2、任何时候都可能被回收</p>
+<p>3、跟踪对象被GC的活动，起哨兵作用</p>
+<p>4、必须和引用队列ReferenceQueue联合使用</p>
+<p><img src="/2019/02/22/javagc/ref.jpg" alt="ref"></p>
+<p>四种引用的关系：</p>
+<p><img src="/2019/02/22/javagc/ref4.jpg" alt="ref4"></p>
 ]]></content>
       <categories>
         <category>study note</category>
@@ -7610,64 +7544,6 @@ public class InterruptDemo {
       </tags>
   </entry>
   <entry>
-    <title>K8S Concepts</title>
-    <url>/2020/06/07/k8sintro/</url>
-    <content><![CDATA[<p>Concepts study here: </p>
-<p><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/</a></p>
-<h2 id="kubeadm-init"><a href="#kubeadm-init" class="headerlink" title="kubeadm init"></a>kubeadm init</h2><ol>
-<li><p>Kubeadmin init pre-flight check </p>
-<p>Check the version of K8S/OS, user(root), host, port, tools etc. </p>
-</li>
-<li><p>Genrate key and certification </p>
-<p>/etc/kubernetes/pki</p>
-</li>
-<li><p>Generate kubeconfig file </p>
-<p>.kube/config    /etc/kubernetes/*.conf    KUBECONFIG</p>
-</li>
-<li><p>Generate manifest file</p>
-<p>/etc/kubernetes/manifests</p>
-</li>
-<li><p>Download the image, wait for starting</p>
-<p>Download from k8s.gcr.io </p>
-<p>kubeadmin waits for response from localhost:6443.healthz (liveessProde, config by manifests/kube-piserver.yaml)</p>
-</li>
-<li><p>Save master configuration information </p>
-</li>
-<li><p>Mark master sign on current node</p>
-</li>
-<li><p>Config TLS</p>
-</li>
-<li><p>Install DNS and kube-proxy</p>
-<p>deploy kube-proxy via daemonSet</p>
-<p>deploy kibe-dns </p>
-</li>
-</ol>
-<h2 id="kubeadm-join"><a href="#kubeadm-join" class="headerlink" title="kubeadm join"></a>kubeadm join</h2><p>add nodes to cluster </p>
-<p>Disovery-token-ca-cert-hash: used by node to check master</p>
-<p>token: used by master to check node</p>
-<h2 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h2><p>Kubelet runs on all K8S nodes (including master), launched by OS init process(like systemd).</p>
-<p>Node pod manager</p>
-<p>config by /etc/systmd/system/kubelet.service.d/10 -kubeadm.conf</p>
-<p><code>systemctl daemon-reload &amp; systemctl estart kubelet</code></p>
-<h2 id="kube-apiserver"><a href="#kube-apiserver" class="headerlink" title="kube-apiserver"></a>kube-apiserver</h2><p>lauched by kubelet via static pod</p>
-<p>Pod spec: /etc/kubernetes/manifests/kube-apiserver.yaml</p>
-<h2 id="Etcd"><a href="#Etcd" class="headerlink" title="Etcd"></a>Etcd</h2><p>Lauched by kubelet via static pod</p>
-<p>Communicate with api-server based on TLS</p>
-<p>Runtime data saved in /var/lib/etcd</p>
-<h2 id="kube-controller-manager"><a href="#kube-controller-manager" class="headerlink" title="kube-controller-manager"></a>kube-controller-manager</h2><p>Responsible for nodes/pod/namespace/service account/service endpoint/resource in cluster</p>
-<p>/etc/kubernetes/manifests/kube-controller-manager.yaml</p>
-<h2 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h2><p>Scheduler for pod</p>
-<p>Lauched by kubelet via static pod</p>
-<h2 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h2><p>Config: /var/lib/kube-proxy/config.conf (pod)</p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>K8S</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java Common Class</title>
     <url>/2019/02/25/jclass/</url>
     <content><![CDATA[<h1 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h1><h2 id="Error-amp-Exception"><a href="#Error-amp-Exception" class="headerlink" title="Error &amp; Exception"></a>Error &amp; Exception</h2><ul>
@@ -8049,6 +7925,163 @@ public class NIOPlainEchoServer {
       </categories>
       <tags>
         <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>JVM basic</title>
+    <url>/2019/02/21/jvm/</url>
+    <content><![CDATA[<h1 id="JVM-basic"><a href="#JVM-basic" class="headerlink" title="JVM basic"></a>JVM basic</h1><h2 id="Compile-Once-Run-Anywhere"><a href="#Compile-Once-Run-Anywhere" class="headerlink" title="Compile Once, Run Anywhere"></a>Compile Once, Run Anywhere</h2><ul>
+<li>平台无关性</li>
+</ul>
+<p><img src="/2019/02/21/jvm/javaclass.jpg" alt="javaclass"></p>
+<ul>
+<li>查看字节码.class</li>
+</ul>
+<p>反编译工具</p>
+<blockquote>
+<p>javap</p>
+</blockquote>
+<ul>
+<li>为何不直接解析为机器码</li>
+</ul>
+<p>1、可将准备工作提前做好，.class文件不存在语法等错误，无需再校验</p>
+<p>2、可将其他语言解析成字节码实现，提高平台兼容性</p>
+<h2 id="JVM-架构"><a href="#JVM-架构" class="headerlink" title="JVM 架构"></a>JVM 架构</h2><p><img src="/2019/02/21/jvm/jvm.jpg" alt="jvm"></p>
+<h2 id="类从编译到执行过程"><a href="#类从编译到执行过程" class="headerlink" title="类从编译到执行过程"></a>类从编译到执行过程</h2><ul>
+<li>编译器将***.java源文件编译为.class字节码文件</li>
+<li>ClassLoader将字节码转化为JVM的Class<robot>对象</robot></li>
+<li>JVM利用Class<robot>对象实例化Robot对象</robot></li>
+</ul>
+<h2 id="ClassLoader"><a href="#ClassLoader" class="headerlink" title="ClassLoader"></a>ClassLoader</h2><ul>
+<li>负责将class问及结案的二进制数据流装载进JVM，进行连接，初始化等操作</li>
+</ul>
+<h3 id="ClassLoader种类"><a href="#ClassLoader种类" class="headerlink" title="ClassLoader种类"></a>ClassLoader种类</h3><ul>
+<li>BootStrapClassLoader：C++编写，加载核心库java.*</li>
+<li>ExtClassLoader：Java编写，加载扩展库javax.*</li>
+<li>AppClassLoader：Java编写，加载程序所在目录，类路径</li>
+<li>自定义ClassLoader：Java编写，定制化加载</li>
+</ul>
+<h3 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h3><p><img src="/2019/02/21/jvm/classloader.jpg" alt="classloader"></p>
+<ul>
+<li>可避免重复加载相同字节码</li>
+</ul>
+<h2 id="LoadClass-amp-forName"><a href="#LoadClass-amp-forName" class="headerlink" title="LoadClass &amp; forName"></a>LoadClass &amp; forName</h2><h3 id="类的加载方式"><a href="#类的加载方式" class="headerlink" title="类的加载方式"></a>类的加载方式</h3><ul>
+<li>隐式加载：new</li>
+<li>显示加载：loadClass，forName</li>
+</ul>
+<h3 id="类的装载过程"><a href="#类的装载过程" class="headerlink" title="类的装载过程"></a>类的装载过程</h3><ul>
+<li><p>加载：通过ClassLoader加载class字节码，生成class对象</p>
+</li>
+<li><p>链接：</p>
+<p>1、校验：检查加载的class正确性和安全性</p>
+<p>2、准备：为类变量分配存储空间并设置类变量初始值</p>
+<p>3、解析：JVM将常量池内的符号引用转换为直接引用</p>
+</li>
+<li><p>初始化：执行类变量赋值和静态代码块</p>
+</li>
+</ul>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><ul>
+<li>Class.forName得到的class是已经初始化的</li>
+<li>Classloder.loadClass得到的class是还没有链接的</li>
+</ul>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>JVM</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>K8S Concepts</title>
+    <url>/2020/06/07/k8sintro/</url>
+    <content><![CDATA[<p>Concepts study here: </p>
+<p><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/</a></p>
+<h2 id="kubeadm-init"><a href="#kubeadm-init" class="headerlink" title="kubeadm init"></a>kubeadm init</h2><ol>
+<li><p>Kubeadmin init pre-flight check </p>
+<p>Check the version of K8S/OS, user(root), host, port, tools etc. </p>
+</li>
+<li><p>Genrate key and certification </p>
+<p>/etc/kubernetes/pki</p>
+</li>
+<li><p>Generate kubeconfig file </p>
+<p>.kube/config    /etc/kubernetes/*.conf    KUBECONFIG</p>
+</li>
+<li><p>Generate manifest file</p>
+<p>/etc/kubernetes/manifests</p>
+</li>
+<li><p>Download the image, wait for starting</p>
+<p>Download from k8s.gcr.io </p>
+<p>kubeadmin waits for response from localhost:6443.healthz (liveessProde, config by manifests/kube-piserver.yaml)</p>
+</li>
+<li><p>Save master configuration information </p>
+</li>
+<li><p>Mark master sign on current node</p>
+</li>
+<li><p>Config TLS</p>
+</li>
+<li><p>Install DNS and kube-proxy</p>
+<p>deploy kube-proxy via daemonSet</p>
+<p>deploy kibe-dns </p>
+</li>
+</ol>
+<h2 id="kubeadm-join"><a href="#kubeadm-join" class="headerlink" title="kubeadm join"></a>kubeadm join</h2><p>add nodes to cluster </p>
+<p>Disovery-token-ca-cert-hash: used by node to check master</p>
+<p>token: used by master to check node</p>
+<h2 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h2><p>Kubelet runs on all K8S nodes (including master), launched by OS init process(like systemd).</p>
+<p>Node pod manager</p>
+<p>config by /etc/systmd/system/kubelet.service.d/10 -kubeadm.conf</p>
+<p><code>systemctl daemon-reload &amp; systemctl estart kubelet</code></p>
+<h2 id="kube-apiserver"><a href="#kube-apiserver" class="headerlink" title="kube-apiserver"></a>kube-apiserver</h2><p>lauched by kubelet via static pod</p>
+<p>Pod spec: /etc/kubernetes/manifests/kube-apiserver.yaml</p>
+<h2 id="Etcd"><a href="#Etcd" class="headerlink" title="Etcd"></a>Etcd</h2><p>Lauched by kubelet via static pod</p>
+<p>Communicate with api-server based on TLS</p>
+<p>Runtime data saved in /var/lib/etcd</p>
+<h2 id="kube-controller-manager"><a href="#kube-controller-manager" class="headerlink" title="kube-controller-manager"></a>kube-controller-manager</h2><p>Responsible for nodes/pod/namespace/service account/service endpoint/resource in cluster</p>
+<p>/etc/kubernetes/manifests/kube-controller-manager.yaml</p>
+<h2 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h2><p>Scheduler for pod</p>
+<p>Lauched by kubelet via static pod</p>
+<h2 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h2><p>Config: /var/lib/kube-proxy/config.conf (pod)</p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>K8S</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux Tips1</title>
+    <url>/2019/01/10/linux/</url>
+    <content><![CDATA[<h1 id="Linux体系架构"><a href="#Linux体系架构" class="headerlink" title="Linux体系架构"></a>Linux体系架构</h1><p><img src="/2019/01/10/linux/struct.jpg" alt="struct"></p>
+<h1 id="查找检索"><a href="#查找检索" class="headerlink" title="查找检索"></a>查找检索</h1><h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><blockquote>
+<p>find path [options] params</p>
+<p>find -name “file*”        //当前目录</p>
+<p>find / -name “file.txt”        //全局</p>
+</blockquote>
+<p>在指定目录下查找文件</p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><blockquote>
+<p>grep “haha” file.txt</p>
+</blockquote>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><ul>
+<li>可将指令连接</li>
+<li><p>|</p>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2></li>
+</ul>
+<p><img src="/2019/01/10/linux/awk.jpg" alt="awk"></p>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><ul>
+<li>sed [option] command filename</li>
+<li>stream editor</li>
+<li>适合行内容编辑</li>
+</ul>
+<p><img src="/2019/01/10/linux/sed.jpg" alt="sed"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -8635,36 +8668,1238 @@ public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFra
       </tags>
   </entry>
   <entry>
-    <title>Linux Tips1</title>
-    <url>/2019/01/10/linux/</url>
-    <content><![CDATA[<h1 id="Linux体系架构"><a href="#Linux体系架构" class="headerlink" title="Linux体系架构"></a>Linux体系架构</h1><p><img src="/2019/01/10/linux/struct.jpg" alt="struct"></p>
-<h1 id="查找检索"><a href="#查找检索" class="headerlink" title="查找检索"></a>查找检索</h1><h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><blockquote>
-<p>find path [options] params</p>
-<p>find -name “file*”        //当前目录</p>
-<p>find / -name “file.txt”        //全局</p>
+    <title>Seven Principles of Software Design</title>
+    <url>/2019/04/10/principles/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://github.com/rexllz/design" target="_blank" rel="noopener">https://github.com/rexllz/design</a></p>
 </blockquote>
-<p>在指定目录下查找文件</p>
-<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><blockquote>
-<p>grep “haha” file.txt</p>
-</blockquote>
-<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><ul>
-<li>可将指令连接</li>
-<li><p>|</p>
-<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2></li>
+<h1 id="开闭原则（Open-Closed-）"><a href="#开闭原则（Open-Closed-）" class="headerlink" title="开闭原则（Open/Closed ）"></a>开闭原则（Open/Closed ）</h1><p><strong>对扩展开放、对修改关闭</strong></p>
+<ul>
+<li><p>提高软件的可复用和可维护性</p>
+</li>
+<li><p>面向抽象编程</p>
+</li>
+<li><p>面向接口编程</p>
+</li>
 </ul>
-<p><img src="/2019/01/10/linux/awk.jpg" alt="awk"></p>
-<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><ul>
-<li>sed [option] command filename</li>
-<li>stream editor</li>
-<li>适合行内容编辑</li>
+<pre><code class="java">public interface ICourse {
+    Integer getId();
+    String getName();
+    Double getPrice();
+}
+</code></pre>
+<pre><code class="java">public class JavaCourse implements ICourse{
+    private Integer Id;
+    private String name;
+    private Double price;
+
+    public JavaCourse(Integer id, String name, Double price) {
+        this.Id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    public Integer getId() {
+        return this.Id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Double getPrice() {
+        return this.price;
+    }
+}
+
+</code></pre>
+<pre><code class="java">public class JavaDiscountCourse extends JavaCourse{
+
+    public JavaDiscountCourse(Integer id, String name, Double price) {
+        super(id, name, price);
+    }
+
+    public Double getDiscountPrice(){
+        return super.getPrice()*0.8;
+    }
+
+    public Double getOriginPrice(){
+        return super.getPrice();
+    }
+}
+</code></pre>
+<p><img src="/2019/04/10/principles/oc.jpg" alt="oc"></p>
+<h1 id="依赖倒置原则（Dependency-Inversion）"><a href="#依赖倒置原则（Dependency-Inversion）" class="headerlink" title="依赖倒置原则（Dependency Inversion）"></a>依赖倒置原则（Dependency Inversion）</h1><p><strong>高层模块不应该依赖底层模块，二者都应该依赖抽象</strong></p>
+<ul>
+<li>抽象不应该依赖细节，细节应该依赖抽象</li>
+<li>针对接口编程，不可针对实现编程</li>
 </ul>
-<p><img src="/2019/01/10/linux/sed.jpg" alt="sed"></p>
+<h2 id="高层依赖底层的情况"><a href="#高层依赖底层的情况" class="headerlink" title="高层依赖底层的情况"></a>高层依赖底层的情况</h2><pre><code class="java">public class Rex {
+    public void studyJava(){
+        System.out.println(&quot;study java&quot;);
+    }
+    public void studyPython(){
+        System.out.println(&quot;study python&quot;);
+    }
+    public void studyJs(){
+        System.out.println(&quot;study js&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">//v1 面向实现编程
+//高层依赖底层
+//test 依赖 rex
+public static void main(String[] args) {
+        Rex rex = new Rex();
+        rex.studyJava();
+        rex.studyJs();
+        rex.studyPython();
+    }
+</code></pre>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><pre><code class="java">public class Rex {
+    public void studyCourse(ICourse iCourse){
+        iCourse.studyCourse();
+    }
+}
+</code></pre>
+<pre><code class="java">//依赖倒置
+    public static void main(String[] args) {
+        Rex rex = new Rex();
+        rex.studyCourse(new JavaCourse());
+        rex.studyCourse(new JsCourse());
+        rex.studyCourse(new PythonCourse());
+    }
+</code></pre>
+<p><img src="/2019/04/10/principles/di.jpg" alt="di"></p>
+<h2 id="构造器注入-单例"><a href="#构造器注入-单例" class="headerlink" title="构造器注入(单例)"></a>构造器注入(单例)</h2><pre><code class="java">public class Rex {
+    private ICourse iCourse;
+    public Rex(ICourse iCourse) {
+        this.iCourse = iCourse;
+    }
+    public void studyImoocCourse(){
+        iCourse.studyCourse();
+    }
+}
+</code></pre>
+<pre><code class="java">//v3 构造器注入
+public static void main(String[] args) {
+        Rex rex = new Rex(new JavaCourse());
+        rex.studyImoocCourse();
+}
+</code></pre>
+<h2 id="setter注入"><a href="#setter注入" class="headerlink" title="setter注入"></a>setter注入</h2><pre><code class="java">public class Rex {
+    private ICourse iCourse;
+    public void setiCourse(ICourse iCourse){
+        this.iCourse = iCourse;
+    }
+    public void studyImoocCourse(){
+        iCourse.studyCourse();
+    }
+}
+</code></pre>
+<pre><code class="java">//v4 setter injection
+public static void main(String[] args) {
+        Rex rex = new Rex();
+        rex.setiCourse(new JavaCourse());
+        rex.studyImoocCourse();
+
+        rex.setiCourse(new PythonCourse());
+        rex.studyImoocCourse();
+
+        rex.setiCourse(new JsCourse());
+        rex.studyImoocCourse();
+}
+</code></pre>
+<h1 id="单一职责原则（Single-Responsibility-）"><a href="#单一职责原则（Single-Responsibility-）" class="headerlink" title="单一职责原则（Single Responsibility ）"></a>单一职责原则（Single Responsibility ）</h1><ul>
+<li>不存在多于一个导致类变更的原因</li>
+<li>一个类、接口、方法只负责一个职责</li>
+<li>降低复杂度，提高可读性、可维护性、降低风险</li>
+</ul>
+<h2 id="类的单一原则"><a href="#类的单一原则" class="headerlink" title="类的单一原则"></a>类的单一原则</h2><p><strong>不遵循单一职责原则的例子</strong></p>
+<pre><code class="java">public class Bird {
+    public void mainMoveMode(String birdName){
+        if(&quot;鸵鸟&quot;.equals(birdName)){
+            System.out.println(birdName+&quot;用脚走&quot;);
+        }else{
+            System.out.println(birdName+&quot;用翅膀飞&quot;);
+        }
+    }
+}
+</code></pre>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        Bird bird = new Bird();
+        bird.mainMoveMode(&quot;鸵鸟&quot;);
+        bird.mainMoveMode(&quot;大雁&quot;);
+    }
+}
+</code></pre>
+<p><strong>类的单一原则修改</strong></p>
+<pre><code class="java">public class FlyBird {
+    public void mainMoveMode(String birdName){
+        System.out.println(birdName+&quot;用翅膀飞&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">public class WalkBird {
+    public void mainMoveMode(String birdName){
+        System.out.println(birdName+&quot;用脚走&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        WalkBird walkBird = new WalkBird();
+        walkBird.mainMoveMode(&quot;鸵鸟&quot;);
+        FlyBird flyBird = new FlyBird();
+        flyBird.mainMoveMode(&quot;大雁&quot;);
+    }
+}
+</code></pre>
+<p><img src="/2019/04/10/principles/sr.jpg" alt="sr"></p>
+<h2 id="接口的单一原则"><a href="#接口的单一原则" class="headerlink" title="接口的单一原则"></a>接口的单一原则</h2><p><img src="/2019/04/10/principles/isr.jpg" alt="isr"></p>
+<h2 id="方法的单一原则"><a href="#方法的单一原则" class="headerlink" title="方法的单一原则"></a>方法的单一原则</h2><p>每个方法对单一属性进行修改或者实现单一功能</p>
+<h1 id="接口隔离原则（Interface-Segregation）"><a href="#接口隔离原则（Interface-Segregation）" class="headerlink" title="接口隔离原则（Interface Segregation）"></a>接口隔离原则（Interface Segregation）</h1><ul>
+<li>采用多个接口，而不依赖于单一总接口</li>
+<li>一个类与一个类的依赖应该建立在最小的接口上</li>
+<li>接口尽量小、尽量细化</li>
+</ul>
+<pre><code class="java">public interface IAnimalAction {
+    void eat();
+
+    void fly();
+
+    void swim();
+}
+</code></pre>
+<pre><code class="java">public interface IFlyAnimalAction {
+    void fly();
+}
+</code></pre>
+<pre><code class="java">public interface ISwimAnimalAction {
+    void swim();
+}
+</code></pre>
+<pre><code class="java">public interface IEatAnimalAction {
+    void eat();
+}
+</code></pre>
+<p><strong>需要适度</strong></p>
+<p><img src="/2019/04/10/principles/is.jpg" alt="is"></p>
+<p>比起单一职责，更倾向于架构，接口，而不是功能</p>
+<h1 id="迪米特原则（最少知道）"><a href="#迪米特原则（最少知道）" class="headerlink" title="迪米特原则（最少知道）"></a>迪米特原则（最少知道）</h1><ul>
+<li>一个对象应该对其他对象保持最少的了解</li>
+<li>降低类与类的耦合</li>
+<li>只和朋友类保持关系（内部使用的类不是朋友类）</li>
+</ul>
+<p><img src="/2019/04/10/principles/demeter.jpg" alt="demeter"></p>
+<h1 id="里氏替换原则（Liskov-Substitution，LSP）"><a href="#里氏替换原则（Liskov-Substitution，LSP）" class="headerlink" title="里氏替换原则（Liskov Substitution，LSP）"></a>里氏替换原则（Liskov Substitution，LSP）</h1><ul>
+<li>如果软件可以适用父类，那一定能适用子类</li>
+<li>子类可以拓展父类的功能，但不能改变已有的功能</li>
+<li>子类可以实现父类的抽象方法，但不能修改非抽象方法</li>
+<li>子类可以增加方法</li>
+<li>重载方法时，入参应当更宽松</li>
+<li><p>子类重载或重写方法时，输出要更严格</p>
+</li>
+<li><p><strong>有效约束继承泛滥，体现开闭原则</strong></p>
+</li>
+<li><strong>增加健壮性、拓展性</strong></li>
+</ul>
+<p>不符合里氏替换的例子</p>
+<pre><code class="java">public class Rectangle {
+    private long length;
+    private long width;
+
+    @Override
+    public long getWidth() {
+        return width;
+    }
+
+    @Override
+    public long getLength() {
+        return length;
+    }
+
+    public void setLength(long length) {
+        this.length = length;
+    }
+
+    public void setWidth(long width) {
+        this.width = width;
+    }
+}
+</code></pre>
+<pre><code class="java">public class Square extends Rectangle {
+    private long sideLength;
+
+    public long getSideLength() {
+        return sideLength;
+    }
+
+    public void setSideLength(long sideLength) {
+        this.sideLength = sideLength;
+    }
+
+    @Override
+    public long getWidth() {
+        return sideLength;
+    }
+
+    @Override
+    public long getLength() {
+        return sideLength;
+    }
+}
+</code></pre>
+<pre><code class="java">public static void resize(Rectangle rectangle){
+        while (rectangle.getWidth() &lt;= rectangle.getLength()){
+            rectangle.setWidth(rectangle.getWidth()+1);
+            System.out.println(&quot;width:&quot;+rectangle.getWidth() + &quot; length:&quot;+rectangle.getLength());
+        }
+        System.out.println(&quot;resize方法结束 width:&quot;+rectangle.getWidth() + 
+                           &quot; length:&quot;+rectangle.getLength());
+    }
+</code></pre>
+<p>新建上层接口</p>
+<p><img src="/2019/04/10/principles/lsp.jpg" alt="lsp"></p>
+<p>从而避免了resize中传入square，因为square不再是rectangle子类</p>
+<h1 id="合成复用原则"><a href="#合成复用原则" class="headerlink" title="合成复用原则"></a>合成复用原则</h1><ul>
+<li>has-A &amp; contains-A 代替 is-A</li>
+<li>降低耦合</li>
+</ul>
+<pre><code class="java">public abstract class DBConnection {
+    //    public String getConnection(){
+//        return &quot;MySQL数据库连接&quot;;
+//    }
+    public abstract String getConnection();
+}
+</code></pre>
+<pre><code class="java">public class MySQLConnection extends DBConnection {
+    @Override
+    public String getConnection() {
+        return &quot;MySQL数据库连接&quot;;
+    }
+}
+</code></pre>
+<pre><code class="java">public class PostgreSQLConnection extends DBConnection {
+    @Override
+    public String getConnection() {
+        return &quot;PostgreSQL数据库连接&quot;;
+    }
+}
+</code></pre>
+<pre><code class="java">public class ProductDao{
+    private DBConnection dbConnection;
+
+    public void setDbConnection(DBConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public void addProduct(){
+        String conn = dbConnection.getConnection();
+        System.out.println(&quot;使用&quot;+conn+&quot;增加产品&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        ProductDao productDao = new ProductDao();
+        productDao.setDbConnection(new PostgreSQLConnection());
+        productDao.addProduct();
+    }
+}
+</code></pre>
+<p><img src="/2019/04/10/principles/ca.jpg" alt="ca"></p>
 ]]></content>
       <categories>
         <category>study note</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
+        <tag>Design Patterns</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>RabbitMQ Cluster</title>
+    <url>/2019/06/08/rabbitcluster/</url>
+    <content><![CDATA[<p>正所谓万物皆可集群。。</p>
+<h1 id="RabbitMQ集群架构模式"><a href="#RabbitMQ集群架构模式" class="headerlink" title="RabbitMQ集群架构模式"></a>RabbitMQ集群架构模式</h1><h2 id="主备模式-Warren"><a href="#主备模式-Warren" class="headerlink" title="主备模式(Warren)"></a>主备模式(Warren)</h2><p>适合并发或数据量不高的情况下，简单易用</p>
+<p>主节点挂掉，从节点替补（可能多个从节点）</p>
+<p><img src="/2019/06/08/rabbitcluster/c1.jpg" alt="c1"></p>
+<p><img src="/2019/06/08/rabbitcluster/c2.jpg" alt="c2"></p>
+<p>每五秒做一次检查，两次正常可用，两次失败不可用</p>
+<h2 id="远程模式-Shovel"><a href="#远程模式-Shovel" class="headerlink" title="远程模式(Shovel)"></a>远程模式(Shovel)</h2><p>双活模式，将消息移动到不同数据中心，分摊压力</p>
+<p>可以跨地域使两个MQ互联</p>
+<p>近端同步确认，远端异步确认</p>
+<p><img src="/2019/06/08/rabbitcluster/c3.jpg" alt="c3"></p>
+<h2 id="镜像模式-Mirror"><a href="#镜像模式-Mirror" class="headerlink" title="镜像模式(Mirror)"></a>镜像模式(Mirror)</h2><p>使用镜像队列，使用2-3个节点实现数据同步</p>
+<p><img src="/2019/06/08/rabbitcluster/c4.jpg" alt="c4"></p>
+<h2 id="多活模式"><a href="#多活模式" class="headerlink" title="多活模式"></a>多活模式</h2><p>在两个或多个MQ集群中实现数据同步</p>
+<p><img src="/2019/06/08/rabbitcluster/c5.jpg" alt="c5"></p>
+<p><img src="/2019/06/08/rabbitcluster/c6.jpg" alt="c6"></p>
+<p>federation exchange：</p>
+<p><img src="/2019/06/08/rabbitcluster/c7.jpg" alt="c7"></p>
+<p><img src="/2019/06/08/rabbitcluster/c8.jpg" alt="c8"></p>
+<h1 id="镜像模型的构建"><a href="#镜像模型的构建" class="headerlink" title="镜像模型的构建"></a>镜像模型的构建</h1><p>实验说明</p>
+<p><img src="/2019/06/08/rabbitcluster/c9.jpg" alt="c9"></p>
+<h2 id="节点安装"><a href="#节点安装" class="headerlink" title="节点安装"></a>节点安装</h2><ul>
+<li>安装依赖</li>
+</ul>
+<pre><code>yum install build-essential openssl openssl-devel unixODBC unixODBC-devel make gcc gcc-c++ kernel-devel m4 ncurses-devel tk tc xz
+</code></pre><ul>
+<li>下载安装包</li>
+</ul>
+<pre><code>wget www.rabbitmq.com/releases/erlang/erlang-18.3-1.el7.centos.x86_64.rpm
+wget http://repo.iotti.biz/CentOS/7/x86_64/socat-1.7.3.2-5.el7.lux.x86_64.rpm
+wget www.rabbitmq.com/releases/rabbitmq-server/v3.6.5/rabbitmq-server-3.6.5-1.noarch.rpm
+</code></pre><ul>
+<li>安装服务命令</li>
+</ul>
+<pre><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm 
+rpm -ivh socat-1.7.3.2-5.el7.lux.x86_64.rpm
+rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
+</code></pre><ul>
+<li>修改集群用户与连接心跳检测</li>
+</ul>
+<pre><code>注意修改vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.5/ebin/rabbit.app文件
+修改：loopback_users 中的 &lt;&lt;&quot;guest&quot;&gt;&gt;,只保留guest
+修改：heartbeat 为1
+</code></pre><ul>
+<li>安装管理插件</li>
+</ul>
+<pre><code>//首先启动服务
+/etc/init.d/rabbitmq-server start stop status restart
+//查看服务有没有启动： lsof -i:5672
+rabbitmq-plugins enable rabbitmq_management
+//可查看管理端口有没有启动： lsof -i:15672 或者 netstat -tnlp|grep 15672
+</code></pre><ul>
+<li>服务指令</li>
+</ul>
+<pre><code>/etc/init.d/rabbitmq-server start stop status restart
+验证单个节点是否安装成功：http://192.168.11.71:15672/
+1．  Ps：以上操作三个节点（71、72、73）同时进行操作
+</code></pre><h2 id="文件同步"><a href="#文件同步" class="headerlink" title="文件同步"></a>文件同步</h2><p>选择76、77、78任意一个节点为Master（这里选择76为Master），也就是说我们需要把76的Cookie文件同步到77、78节点上去，进入/var/lib/rabbitmq目录下，把/var/lib/rabbitmq/.erlang.cookie文件的权限修改为777，原来是400；然后把.erlang.cookie文件copy到各个节点下；最后把所有cookie文件权限还原为400即可。</p>
+<pre><code>/etc/init.d/rabbitmq-server stop 
+//进入目录修改权限；远程copy77、78节点，比如：
+scp /var/lib/rabbitmq/.erlang.cookie 到192.168.11.77和192.168.11.78中
+</code></pre><h2 id="组成集群"><a href="#组成集群" class="headerlink" title="组成集群"></a>组成集群</h2><ul>
+<li>停止MQ服务</li>
+</ul>
+<pre><code>rabbitmqctl stop
+</code></pre><ul>
+<li><p>组成集群</p>
+<p>接下来我们就可以使用集群命令，配置76、77、78为集群模式，3个节点（76、77、78）执行启动命令，后续启动集群使用此命令即可。</p>
+</li>
+</ul>
+<pre><code>rabbitmq-server -detached
+</code></pre><ul>
+<li>slave加入集群</li>
+</ul>
+<pre><code class="bash">//注意做这个步骤的时候：需要配置/etc/hosts 必须相互能够寻址到
+bhz77：rabbitmqctl stop_app
+bhz77：rabbitmqctl join_cluster --ram rabbit@bhz76
+bhz77：rabbitmqctl start_app
+bhz78：rabbitmqctl stop_app
+bhz78：rabbitmqctl join_cluster rabbit@bhz76
+bhz78：rabbitmqctl start_app
+//在另外其他节点上操作要移除的集群节点
+rabbitmqctl forget_cluster_node rabbit@bhz24
+</code></pre>
+<ul>
+<li>修改集群名称</li>
+</ul>
+<pre><code class="bash">rabbitmqctl set_cluster_name rabbitmq_cluster1
+</code></pre>
+<ul>
+<li>查看集群状态</li>
+</ul>
+<pre><code class="bash">rabbitmqctl cluster_status
+</code></pre>
+<ul>
+<li><p>管控台界面</p>
+<p>访问任意一个管控台节点：<a href="http://192.168.11.71:15672" target="_blank" rel="noopener">http://192.168.11.71:15672</a> </p>
+</li>
+</ul>
+<p><img src="/2019/06/08/rabbitcluster/c10.jpg" alt="c10"></p>
+<ul>
+<li><p>配置镜像队列</p>
+<p>将所有队列设置为镜像队列，即队列会被复制到各个节点，各个节点状态一致，RabbitMQ高可用集群就已经搭建好了,我们可以重启服务，查看其队列是否在从节点同步</p>
+</li>
+</ul>
+<pre><code class="bash">rabbitmqctl set_policy ha-all &quot;^&quot; &#39;{&quot;ha-mode&quot;:&quot;all&quot;}&#39;
+</code></pre>
+<h2 id="Ha-Proxy"><a href="#Ha-Proxy" class="headerlink" title="Ha-Proxy"></a>Ha-Proxy</h2><p>HAProxy是一款提供高可用性、负载均衡以及基于TCP和HTTP应用的代理软件，HAProxy是完全免费的、借助HAProxy可以快速并且可靠的提供基于TCP和HTTP应用的代理解决方案。</p>
+<p>HAProxy适用于那些负载较大的web站点，这些站点通常又需要会话保持或七层处理。 </p>
+<p>HAProxy可以支持数以万计的并发连接,并且HAProxy的运行模式使得它可以很简单安全的整合进架构中，同时可以保护web服务器不被暴露到网络上</p>
+<ul>
+<li>Haproxy安装</li>
+</ul>
+<pre><code class="bash">//下载依赖包
+yum install gcc vim wget
+//下载haproxy
+wget http://www.haproxy.org/download/1.6/src/haproxy-1.6.5.tar.gz
+//解压
+tar -zxvf haproxy-1.6.5.tar.gz -C /usr/local
+//进入目录、进行编译、安装
+cd /usr/local/haproxy-1.6.5
+make TARGET=linux31 PREFIX=/usr/local/haproxy
+make install PREFIX=/usr/local/haproxy
+mkdir /etc/haproxy
+//赋权
+groupadd -r -g 149 haproxy
+useradd -g haproxy -r -s /sbin/nologin -u 149 haproxy
+//创建haproxy配置文件
+touch /etc/haproxy/haproxy.cfg
+</code></pre>
+<ul>
+<li>Haproxy配置</li>
+</ul>
+<pre><code>vim /etc/haproxy/haproxy.cfg
+
+#logging options
+global
+    log 127.0.0.1 local0 info
+    maxconn 5120
+    chroot /usr/local/haproxy
+    uid 99
+    gid 99
+    daemon
+    quiet
+    nbproc 20
+    pidfile /var/run/haproxy.pid
+
+defaults
+    log global
+    #使用4层代理模式，”mode http”为7层代理模式
+    mode tcp
+    #if you set mode to tcp,then you nust change tcplog into httplog
+    option tcplog
+    option dontlognull
+    retries 3
+    option redispatch
+    maxconn 2000
+    contimeout 5s
+     ##客户端空闲超时时间为 60秒 则HA 发起重连机制
+     clitimeout 60s
+     ##服务器端链接超时时间为 15秒 则HA 发起重连机制
+     srvtimeout 15s    
+#front-end IP for consumers and producters
+
+listen rabbitmq_cluster
+    bind 0.0.0.0:5672
+    #配置TCP模式
+    mode tcp
+    #balance url_param userid
+    #balance url_param session_id check_post 64
+    #balance hdr(User-Agent)
+    #balance hdr(host)
+    #balance hdr(Host) use_domain_only
+    #balance rdp-cookie
+    #balance leastconn
+    #balance source //ip
+    #简单的轮询
+    balance roundrobin
+    #rabbitmq集群节点配置 #inter 每隔五秒对mq集群做健康检查， 2次正确证明服务器可用，2次失败证明服务器不可用，并且配置主备机制
+        server bhz76 192.168.11.76:5672 check inter 5000 rise 2 fall 2
+        server bhz77 192.168.11.77:5672 check inter 5000 rise 2 fall 2
+        server bhz78 192.168.11.78:5672 check inter 5000 rise 2 fall 2
+#配置haproxy web监控，查看统计信息
+listen stats
+    bind 192.168.11.79:8100
+    mode http
+    option httplog
+    stats enable
+    #设置haproxy监控地址为http://localhost:8100/rabbitmq-stats
+    stats uri /rabbitmq-stats
+    stats refresh 5s
+
+</code></pre><ul>
+<li>启动haproxy</li>
+</ul>
+<pre><code>/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+//查看haproxy进程状态
+ps -ef | grep haproxy
+</code></pre><ul>
+<li><p>访问haproxy</p>
+<p>访问如下地址可以对rmq节点进行监控：<a href="http://192.168.1.27:8100/rabbitmq-stats" target="_blank" rel="noopener">http://192.168.1.27:8100/rabbitmq-stats</a></p>
+</li>
+</ul>
+<p><img src="/2019/06/08/rabbitcluster/c11.jpg" alt="c11"></p>
+<ul>
+<li>关闭haproxy</li>
+</ul>
+<pre><code>killall haproxy
+ps -ef | grep haproxy
+</code></pre><h2 id="KeepAlived"><a href="#KeepAlived" class="headerlink" title="KeepAlived"></a>KeepAlived</h2><p>Keepalived，它是一个高性能的服务器高可用或热备解决方案，Keepalived主要来防止服务器单点故障的发生问题，可以通过其与Nginx、Haproxy等反向代理的负载均衡服务器配合实现web服务端的高可用。Keepalived以VRRP协议为实现基础，用VRRP协议来实现高可用性（HA）.VRRP（Virtual Router Redundancy Protocol）协议是用于实现路由器冗余的协议，VRRP协议将两台或多台路由器设备虚拟成一个设备，对外提供虚拟路由器IP（一个或多个）。</p>
+<ul>
+<li><p>Keepalived安装</p>
+<p><a href="http://www.keepalived.org/download.html" target="_blank" rel="noopener">http://www.keepalived.org/download.html</a></p>
+</li>
+</ul>
+<pre><code>//安装所需软件包
+yum install -y openssl openssl-devel
+//下载
+wget http://www.keepalived.org/software/keepalived-1.2.18.tar.gz
+//解压、编译、安装
+tar -zxvf keepalived-1.2.18.tar.gz -C /usr/local/
+cd keepalived-1.2.18/ &amp;&amp; ./configure --prefix=/usr/local/keepalived
+make &amp;&amp; make install
+//将keepalived安装成Linux系统服务，因为没有使用keepalived的默认安装路径（默认路径：/usr/local）,安装完成之后，需要做一些修改工作
+//首先创建文件夹，将keepalived配置文件进行复制：
+mkdir /etc/keepalived
+cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/
+//然后复制keepalived脚本文件：
+cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/
+cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/
+ln -s /usr/local/sbin/keepalived /usr/sbin/
+ln -s /usr/local/keepalived/sbin/keepalived /sbin/
+//可以设置开机启动：chkconfig keepalived on，到此我们安装完毕!
+chkconfig keepalived on
+</code></pre><ul>
+<li>Keepalived配置</li>
+</ul>
+<pre><code>vim /etc/keepalived/keepalived.conf
+
+
+! Configuration File for keepalived
+
+global_defs {
+   router_id bhz79  ##标识节点的字符串，通常为hostname
+
+}
+
+vrrp_script chk_haproxy {
+    script &quot;/etc/keepalived/haproxy_check.sh&quot;  ##执行脚本位置
+    interval 2  ##检测时间间隔
+    weight -20  ##如果条件成立则权重减20
+}
+
+vrrp_instance VI_1 {
+    state MASTER  ## 主节点为MASTER，备份节点为BACKUP
+    interface eth0 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eth0）
+    virtual_router_id 79  ## 虚拟路由ID号（主备节点一定要相同）
+    mcast_src_ip 192.168.11.79 ## 本机ip地址
+    priority 100  ##优先级配置（0-254的值）
+    nopreempt
+    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
+authentication {  ## 认证匹配
+        auth_type PASS
+        auth_pass bhz
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    virtual_ipaddress {
+        192.168.11.70  ## 虚拟ip，可以指定多个
+    }
+}
+
+
+
+
+another
+
+! Configuration File for keepalived
+
+global_defs {
+   router_id bhz80  ##标识节点的字符串，通常为hostname
+
+}
+
+vrrp_script chk_haproxy {
+    script &quot;/etc/keepalived/haproxy_check.sh&quot;  ##执行脚本位置
+    interval 2  ##检测时间间隔
+    weight -20  ##如果条件成立则权重减20
+}
+
+vrrp_instance VI_1 {
+    state BACKUP  ## 主节点为MASTER，备份节点为BACKUP
+    interface eno16777736 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eno16777736）
+    virtual_router_id 79  ## 虚拟路由ID号（主备节点一定要相同）
+    mcast_src_ip 192.168.11.80  ## 本机ip地址
+    priority 90  ##优先级配置（0-254的值）
+    nopreempt
+    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
+authentication {  ## 认证匹配
+        auth_type PASS
+        auth_pass bhz
+    }
+
+    track_script {
+        chk_haproxy
+    }
+
+    virtual_ipaddress {
+        192.168.1.70  ## 虚拟ip，可以指定多个
+    }
+}
+
+</code></pre><ul>
+<li><p>执行脚本编写</p>
+<p>添加文件位置为/etc/keepalived/haproxy_check.sh（79、80两个节点文件内容一致即可）</p>
+</li>
+</ul>
+<pre><code>#!/bin/bash
+COUNT=`ps -C haproxy --no-header |wc -l`
+if [ $COUNT -eq 0 ];then
+    /usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
+    sleep 2
+    if [ `ps -C haproxy --no-header |wc -l` -eq 0 ];then
+        killall keepalived
+    fi
+fi
+
+</code></pre><ul>
+<li>执行脚本</li>
+</ul>
+<pre><code>chmod +x /etc/keepalived/haproxy_check.sh
+//启动两台机器的keepalived
+service keepalived start | stop | status | restart
+//查看状态
+ps -ef | grep haproxy
+ps -ef | grep keepalived
+</code></pre><ul>
+<li>高可用测试</li>
+</ul>
+<p>vip在27节点上</p>
+<p><img src="/2019/06/08/rabbitcluster/c12.jpg" alt="c12"></p>
+<p>27节点宕机测试：停掉27的keepalived服务即可。</p>
+<p><img src="/2019/06/08/rabbitcluster/c13.jpg" alt="c13"></p>
+<p>查看28节点状态：我们发现VIP漂移到了28节点上，那么28节点的haproxy可以继续对外提供服务！</p>
+<p><img src="/2019/06/08/rabbitcluster/c14.jpg" alt="c14"></p>
+<h2 id="集群配置文件"><a href="#集群配置文件" class="headerlink" title="集群配置文件"></a>集群配置文件</h2><p>创建如下配置文件位于：/etc/rabbitmq目录下（这个目录需要自己创建）</p>
+<p>环境变量配置文件：rabbitmq-env.conf </p>
+<p>配置信息配置文件：rabbitmq.config（可以不创建和配置，修改）</p>
+<p>rabbitmq-env.conf配置文件：</p>
+<p>关键参数配置:</p>
+<p>RABBITMQ_NODE_IP_ADDRESS=本机IP地址</p>
+<p>RABBITMQ_NODE_PORT=5672</p>
+<p>RABBITMQ_LOG_BASE=/var/lib/rabbitmq/log</p>
+<p>RABBITMQ_MNESIA_BASE=/var/lib/rabbitmq/mnesia</p>
+<p>配置参考参数如下：</p>
+<p>RABBITMQ_NODENAME=FZTEC-240088 节点名称</p>
+<p>RABBITMQ_NODE_IP_ADDRESS=127.0.0.1 监听IP</p>
+<p>RABBITMQ_NODE_PORT=5672 监听端口</p>
+<p>RABBITMQ_LOG_BASE=/data/rabbitmq/log 日志目录</p>
+<p>RABBITMQ_PLUGINS_DIR=/data/rabbitmq/plugins 插件目录</p>
+<p>RABBITMQ_MNESIA_BASE=/data/rabbitmq/mnesia 后端存储目录</p>
+<p>更详细的配置参见： <a href="http://www.rabbitmq.com/configure.html#configuration-file" target="_blank" rel="noopener">http://www.rabbitmq.com/configure.html#configuration-file</a></p>
+<p>配置文件信息修改：</p>
+<p>/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/ebin/rabbit.app和rabbitmq.config配置文件配置任意一个即可，我们进行配置如下：</p>
+<p>vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/ebin/rabbit.app</p>
+<p>关键参数配置</p>
+<p>tcp_listerners 设置rabbimq的监听端口，默认为[5672]。<br>disk_free_limit 磁盘低水位线，若磁盘容量低于指定值则停止接收数据，默认值为{mem_relative, 1.0},即与内存相关联1：1，也可定制为多少byte.<br>vm_memory_high_watermark，设置内存低水位线，若低于该水位线，则开启流控机制，默认值是0.4，即内存总量的40%。<br>hipe_compile 将部分rabbimq代码用High Performance Erlang compiler编译，可提升性能，该参数是实验性，若出现erlang vm segfaults，应关掉。<br>force_fine_statistics， 该参数属于rabbimq_management，若为true则进行精细化的统计，但会影响性能</p>
+<p>更详细的配置参见：<a href="http://www.rabbitmq.com/configure.html" target="_blank" rel="noopener">http://www.rabbitmq.com/configure.html</a></p>
+<h1 id="恢复与故障转移"><a href="#恢复与故障转移" class="headerlink" title="恢复与故障转移"></a>恢复与故障转移</h1><p>镜像队列为例</p>
+<p><img src="/2019/06/08/rabbitcluster/c15.jpg" alt="c15"></p>
+<p><img src="/2019/06/08/rabbitcluster/c16.jpg" alt="c16"></p>
+<p><img src="/2019/06/08/rabbitcluster/c17.jpg" alt="c17"></p>
+<p><img src="/2019/06/08/rabbitcluster/c18.jpg" alt="c18"></p>
+<p><img src="/2019/06/08/rabbitcluster/c19.jpg" alt="c19"></p>
+<p><img src="/2019/06/08/rabbitcluster/c20.jpg" alt="c20"></p>
+<h1 id="延迟插件"><a href="#延迟插件" class="headerlink" title="延迟插件"></a>延迟插件</h1><p>延迟队列可以用于消息的延迟推送，定时任务，削峰限流，降级等机制。</p>
+<ul>
+<li>download the ‘rabbitmq_delayed_message_exchange-0.0.1.ez’ file</li>
+</ul>
+<p><a href="https://github.com/rabbitmq/rabbitmq-delayed-message-exchange" target="_blank" rel="noopener">https://github.com/rabbitmq/rabbitmq-delayed-message-exchange</a></p>
+<p><a href="http://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">http://www.rabbitmq.com/community-plugins.html</a></p>
+<p><a href="https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange/v3.6.x#files/" target="_blank" rel="noopener">https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange/v3.6.x#files/</a></p>
+<ul>
+<li>PUT Directory</li>
+</ul>
+<p>/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/plugins</p>
+<ul>
+<li>Then run the following command</li>
+</ul>
+<p>Start the rabbitmq cluster for command</p>
+<pre><code>rabbitmq-server -detached
+rabbitmq-plugins enable rabbitmq_delayed_message_exchange
+</code></pre><ul>
+<li>访问地址：<a href="http://192.168.1.21:15672/#/exchanges" target="_blank" rel="noopener">http://192.168.1.21:15672/#/exchanges</a>，添加延迟队列</li>
+</ul>
+<p><img src="/2019/06/08/rabbitcluster/c21.jpg" alt="c21"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>MQ</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>React Basic</title>
+    <url>/2019/06/25/react/</url>
+    <content><![CDATA[<p>学习一下前端知识来完成基本的项目。。</p>
+<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><ul>
+<li>安装node，配置环境变量</li>
+<li>安装react脚手架   npm install -g create-react-app</li>
+</ul>
+<p>目录结构：</p>
+<p><img src="/2019/06/25/react/r0.jpg" alt="r0"></p>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>前端组件化，将复杂前端分割成多个组件完成</p>
+<p><img src="/2019/06/25/react/r1.jpg" alt="r1"></p>
+<p>在index.js中</p>
+<pre><code class="js">import React from &#39;react&#39;;
+import ReactDOM from &#39;react-dom&#39;;
+import &#39;./index.css&#39;;
+
+import App from &#39;./App&#39;;
+import * as serviceWorker from &#39;./serviceWorker&#39;;
+
+ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+</code></pre>
+<p>serviceWorker用于离线保存网页</p>
+<p>其中引入了app组件</p>
+<p>ReactDOM.render(<app>, document.getElementById(‘root’));</app></p>
+<p>在app.js中定义组件</p>
+<pre><code class="js">import React from &#39;react&#39;;
+import logo from &#39;./logo.svg&#39;;
+import &#39;./App.css&#39;;
+
+function App() {
+  return (
+    &lt;div className=&quot;App&quot;&gt;
+      &lt;header className=&quot;App-header&quot;&gt;
+        &lt;img src={logo} className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;
+        &lt;p&gt;
+          Edit &lt;code&gt;src/App.js&lt;/code&gt; and save to reload.
+        &lt;/p&gt;
+        &lt;a
+          className=&quot;App-link&quot;
+          href=&quot;https://reactjs.org&quot;
+          target=&quot;_blank&quot;
+          rel=&quot;noopener noreferrer&quot;
+        &gt;
+          Learn React
+        &lt;/a&gt;
+      &lt;/header&gt;
+    &lt;/div&gt;
+  );
+}
+
+export default App;
+</code></pre>
+<p><img src="/2019/06/25/react/r2.jpg" alt="r2"></p>
+<p>编写简单的组件：Rex.js</p>
+<pre><code class="js">import React, { Component} from &quot;react&quot;;
+
+class Rex extends Component{
+    render() {
+        return(
+            &lt;div&gt;
+                hello rex
+            &lt;/div&gt;
+        );
+    }
+}
+
+export default Rex;
+</code></pre>
+<p>index.js中改变引用（组件的开头必须大写）</p>
+<pre><code class="js">import React from &#39;react&#39;;
+import ReactDOM from &#39;react-dom&#39;;
+import &#39;./index.css&#39;;
+
+import App from &#39;./App&#39;;
+import Rex from &#39;./Rex&#39;;
+import * as serviceWorker from &#39;./serviceWorker&#39;;
+
+// ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;));
+ReactDOM.render(&lt;Rex /&gt;, document.getElementById(&#39;root&#39;));
+
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: https://bit.ly/CRA-PWA
+serviceWorker.unregister();
+
+</code></pre>
+<p>显示效果：</p>
+<p><img src="/2019/06/25/react/r3.jpg" alt="r3"></p>
+<h1 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h1><p>必须引入react，才可以使用JSX语法，是一种在js中使用html的方式</p>
+<p>大写标签代表组件，小写标签代表html</p>
+<p>react中，component render返回的html，最外层必须被包裹</p>
+<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
+
+class TodoList extends Component{
+    render() {
+        return(
+
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;input/&gt;
+                    &lt;button&gt;submit&lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;ul&gt;
+                    &lt;li&gt;hahah&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/Fragment&gt;
+
+        )
+    }
+}
+export default TodoList;
+</code></pre>
+<p>Fragment为最外层隐形div（大写开头为组件）</p>
+<p>JSX注释{/<em> </em>/}</p>
+<p>创建css文件</p>
+<pre><code class="css">.input {
+    border: 1px solid red;
+}
+</code></pre>
+<p>导入包</p>
+<blockquote>
+<p>impott ‘./xxx.css’;</p>
+</blockquote>
+<pre><code class="jsx">&lt;input
+    className-&#39;input&#39;
+    /&gt;
+</code></pre>
+<p>触发光标位置</p>
+<pre><code class="jsx">&lt;label htmlFor=&quot;id&quot;&gt;label&lt;/label&gt;
+</code></pre>
+<h1 id="响应式与事件"><a href="#响应式与事件" class="headerlink" title="响应式与事件"></a>响应式与事件</h1><p>react中的类默认一个构造函数，会率先触发，state负责存储数据</p>
+<p>react可以给页面状态，响应状态的变化</p>
+<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
+
+class TodoList extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            input: &#39;&#39;,
+            list: []
+        }
+    }
+
+
+    render() {
+        return(
+
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;input
+                        value={this.state.input}
+                        onChange={this.handleInputChange.bind(this)}
+                    /&gt;
+                    &lt;button&gt;submit&lt;/button&gt;
+                &lt;/div&gt;
+
+                &lt;ul&gt;
+                    &lt;li&gt;hahah&lt;/li&gt;
+                &lt;/ul&gt;
+            &lt;/Fragment&gt;
+
+        )
+    }
+
+    handleInputChange(e){
+        this.setState({
+            input: e.target.value
+        })
+    }
+
+}
+export default TodoList;
+</code></pre>
+<p>绑定相同this，通过e传递数据，并通过setState改变数值，全程对数据操作</p>
+<h1 id="实现一个TodoList"><a href="#实现一个TodoList" class="headerlink" title="实现一个TodoList"></a>实现一个TodoList</h1><p>react不允许对state进行操作，必须深拷贝操作，以方便优化性能</p>
+<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
+
+class TodoList extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            input: &#39;&#39;,
+            list: []
+        }
+    }
+
+    render() {
+        return(
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;input
+                        value={this.state.input}
+                        onChange={this.handleInputChange.bind(this)}
+                    /&gt;
+                    &lt;button
+                        onClick={this.handleBtnClick.bind(this)}
+                    &gt;Submit&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;ul&gt;
+                        {
+                            this.state.list.map((item,index) =&gt;{
+                                return&lt;li
+                                    key={index}
+                                    onClick={this.handleDelete.bind(this,index)}
+                                &gt;{item}&lt;/li&gt;
+                            })
+                        }
+                &lt;/ul&gt;
+            &lt;/Fragment&gt;
+        )
+    }
+
+    handleBtnClick(){
+        this.setState({
+            list: [...this.state.list, this.state.input],
+            input: &#39;&#39;
+        })
+    }
+
+    handleInputChange(e){
+        this.setState({
+            input: e.target.value
+        })
+    }
+
+    handleDelete(index){
+        const list = [...this.state.list];
+        list.splice(index,1);
+        this.setState({
+            list: list
+        })
+    }
+
+}
+export default TodoList;
+</code></pre>
+<p><img src="/2019/06/25/react/r4.jpg" alt="r4"></p>
+<h1 id="组件-js之间的传值"><a href="#组件-js之间的传值" class="headerlink" title="组件.js之间的传值"></a>组件.js之间的传值</h1><p>大组件：</p>
+<pre><code class="jsx">import React, { Component, Fragment } from &#39;react&#39;;
+import TodoItem from &#39;./TodoItem&#39;;
+import Test from &#39;./Test&#39;;
+import &#39;./style.css&#39;;
+
+class TodoList extends Component {
+
+    constructor(props) {
+        super(props);
+        // 当组件的state或者props发生改变的时候，render函数就会重新执行
+        this.state = {
+            inputValue: &#39;&#39;,
+            list: []
+        }
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleBtnClick = this.handleBtnClick.bind(this);
+        this.handleItemDelete = this.handleItemDelete.bind(this);
+    }
+
+    render() {
+        return (
+            &lt;Fragment&gt;
+                &lt;div&gt;
+                    &lt;label htmlFor=&quot;insertArea&quot;&gt;输入内容&lt;/label&gt;
+                    &lt;input 
+                        id=&quot;insertArea&quot;
+                        className=&#39;input&#39;
+                        value={this.state.inputValue}
+                        onChange={this.handleInputChange}
+                    /&gt;
+                    &lt;button onClick={this.handleBtnClick}&gt;提交&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;ul&gt;
+                    {this.getTodoItem()}
+                &lt;/ul&gt;
+                &lt;Test content={this.state.inputValue}/&gt;
+            &lt;/Fragment&gt;
+        )
+    }
+
+    getTodoItem() {
+        return this.state.list.map((item, index) =&gt; {
+            return (
+                &lt;TodoItem 
+                    key={index}
+                    content={item} 
+                    index={index}
+                    deleteItem={this.handleItemDelete}
+                /&gt;
+            )
+        })
+    }
+
+    handleInputChange(e) {
+        const value = e.target.value;
+        this.setState(() =&gt; ({
+            inputValue: value
+        }));
+    }
+
+    handleBtnClick() {
+        this.setState((prevState) =&gt; ({
+            list: [...prevState.list, prevState.inputValue],
+            inputValue: &#39;&#39;
+        }));
+    }
+
+    handleItemDelete(index) {
+        this.setState((prevState) =&gt; {
+            const list = [...prevState.list];
+            list.splice(index, 1);
+            return {list}
+        });
+    }
+}
+
+export default TodoList;
+</code></pre>
+<p>小组件：</p>
+<pre><code class="jsx">import React, { Component } from &#39;react&#39;;
+import PropTypes from &#39;prop-types&#39;;
+
+class TodoItem extends Component {
+
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    render() {
+        const { content, test }  = this.props;
+        // JSX -&gt; createElemnt -&gt;  虚拟DOM（JS 对象） -&gt; 真实的DOM
+        // return &lt;div&gt;&lt;span&gt;item&lt;/span&gt;&lt;/div&gt;
+        return React.createElement(&#39;div&#39;, {}, React.createElement(&#39;span&#39;, {}, &#39;item&#39;));
+    }
+
+    handleClick() {
+        const { deleteItem, index } = this.props;
+        deleteItem(index);
+    }
+}
+
+TodoItem.propTypes = {
+    test: PropTypes.string.isRequired,
+    content: PropTypes.arrayOf(PropTypes.number, PropTypes.string),
+    deleteItem: PropTypes.func,
+    index: PropTypes.number
+}
+
+TodoItem.defaultProps = {
+    test: &#39;hello world&#39;
+}
+
+export default TodoItem;
+</code></pre>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>React</tag>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>React Skills</title>
+    <url>/2019/07/07/react2/</url>
+    <content><![CDATA[<p>项目调试：摇动手机打开开发者菜单</p>
+<p>react native可以通过ES5,ES6，函数的方法定义组件，函数方法没有状态，不能使用this</p>
+<h1 id="组件的传参"><a href="#组件的传参" class="headerlink" title="组件的传参"></a>组件的传参</h1><p>将外部的item传给TodoItem小组件，明明为content：</p>
+<p><img src="/2019/07/07/react2/r0.jpg" alt="r0"></p>
+<p>子组件使用传递得到的内容</p>
+<p><img src="/2019/07/07/react2/r2.jpg" alt="r2"></p>
+<h1 id="设置proptype和default"><a href="#设置proptype和default" class="headerlink" title="设置proptype和default"></a>设置proptype和default</h1><p>propTypes要求格式、要求非空</p>
+<p>defaultProps设置默认值</p>
+<pre><code class="js">TodoItem.propTypes = {
+    test: PropTypes.string.isRequired,
+    content: PropTypes.arrayOf(PropTypes.number, PropTypes.string),
+    deleteItem: PropTypes.func,
+    index: PropTypes.number
+}
+
+TodoItem.defaultProps = {
+    test: &#39;hello world&#39;
+}
+</code></pre>
+<h1 id="Props-State-Render"><a href="#Props-State-Render" class="headerlink" title="Props, State, Render"></a>Props, State, Render</h1><p>当state和props发生改变时，render函数就会执行</p>
+<p>render过程效率很高，因为有虚拟DOM</p>
+<h1 id="虚拟DOM"><a href="#虚拟DOM" class="headerlink" title="虚拟DOM"></a>虚拟DOM</h1><p>render的过程</p>
+<ul>
+<li>State 数据</li>
+<li>JSX 模板</li>
+<li>数据+模板 整合生成真实DOM</li>
+<li>State发生改变</li>
+<li>数据+模板 整合生成真实DOM，替换原有DOM</li>
+</ul>
+<p>多次生成DOM非常耗费性能</p>
+<p>改良过程：</p>
+<ul>
+<li>State 数据</li>
+<li>JSX 模板</li>
+<li>数据+模板 整合生成真实DOM</li>
+<li>State发生改变</li>
+<li>数据+模板 整合生成真实DOM，并不替换原有DOM</li>
+<li>对比差异</li>
+<li>局部替换</li>
+</ul>
+<p>最终方案：虚拟DOM</p>
+<ul>
+<li>State 数据</li>
+<li>JSX 模板</li>
+<li>数据+模板 整合生成真实DOM</li>
+<li>生成虚拟DOM（一个js对象）</li>
+<li>State发生改变</li>
+<li>生成新的虚拟DOM</li>
+<li>比较两个虚拟DOM的区别</li>
+<li>直接操作DOM，改变内容</li>
+</ul>
+<h1 id="ref的使用"><a href="#ref的使用" class="headerlink" title="ref的使用"></a>ref的使用</h1><p>input中onchange函数</p>
+<p><img src="/2019/07/07/react2/r3.jpg" alt="r3"></p>
+<p>传值一个e得到DOM值，对应函数从e中得到input value</p>
+<p><img src="/2019/07/07/react2/r4.jpg" alt="r4"></p>
+<p>增加ref参数，引用dom节点为this.input</p>
+<p><img src="/2019/07/07/react2/r5.jpg" alt="r5"></p>
+<p>对应函数通过ref获得值</p>
+<p><img src="/2019/07/07/react2/r6.jpg" alt="r6"></p>
+<p>本质是直接操纵DOM（不推荐）</p>
+<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p>生命周期函数：某一时刻组件自动执行的函数</p>
+<p><img src="/2019/07/07/react2/r7.jpg" alt="r7"></p>
+<ul>
+<li>Iinitialization</li>
+</ul>
+<p>constructor函数，构建props和state</p>
+<ul>
+<li>Mounting挂载</li>
+</ul>
+<p>componentWillMount，即将挂载到页面时执行</p>
+<p>componentDidMount，组件挂载到页面后自动执行</p>
+<p>初次加载页面时的过程：</p>
+<p><img src="/2019/07/07/react2/r8.jpg" alt="r8"></p>
+<ul>
+<li>Updating组件更新</li>
+</ul>
+<p>ShoudComponentUpdate，组件被更新之前，自动执行，返回一个布尔类型，表示是否需要更新组件，如果返回false，不会继续后续流程</p>
+<p>ComponentWillUpdate，在should返回true后，组件更新之前执行</p>
+<p>update时的过程：</p>
+<p><img src="/2019/07/07/react2/r9.jpg" alt="r9"></p>
+<p>ComponentWillReceiveProps</p>
+<p>接受父组件props时调用，父组件render重新执行时，子组件此函数执行</p>
+<ul>
+<li>UnMounting</li>
+</ul>
+<p>组件被卸载前执行</p>
+<p>所有生命周期函数都有默认实现，唯有render函数必须自己实现才可以运行</p>
+<p>使用情景：避免子组件过度渲染</p>
+<p><img src="/2019/07/07/react2/r10.jpg" alt="r10"></p>
+<p>使用情景：发送Ajax请求，规定写在componentDidMount中</p>
+<p><img src="/2019/07/07/react2/r11.jpg" alt="r11"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>React</tag>
+        <tag>JavaScript</tag>
       </tags>
   </entry>
   <entry>
@@ -9862,1241 +11097,6 @@ public class Producer {
       </tags>
   </entry>
   <entry>
-    <title>Seven Principles of Software Design</title>
-    <url>/2019/04/10/principles/</url>
-    <content><![CDATA[<blockquote>
-<p><a href="https://github.com/rexllz/design" target="_blank" rel="noopener">https://github.com/rexllz/design</a></p>
-</blockquote>
-<h1 id="开闭原则（Open-Closed-）"><a href="#开闭原则（Open-Closed-）" class="headerlink" title="开闭原则（Open/Closed ）"></a>开闭原则（Open/Closed ）</h1><p><strong>对扩展开放、对修改关闭</strong></p>
-<ul>
-<li><p>提高软件的可复用和可维护性</p>
-</li>
-<li><p>面向抽象编程</p>
-</li>
-<li><p>面向接口编程</p>
-</li>
-</ul>
-<pre><code class="java">public interface ICourse {
-    Integer getId();
-    String getName();
-    Double getPrice();
-}
-</code></pre>
-<pre><code class="java">public class JavaCourse implements ICourse{
-    private Integer Id;
-    private String name;
-    private Double price;
-
-    public JavaCourse(Integer id, String name, Double price) {
-        this.Id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-    public Integer getId() {
-        return this.Id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Double getPrice() {
-        return this.price;
-    }
-}
-
-</code></pre>
-<pre><code class="java">public class JavaDiscountCourse extends JavaCourse{
-
-    public JavaDiscountCourse(Integer id, String name, Double price) {
-        super(id, name, price);
-    }
-
-    public Double getDiscountPrice(){
-        return super.getPrice()*0.8;
-    }
-
-    public Double getOriginPrice(){
-        return super.getPrice();
-    }
-}
-</code></pre>
-<p><img src="/2019/04/10/principles/oc.jpg" alt="oc"></p>
-<h1 id="依赖倒置原则（Dependency-Inversion）"><a href="#依赖倒置原则（Dependency-Inversion）" class="headerlink" title="依赖倒置原则（Dependency Inversion）"></a>依赖倒置原则（Dependency Inversion）</h1><p><strong>高层模块不应该依赖底层模块，二者都应该依赖抽象</strong></p>
-<ul>
-<li>抽象不应该依赖细节，细节应该依赖抽象</li>
-<li>针对接口编程，不可针对实现编程</li>
-</ul>
-<h2 id="高层依赖底层的情况"><a href="#高层依赖底层的情况" class="headerlink" title="高层依赖底层的情况"></a>高层依赖底层的情况</h2><pre><code class="java">public class Rex {
-    public void studyJava(){
-        System.out.println(&quot;study java&quot;);
-    }
-    public void studyPython(){
-        System.out.println(&quot;study python&quot;);
-    }
-    public void studyJs(){
-        System.out.println(&quot;study js&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">//v1 面向实现编程
-//高层依赖底层
-//test 依赖 rex
-public static void main(String[] args) {
-        Rex rex = new Rex();
-        rex.studyJava();
-        rex.studyJs();
-        rex.studyPython();
-    }
-</code></pre>
-<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><pre><code class="java">public class Rex {
-    public void studyCourse(ICourse iCourse){
-        iCourse.studyCourse();
-    }
-}
-</code></pre>
-<pre><code class="java">//依赖倒置
-    public static void main(String[] args) {
-        Rex rex = new Rex();
-        rex.studyCourse(new JavaCourse());
-        rex.studyCourse(new JsCourse());
-        rex.studyCourse(new PythonCourse());
-    }
-</code></pre>
-<p><img src="/2019/04/10/principles/di.jpg" alt="di"></p>
-<h2 id="构造器注入-单例"><a href="#构造器注入-单例" class="headerlink" title="构造器注入(单例)"></a>构造器注入(单例)</h2><pre><code class="java">public class Rex {
-    private ICourse iCourse;
-    public Rex(ICourse iCourse) {
-        this.iCourse = iCourse;
-    }
-    public void studyImoocCourse(){
-        iCourse.studyCourse();
-    }
-}
-</code></pre>
-<pre><code class="java">//v3 构造器注入
-public static void main(String[] args) {
-        Rex rex = new Rex(new JavaCourse());
-        rex.studyImoocCourse();
-}
-</code></pre>
-<h2 id="setter注入"><a href="#setter注入" class="headerlink" title="setter注入"></a>setter注入</h2><pre><code class="java">public class Rex {
-    private ICourse iCourse;
-    public void setiCourse(ICourse iCourse){
-        this.iCourse = iCourse;
-    }
-    public void studyImoocCourse(){
-        iCourse.studyCourse();
-    }
-}
-</code></pre>
-<pre><code class="java">//v4 setter injection
-public static void main(String[] args) {
-        Rex rex = new Rex();
-        rex.setiCourse(new JavaCourse());
-        rex.studyImoocCourse();
-
-        rex.setiCourse(new PythonCourse());
-        rex.studyImoocCourse();
-
-        rex.setiCourse(new JsCourse());
-        rex.studyImoocCourse();
-}
-</code></pre>
-<h1 id="单一职责原则（Single-Responsibility-）"><a href="#单一职责原则（Single-Responsibility-）" class="headerlink" title="单一职责原则（Single Responsibility ）"></a>单一职责原则（Single Responsibility ）</h1><ul>
-<li>不存在多于一个导致类变更的原因</li>
-<li>一个类、接口、方法只负责一个职责</li>
-<li>降低复杂度，提高可读性、可维护性、降低风险</li>
-</ul>
-<h2 id="类的单一原则"><a href="#类的单一原则" class="headerlink" title="类的单一原则"></a>类的单一原则</h2><p><strong>不遵循单一职责原则的例子</strong></p>
-<pre><code class="java">public class Bird {
-    public void mainMoveMode(String birdName){
-        if(&quot;鸵鸟&quot;.equals(birdName)){
-            System.out.println(birdName+&quot;用脚走&quot;);
-        }else{
-            System.out.println(birdName+&quot;用翅膀飞&quot;);
-        }
-    }
-}
-</code></pre>
-<pre><code class="java">public class Test {
-    public static void main(String[] args) {
-        Bird bird = new Bird();
-        bird.mainMoveMode(&quot;鸵鸟&quot;);
-        bird.mainMoveMode(&quot;大雁&quot;);
-    }
-}
-</code></pre>
-<p><strong>类的单一原则修改</strong></p>
-<pre><code class="java">public class FlyBird {
-    public void mainMoveMode(String birdName){
-        System.out.println(birdName+&quot;用翅膀飞&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">public class WalkBird {
-    public void mainMoveMode(String birdName){
-        System.out.println(birdName+&quot;用脚走&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">public class Test {
-    public static void main(String[] args) {
-        WalkBird walkBird = new WalkBird();
-        walkBird.mainMoveMode(&quot;鸵鸟&quot;);
-        FlyBird flyBird = new FlyBird();
-        flyBird.mainMoveMode(&quot;大雁&quot;);
-    }
-}
-</code></pre>
-<p><img src="/2019/04/10/principles/sr.jpg" alt="sr"></p>
-<h2 id="接口的单一原则"><a href="#接口的单一原则" class="headerlink" title="接口的单一原则"></a>接口的单一原则</h2><p><img src="/2019/04/10/principles/isr.jpg" alt="isr"></p>
-<h2 id="方法的单一原则"><a href="#方法的单一原则" class="headerlink" title="方法的单一原则"></a>方法的单一原则</h2><p>每个方法对单一属性进行修改或者实现单一功能</p>
-<h1 id="接口隔离原则（Interface-Segregation）"><a href="#接口隔离原则（Interface-Segregation）" class="headerlink" title="接口隔离原则（Interface Segregation）"></a>接口隔离原则（Interface Segregation）</h1><ul>
-<li>采用多个接口，而不依赖于单一总接口</li>
-<li>一个类与一个类的依赖应该建立在最小的接口上</li>
-<li>接口尽量小、尽量细化</li>
-</ul>
-<pre><code class="java">public interface IAnimalAction {
-    void eat();
-
-    void fly();
-
-    void swim();
-}
-</code></pre>
-<pre><code class="java">public interface IFlyAnimalAction {
-    void fly();
-}
-</code></pre>
-<pre><code class="java">public interface ISwimAnimalAction {
-    void swim();
-}
-</code></pre>
-<pre><code class="java">public interface IEatAnimalAction {
-    void eat();
-}
-</code></pre>
-<p><strong>需要适度</strong></p>
-<p><img src="/2019/04/10/principles/is.jpg" alt="is"></p>
-<p>比起单一职责，更倾向于架构，接口，而不是功能</p>
-<h1 id="迪米特原则（最少知道）"><a href="#迪米特原则（最少知道）" class="headerlink" title="迪米特原则（最少知道）"></a>迪米特原则（最少知道）</h1><ul>
-<li>一个对象应该对其他对象保持最少的了解</li>
-<li>降低类与类的耦合</li>
-<li>只和朋友类保持关系（内部使用的类不是朋友类）</li>
-</ul>
-<p><img src="/2019/04/10/principles/demeter.jpg" alt="demeter"></p>
-<h1 id="里氏替换原则（Liskov-Substitution，LSP）"><a href="#里氏替换原则（Liskov-Substitution，LSP）" class="headerlink" title="里氏替换原则（Liskov Substitution，LSP）"></a>里氏替换原则（Liskov Substitution，LSP）</h1><ul>
-<li>如果软件可以适用父类，那一定能适用子类</li>
-<li>子类可以拓展父类的功能，但不能改变已有的功能</li>
-<li>子类可以实现父类的抽象方法，但不能修改非抽象方法</li>
-<li>子类可以增加方法</li>
-<li>重载方法时，入参应当更宽松</li>
-<li><p>子类重载或重写方法时，输出要更严格</p>
-</li>
-<li><p><strong>有效约束继承泛滥，体现开闭原则</strong></p>
-</li>
-<li><strong>增加健壮性、拓展性</strong></li>
-</ul>
-<p>不符合里氏替换的例子</p>
-<pre><code class="java">public class Rectangle {
-    private long length;
-    private long width;
-
-    @Override
-    public long getWidth() {
-        return width;
-    }
-
-    @Override
-    public long getLength() {
-        return length;
-    }
-
-    public void setLength(long length) {
-        this.length = length;
-    }
-
-    public void setWidth(long width) {
-        this.width = width;
-    }
-}
-</code></pre>
-<pre><code class="java">public class Square extends Rectangle {
-    private long sideLength;
-
-    public long getSideLength() {
-        return sideLength;
-    }
-
-    public void setSideLength(long sideLength) {
-        this.sideLength = sideLength;
-    }
-
-    @Override
-    public long getWidth() {
-        return sideLength;
-    }
-
-    @Override
-    public long getLength() {
-        return sideLength;
-    }
-}
-</code></pre>
-<pre><code class="java">public static void resize(Rectangle rectangle){
-        while (rectangle.getWidth() &lt;= rectangle.getLength()){
-            rectangle.setWidth(rectangle.getWidth()+1);
-            System.out.println(&quot;width:&quot;+rectangle.getWidth() + &quot; length:&quot;+rectangle.getLength());
-        }
-        System.out.println(&quot;resize方法结束 width:&quot;+rectangle.getWidth() + 
-                           &quot; length:&quot;+rectangle.getLength());
-    }
-</code></pre>
-<p>新建上层接口</p>
-<p><img src="/2019/04/10/principles/lsp.jpg" alt="lsp"></p>
-<p>从而避免了resize中传入square，因为square不再是rectangle子类</p>
-<h1 id="合成复用原则"><a href="#合成复用原则" class="headerlink" title="合成复用原则"></a>合成复用原则</h1><ul>
-<li>has-A &amp; contains-A 代替 is-A</li>
-<li>降低耦合</li>
-</ul>
-<pre><code class="java">public abstract class DBConnection {
-    //    public String getConnection(){
-//        return &quot;MySQL数据库连接&quot;;
-//    }
-    public abstract String getConnection();
-}
-</code></pre>
-<pre><code class="java">public class MySQLConnection extends DBConnection {
-    @Override
-    public String getConnection() {
-        return &quot;MySQL数据库连接&quot;;
-    }
-}
-</code></pre>
-<pre><code class="java">public class PostgreSQLConnection extends DBConnection {
-    @Override
-    public String getConnection() {
-        return &quot;PostgreSQL数据库连接&quot;;
-    }
-}
-</code></pre>
-<pre><code class="java">public class ProductDao{
-    private DBConnection dbConnection;
-
-    public void setDbConnection(DBConnection dbConnection) {
-        this.dbConnection = dbConnection;
-    }
-
-    public void addProduct(){
-        String conn = dbConnection.getConnection();
-        System.out.println(&quot;使用&quot;+conn+&quot;增加产品&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">public class Test {
-    public static void main(String[] args) {
-        ProductDao productDao = new ProductDao();
-        productDao.setDbConnection(new PostgreSQLConnection());
-        productDao.addProduct();
-    }
-}
-</code></pre>
-<p><img src="/2019/04/10/principles/ca.jpg" alt="ca"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Design Patterns</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>React Basic</title>
-    <url>/2019/06/25/react/</url>
-    <content><![CDATA[<p>学习一下前端知识来完成基本的项目。。</p>
-<h1 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h1><ul>
-<li>安装node，配置环境变量</li>
-<li>安装react脚手架   npm install -g create-react-app</li>
-</ul>
-<p>目录结构：</p>
-<p><img src="/2019/06/25/react/r0.jpg" alt="r0"></p>
-<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>前端组件化，将复杂前端分割成多个组件完成</p>
-<p><img src="/2019/06/25/react/r1.jpg" alt="r1"></p>
-<p>在index.js中</p>
-<pre><code class="js">import React from &#39;react&#39;;
-import ReactDOM from &#39;react-dom&#39;;
-import &#39;./index.css&#39;;
-
-import App from &#39;./App&#39;;
-import * as serviceWorker from &#39;./serviceWorker&#39;;
-
-ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
-</code></pre>
-<p>serviceWorker用于离线保存网页</p>
-<p>其中引入了app组件</p>
-<p>ReactDOM.render(<app>, document.getElementById(‘root’));</app></p>
-<p>在app.js中定义组件</p>
-<pre><code class="js">import React from &#39;react&#39;;
-import logo from &#39;./logo.svg&#39;;
-import &#39;./App.css&#39;;
-
-function App() {
-  return (
-    &lt;div className=&quot;App&quot;&gt;
-      &lt;header className=&quot;App-header&quot;&gt;
-        &lt;img src={logo} className=&quot;App-logo&quot; alt=&quot;logo&quot; /&gt;
-        &lt;p&gt;
-          Edit &lt;code&gt;src/App.js&lt;/code&gt; and save to reload.
-        &lt;/p&gt;
-        &lt;a
-          className=&quot;App-link&quot;
-          href=&quot;https://reactjs.org&quot;
-          target=&quot;_blank&quot;
-          rel=&quot;noopener noreferrer&quot;
-        &gt;
-          Learn React
-        &lt;/a&gt;
-      &lt;/header&gt;
-    &lt;/div&gt;
-  );
-}
-
-export default App;
-</code></pre>
-<p><img src="/2019/06/25/react/r2.jpg" alt="r2"></p>
-<p>编写简单的组件：Rex.js</p>
-<pre><code class="js">import React, { Component} from &quot;react&quot;;
-
-class Rex extends Component{
-    render() {
-        return(
-            &lt;div&gt;
-                hello rex
-            &lt;/div&gt;
-        );
-    }
-}
-
-export default Rex;
-</code></pre>
-<p>index.js中改变引用（组件的开头必须大写）</p>
-<pre><code class="js">import React from &#39;react&#39;;
-import ReactDOM from &#39;react-dom&#39;;
-import &#39;./index.css&#39;;
-
-import App from &#39;./App&#39;;
-import Rex from &#39;./Rex&#39;;
-import * as serviceWorker from &#39;./serviceWorker&#39;;
-
-// ReactDOM.render(&lt;App /&gt;, document.getElementById(&#39;root&#39;));
-ReactDOM.render(&lt;Rex /&gt;, document.getElementById(&#39;root&#39;));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
-
-</code></pre>
-<p>显示效果：</p>
-<p><img src="/2019/06/25/react/r3.jpg" alt="r3"></p>
-<h1 id="JSX"><a href="#JSX" class="headerlink" title="JSX"></a>JSX</h1><p>必须引入react，才可以使用JSX语法，是一种在js中使用html的方式</p>
-<p>大写标签代表组件，小写标签代表html</p>
-<p>react中，component render返回的html，最外层必须被包裹</p>
-<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
-
-class TodoList extends Component{
-    render() {
-        return(
-
-            &lt;Fragment&gt;
-                &lt;div&gt;
-                    &lt;input/&gt;
-                    &lt;button&gt;submit&lt;/button&gt;
-                &lt;/div&gt;
-
-                &lt;ul&gt;
-                    &lt;li&gt;hahah&lt;/li&gt;
-                &lt;/ul&gt;
-            &lt;/Fragment&gt;
-
-        )
-    }
-}
-export default TodoList;
-</code></pre>
-<p>Fragment为最外层隐形div（大写开头为组件）</p>
-<p>JSX注释{/<em> </em>/}</p>
-<p>创建css文件</p>
-<pre><code class="css">.input {
-    border: 1px solid red;
-}
-</code></pre>
-<p>导入包</p>
-<blockquote>
-<p>impott ‘./xxx.css’;</p>
-</blockquote>
-<pre><code class="jsx">&lt;input
-    className-&#39;input&#39;
-    /&gt;
-</code></pre>
-<p>触发光标位置</p>
-<pre><code class="jsx">&lt;label htmlFor=&quot;id&quot;&gt;label&lt;/label&gt;
-</code></pre>
-<h1 id="响应式与事件"><a href="#响应式与事件" class="headerlink" title="响应式与事件"></a>响应式与事件</h1><p>react中的类默认一个构造函数，会率先触发，state负责存储数据</p>
-<p>react可以给页面状态，响应状态的变化</p>
-<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
-
-class TodoList extends Component{
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            input: &#39;&#39;,
-            list: []
-        }
-    }
-
-
-    render() {
-        return(
-
-            &lt;Fragment&gt;
-                &lt;div&gt;
-                    &lt;input
-                        value={this.state.input}
-                        onChange={this.handleInputChange.bind(this)}
-                    /&gt;
-                    &lt;button&gt;submit&lt;/button&gt;
-                &lt;/div&gt;
-
-                &lt;ul&gt;
-                    &lt;li&gt;hahah&lt;/li&gt;
-                &lt;/ul&gt;
-            &lt;/Fragment&gt;
-
-        )
-    }
-
-    handleInputChange(e){
-        this.setState({
-            input: e.target.value
-        })
-    }
-
-}
-export default TodoList;
-</code></pre>
-<p>绑定相同this，通过e传递数据，并通过setState改变数值，全程对数据操作</p>
-<h1 id="实现一个TodoList"><a href="#实现一个TodoList" class="headerlink" title="实现一个TodoList"></a>实现一个TodoList</h1><p>react不允许对state进行操作，必须深拷贝操作，以方便优化性能</p>
-<pre><code class="jsx">import React , { Component, Fragment} from &#39;react&#39;;
-
-class TodoList extends Component{
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            input: &#39;&#39;,
-            list: []
-        }
-    }
-
-    render() {
-        return(
-            &lt;Fragment&gt;
-                &lt;div&gt;
-                    &lt;input
-                        value={this.state.input}
-                        onChange={this.handleInputChange.bind(this)}
-                    /&gt;
-                    &lt;button
-                        onClick={this.handleBtnClick.bind(this)}
-                    &gt;Submit&lt;/button&gt;
-                &lt;/div&gt;
-                &lt;ul&gt;
-                        {
-                            this.state.list.map((item,index) =&gt;{
-                                return&lt;li
-                                    key={index}
-                                    onClick={this.handleDelete.bind(this,index)}
-                                &gt;{item}&lt;/li&gt;
-                            })
-                        }
-                &lt;/ul&gt;
-            &lt;/Fragment&gt;
-        )
-    }
-
-    handleBtnClick(){
-        this.setState({
-            list: [...this.state.list, this.state.input],
-            input: &#39;&#39;
-        })
-    }
-
-    handleInputChange(e){
-        this.setState({
-            input: e.target.value
-        })
-    }
-
-    handleDelete(index){
-        const list = [...this.state.list];
-        list.splice(index,1);
-        this.setState({
-            list: list
-        })
-    }
-
-}
-export default TodoList;
-</code></pre>
-<p><img src="/2019/06/25/react/r4.jpg" alt="r4"></p>
-<h1 id="组件-js之间的传值"><a href="#组件-js之间的传值" class="headerlink" title="组件.js之间的传值"></a>组件.js之间的传值</h1><p>大组件：</p>
-<pre><code class="jsx">import React, { Component, Fragment } from &#39;react&#39;;
-import TodoItem from &#39;./TodoItem&#39;;
-import Test from &#39;./Test&#39;;
-import &#39;./style.css&#39;;
-
-class TodoList extends Component {
-
-    constructor(props) {
-        super(props);
-        // 当组件的state或者props发生改变的时候，render函数就会重新执行
-        this.state = {
-            inputValue: &#39;&#39;,
-            list: []
-        }
-        this.handleInputChange = this.handleInputChange.bind(this);
-        this.handleBtnClick = this.handleBtnClick.bind(this);
-        this.handleItemDelete = this.handleItemDelete.bind(this);
-    }
-
-    render() {
-        return (
-            &lt;Fragment&gt;
-                &lt;div&gt;
-                    &lt;label htmlFor=&quot;insertArea&quot;&gt;输入内容&lt;/label&gt;
-                    &lt;input 
-                        id=&quot;insertArea&quot;
-                        className=&#39;input&#39;
-                        value={this.state.inputValue}
-                        onChange={this.handleInputChange}
-                    /&gt;
-                    &lt;button onClick={this.handleBtnClick}&gt;提交&lt;/button&gt;
-                &lt;/div&gt;
-                &lt;ul&gt;
-                    {this.getTodoItem()}
-                &lt;/ul&gt;
-                &lt;Test content={this.state.inputValue}/&gt;
-            &lt;/Fragment&gt;
-        )
-    }
-
-    getTodoItem() {
-        return this.state.list.map((item, index) =&gt; {
-            return (
-                &lt;TodoItem 
-                    key={index}
-                    content={item} 
-                    index={index}
-                    deleteItem={this.handleItemDelete}
-                /&gt;
-            )
-        })
-    }
-
-    handleInputChange(e) {
-        const value = e.target.value;
-        this.setState(() =&gt; ({
-            inputValue: value
-        }));
-    }
-
-    handleBtnClick() {
-        this.setState((prevState) =&gt; ({
-            list: [...prevState.list, prevState.inputValue],
-            inputValue: &#39;&#39;
-        }));
-    }
-
-    handleItemDelete(index) {
-        this.setState((prevState) =&gt; {
-            const list = [...prevState.list];
-            list.splice(index, 1);
-            return {list}
-        });
-    }
-}
-
-export default TodoList;
-</code></pre>
-<p>小组件：</p>
-<pre><code class="jsx">import React, { Component } from &#39;react&#39;;
-import PropTypes from &#39;prop-types&#39;;
-
-class TodoItem extends Component {
-
-    constructor(props) {
-        super(props);
-        this.handleClick = this.handleClick.bind(this);
-    }
-
-    render() {
-        const { content, test }  = this.props;
-        // JSX -&gt; createElemnt -&gt;  虚拟DOM（JS 对象） -&gt; 真实的DOM
-        // return &lt;div&gt;&lt;span&gt;item&lt;/span&gt;&lt;/div&gt;
-        return React.createElement(&#39;div&#39;, {}, React.createElement(&#39;span&#39;, {}, &#39;item&#39;));
-    }
-
-    handleClick() {
-        const { deleteItem, index } = this.props;
-        deleteItem(index);
-    }
-}
-
-TodoItem.propTypes = {
-    test: PropTypes.string.isRequired,
-    content: PropTypes.arrayOf(PropTypes.number, PropTypes.string),
-    deleteItem: PropTypes.func,
-    index: PropTypes.number
-}
-
-TodoItem.defaultProps = {
-    test: &#39;hello world&#39;
-}
-
-export default TodoItem;
-</code></pre>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>React</tag>
-        <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>RabbitMQ Cluster</title>
-    <url>/2019/06/08/rabbitcluster/</url>
-    <content><![CDATA[<p>正所谓万物皆可集群。。</p>
-<h1 id="RabbitMQ集群架构模式"><a href="#RabbitMQ集群架构模式" class="headerlink" title="RabbitMQ集群架构模式"></a>RabbitMQ集群架构模式</h1><h2 id="主备模式-Warren"><a href="#主备模式-Warren" class="headerlink" title="主备模式(Warren)"></a>主备模式(Warren)</h2><p>适合并发或数据量不高的情况下，简单易用</p>
-<p>主节点挂掉，从节点替补（可能多个从节点）</p>
-<p><img src="/2019/06/08/rabbitcluster/c1.jpg" alt="c1"></p>
-<p><img src="/2019/06/08/rabbitcluster/c2.jpg" alt="c2"></p>
-<p>每五秒做一次检查，两次正常可用，两次失败不可用</p>
-<h2 id="远程模式-Shovel"><a href="#远程模式-Shovel" class="headerlink" title="远程模式(Shovel)"></a>远程模式(Shovel)</h2><p>双活模式，将消息移动到不同数据中心，分摊压力</p>
-<p>可以跨地域使两个MQ互联</p>
-<p>近端同步确认，远端异步确认</p>
-<p><img src="/2019/06/08/rabbitcluster/c3.jpg" alt="c3"></p>
-<h2 id="镜像模式-Mirror"><a href="#镜像模式-Mirror" class="headerlink" title="镜像模式(Mirror)"></a>镜像模式(Mirror)</h2><p>使用镜像队列，使用2-3个节点实现数据同步</p>
-<p><img src="/2019/06/08/rabbitcluster/c4.jpg" alt="c4"></p>
-<h2 id="多活模式"><a href="#多活模式" class="headerlink" title="多活模式"></a>多活模式</h2><p>在两个或多个MQ集群中实现数据同步</p>
-<p><img src="/2019/06/08/rabbitcluster/c5.jpg" alt="c5"></p>
-<p><img src="/2019/06/08/rabbitcluster/c6.jpg" alt="c6"></p>
-<p>federation exchange：</p>
-<p><img src="/2019/06/08/rabbitcluster/c7.jpg" alt="c7"></p>
-<p><img src="/2019/06/08/rabbitcluster/c8.jpg" alt="c8"></p>
-<h1 id="镜像模型的构建"><a href="#镜像模型的构建" class="headerlink" title="镜像模型的构建"></a>镜像模型的构建</h1><p>实验说明</p>
-<p><img src="/2019/06/08/rabbitcluster/c9.jpg" alt="c9"></p>
-<h2 id="节点安装"><a href="#节点安装" class="headerlink" title="节点安装"></a>节点安装</h2><ul>
-<li>安装依赖</li>
-</ul>
-<pre><code>yum install build-essential openssl openssl-devel unixODBC unixODBC-devel make gcc gcc-c++ kernel-devel m4 ncurses-devel tk tc xz
-</code></pre><ul>
-<li>下载安装包</li>
-</ul>
-<pre><code>wget www.rabbitmq.com/releases/erlang/erlang-18.3-1.el7.centos.x86_64.rpm
-wget http://repo.iotti.biz/CentOS/7/x86_64/socat-1.7.3.2-5.el7.lux.x86_64.rpm
-wget www.rabbitmq.com/releases/rabbitmq-server/v3.6.5/rabbitmq-server-3.6.5-1.noarch.rpm
-</code></pre><ul>
-<li>安装服务命令</li>
-</ul>
-<pre><code>rpm -ivh erlang-18.3-1.el7.centos.x86_64.rpm 
-rpm -ivh socat-1.7.3.2-5.el7.lux.x86_64.rpm
-rpm -ivh rabbitmq-server-3.6.5-1.noarch.rpm
-</code></pre><ul>
-<li>修改集群用户与连接心跳检测</li>
-</ul>
-<pre><code>注意修改vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.5/ebin/rabbit.app文件
-修改：loopback_users 中的 &lt;&lt;&quot;guest&quot;&gt;&gt;,只保留guest
-修改：heartbeat 为1
-</code></pre><ul>
-<li>安装管理插件</li>
-</ul>
-<pre><code>//首先启动服务
-/etc/init.d/rabbitmq-server start stop status restart
-//查看服务有没有启动： lsof -i:5672
-rabbitmq-plugins enable rabbitmq_management
-//可查看管理端口有没有启动： lsof -i:15672 或者 netstat -tnlp|grep 15672
-</code></pre><ul>
-<li>服务指令</li>
-</ul>
-<pre><code>/etc/init.d/rabbitmq-server start stop status restart
-验证单个节点是否安装成功：http://192.168.11.71:15672/
-1．  Ps：以上操作三个节点（71、72、73）同时进行操作
-</code></pre><h2 id="文件同步"><a href="#文件同步" class="headerlink" title="文件同步"></a>文件同步</h2><p>选择76、77、78任意一个节点为Master（这里选择76为Master），也就是说我们需要把76的Cookie文件同步到77、78节点上去，进入/var/lib/rabbitmq目录下，把/var/lib/rabbitmq/.erlang.cookie文件的权限修改为777，原来是400；然后把.erlang.cookie文件copy到各个节点下；最后把所有cookie文件权限还原为400即可。</p>
-<pre><code>/etc/init.d/rabbitmq-server stop 
-//进入目录修改权限；远程copy77、78节点，比如：
-scp /var/lib/rabbitmq/.erlang.cookie 到192.168.11.77和192.168.11.78中
-</code></pre><h2 id="组成集群"><a href="#组成集群" class="headerlink" title="组成集群"></a>组成集群</h2><ul>
-<li>停止MQ服务</li>
-</ul>
-<pre><code>rabbitmqctl stop
-</code></pre><ul>
-<li><p>组成集群</p>
-<p>接下来我们就可以使用集群命令，配置76、77、78为集群模式，3个节点（76、77、78）执行启动命令，后续启动集群使用此命令即可。</p>
-</li>
-</ul>
-<pre><code>rabbitmq-server -detached
-</code></pre><ul>
-<li>slave加入集群</li>
-</ul>
-<pre><code class="bash">//注意做这个步骤的时候：需要配置/etc/hosts 必须相互能够寻址到
-bhz77：rabbitmqctl stop_app
-bhz77：rabbitmqctl join_cluster --ram rabbit@bhz76
-bhz77：rabbitmqctl start_app
-bhz78：rabbitmqctl stop_app
-bhz78：rabbitmqctl join_cluster rabbit@bhz76
-bhz78：rabbitmqctl start_app
-//在另外其他节点上操作要移除的集群节点
-rabbitmqctl forget_cluster_node rabbit@bhz24
-</code></pre>
-<ul>
-<li>修改集群名称</li>
-</ul>
-<pre><code class="bash">rabbitmqctl set_cluster_name rabbitmq_cluster1
-</code></pre>
-<ul>
-<li>查看集群状态</li>
-</ul>
-<pre><code class="bash">rabbitmqctl cluster_status
-</code></pre>
-<ul>
-<li><p>管控台界面</p>
-<p>访问任意一个管控台节点：<a href="http://192.168.11.71:15672" target="_blank" rel="noopener">http://192.168.11.71:15672</a> </p>
-</li>
-</ul>
-<p><img src="/2019/06/08/rabbitcluster/c10.jpg" alt="c10"></p>
-<ul>
-<li><p>配置镜像队列</p>
-<p>将所有队列设置为镜像队列，即队列会被复制到各个节点，各个节点状态一致，RabbitMQ高可用集群就已经搭建好了,我们可以重启服务，查看其队列是否在从节点同步</p>
-</li>
-</ul>
-<pre><code class="bash">rabbitmqctl set_policy ha-all &quot;^&quot; &#39;{&quot;ha-mode&quot;:&quot;all&quot;}&#39;
-</code></pre>
-<h2 id="Ha-Proxy"><a href="#Ha-Proxy" class="headerlink" title="Ha-Proxy"></a>Ha-Proxy</h2><p>HAProxy是一款提供高可用性、负载均衡以及基于TCP和HTTP应用的代理软件，HAProxy是完全免费的、借助HAProxy可以快速并且可靠的提供基于TCP和HTTP应用的代理解决方案。</p>
-<p>HAProxy适用于那些负载较大的web站点，这些站点通常又需要会话保持或七层处理。 </p>
-<p>HAProxy可以支持数以万计的并发连接,并且HAProxy的运行模式使得它可以很简单安全的整合进架构中，同时可以保护web服务器不被暴露到网络上</p>
-<ul>
-<li>Haproxy安装</li>
-</ul>
-<pre><code class="bash">//下载依赖包
-yum install gcc vim wget
-//下载haproxy
-wget http://www.haproxy.org/download/1.6/src/haproxy-1.6.5.tar.gz
-//解压
-tar -zxvf haproxy-1.6.5.tar.gz -C /usr/local
-//进入目录、进行编译、安装
-cd /usr/local/haproxy-1.6.5
-make TARGET=linux31 PREFIX=/usr/local/haproxy
-make install PREFIX=/usr/local/haproxy
-mkdir /etc/haproxy
-//赋权
-groupadd -r -g 149 haproxy
-useradd -g haproxy -r -s /sbin/nologin -u 149 haproxy
-//创建haproxy配置文件
-touch /etc/haproxy/haproxy.cfg
-</code></pre>
-<ul>
-<li>Haproxy配置</li>
-</ul>
-<pre><code>vim /etc/haproxy/haproxy.cfg
-
-#logging options
-global
-    log 127.0.0.1 local0 info
-    maxconn 5120
-    chroot /usr/local/haproxy
-    uid 99
-    gid 99
-    daemon
-    quiet
-    nbproc 20
-    pidfile /var/run/haproxy.pid
-
-defaults
-    log global
-    #使用4层代理模式，”mode http”为7层代理模式
-    mode tcp
-    #if you set mode to tcp,then you nust change tcplog into httplog
-    option tcplog
-    option dontlognull
-    retries 3
-    option redispatch
-    maxconn 2000
-    contimeout 5s
-     ##客户端空闲超时时间为 60秒 则HA 发起重连机制
-     clitimeout 60s
-     ##服务器端链接超时时间为 15秒 则HA 发起重连机制
-     srvtimeout 15s    
-#front-end IP for consumers and producters
-
-listen rabbitmq_cluster
-    bind 0.0.0.0:5672
-    #配置TCP模式
-    mode tcp
-    #balance url_param userid
-    #balance url_param session_id check_post 64
-    #balance hdr(User-Agent)
-    #balance hdr(host)
-    #balance hdr(Host) use_domain_only
-    #balance rdp-cookie
-    #balance leastconn
-    #balance source //ip
-    #简单的轮询
-    balance roundrobin
-    #rabbitmq集群节点配置 #inter 每隔五秒对mq集群做健康检查， 2次正确证明服务器可用，2次失败证明服务器不可用，并且配置主备机制
-        server bhz76 192.168.11.76:5672 check inter 5000 rise 2 fall 2
-        server bhz77 192.168.11.77:5672 check inter 5000 rise 2 fall 2
-        server bhz78 192.168.11.78:5672 check inter 5000 rise 2 fall 2
-#配置haproxy web监控，查看统计信息
-listen stats
-    bind 192.168.11.79:8100
-    mode http
-    option httplog
-    stats enable
-    #设置haproxy监控地址为http://localhost:8100/rabbitmq-stats
-    stats uri /rabbitmq-stats
-    stats refresh 5s
-
-</code></pre><ul>
-<li>启动haproxy</li>
-</ul>
-<pre><code>/usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
-//查看haproxy进程状态
-ps -ef | grep haproxy
-</code></pre><ul>
-<li><p>访问haproxy</p>
-<p>访问如下地址可以对rmq节点进行监控：<a href="http://192.168.1.27:8100/rabbitmq-stats" target="_blank" rel="noopener">http://192.168.1.27:8100/rabbitmq-stats</a></p>
-</li>
-</ul>
-<p><img src="/2019/06/08/rabbitcluster/c11.jpg" alt="c11"></p>
-<ul>
-<li>关闭haproxy</li>
-</ul>
-<pre><code>killall haproxy
-ps -ef | grep haproxy
-</code></pre><h2 id="KeepAlived"><a href="#KeepAlived" class="headerlink" title="KeepAlived"></a>KeepAlived</h2><p>Keepalived，它是一个高性能的服务器高可用或热备解决方案，Keepalived主要来防止服务器单点故障的发生问题，可以通过其与Nginx、Haproxy等反向代理的负载均衡服务器配合实现web服务端的高可用。Keepalived以VRRP协议为实现基础，用VRRP协议来实现高可用性（HA）.VRRP（Virtual Router Redundancy Protocol）协议是用于实现路由器冗余的协议，VRRP协议将两台或多台路由器设备虚拟成一个设备，对外提供虚拟路由器IP（一个或多个）。</p>
-<ul>
-<li><p>Keepalived安装</p>
-<p><a href="http://www.keepalived.org/download.html" target="_blank" rel="noopener">http://www.keepalived.org/download.html</a></p>
-</li>
-</ul>
-<pre><code>//安装所需软件包
-yum install -y openssl openssl-devel
-//下载
-wget http://www.keepalived.org/software/keepalived-1.2.18.tar.gz
-//解压、编译、安装
-tar -zxvf keepalived-1.2.18.tar.gz -C /usr/local/
-cd keepalived-1.2.18/ &amp;&amp; ./configure --prefix=/usr/local/keepalived
-make &amp;&amp; make install
-//将keepalived安装成Linux系统服务，因为没有使用keepalived的默认安装路径（默认路径：/usr/local）,安装完成之后，需要做一些修改工作
-//首先创建文件夹，将keepalived配置文件进行复制：
-mkdir /etc/keepalived
-cp /usr/local/keepalived/etc/keepalived/keepalived.conf /etc/keepalived/
-//然后复制keepalived脚本文件：
-cp /usr/local/keepalived/etc/rc.d/init.d/keepalived /etc/init.d/
-cp /usr/local/keepalived/etc/sysconfig/keepalived /etc/sysconfig/
-ln -s /usr/local/sbin/keepalived /usr/sbin/
-ln -s /usr/local/keepalived/sbin/keepalived /sbin/
-//可以设置开机启动：chkconfig keepalived on，到此我们安装完毕!
-chkconfig keepalived on
-</code></pre><ul>
-<li>Keepalived配置</li>
-</ul>
-<pre><code>vim /etc/keepalived/keepalived.conf
-
-
-! Configuration File for keepalived
-
-global_defs {
-   router_id bhz79  ##标识节点的字符串，通常为hostname
-
-}
-
-vrrp_script chk_haproxy {
-    script &quot;/etc/keepalived/haproxy_check.sh&quot;  ##执行脚本位置
-    interval 2  ##检测时间间隔
-    weight -20  ##如果条件成立则权重减20
-}
-
-vrrp_instance VI_1 {
-    state MASTER  ## 主节点为MASTER，备份节点为BACKUP
-    interface eth0 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eth0）
-    virtual_router_id 79  ## 虚拟路由ID号（主备节点一定要相同）
-    mcast_src_ip 192.168.11.79 ## 本机ip地址
-    priority 100  ##优先级配置（0-254的值）
-    nopreempt
-    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
-authentication {  ## 认证匹配
-        auth_type PASS
-        auth_pass bhz
-    }
-
-    track_script {
-        chk_haproxy
-    }
-
-    virtual_ipaddress {
-        192.168.11.70  ## 虚拟ip，可以指定多个
-    }
-}
-
-
-
-
-another
-
-! Configuration File for keepalived
-
-global_defs {
-   router_id bhz80  ##标识节点的字符串，通常为hostname
-
-}
-
-vrrp_script chk_haproxy {
-    script &quot;/etc/keepalived/haproxy_check.sh&quot;  ##执行脚本位置
-    interval 2  ##检测时间间隔
-    weight -20  ##如果条件成立则权重减20
-}
-
-vrrp_instance VI_1 {
-    state BACKUP  ## 主节点为MASTER，备份节点为BACKUP
-    interface eno16777736 ## 绑定虚拟IP的网络接口（网卡），与本机IP地址所在的网络接口相同（我这里是eno16777736）
-    virtual_router_id 79  ## 虚拟路由ID号（主备节点一定要相同）
-    mcast_src_ip 192.168.11.80  ## 本机ip地址
-    priority 90  ##优先级配置（0-254的值）
-    nopreempt
-    advert_int 1  ## 组播信息发送间隔，俩个节点必须配置一致，默认1s
-authentication {  ## 认证匹配
-        auth_type PASS
-        auth_pass bhz
-    }
-
-    track_script {
-        chk_haproxy
-    }
-
-    virtual_ipaddress {
-        192.168.1.70  ## 虚拟ip，可以指定多个
-    }
-}
-
-</code></pre><ul>
-<li><p>执行脚本编写</p>
-<p>添加文件位置为/etc/keepalived/haproxy_check.sh（79、80两个节点文件内容一致即可）</p>
-</li>
-</ul>
-<pre><code>#!/bin/bash
-COUNT=`ps -C haproxy --no-header |wc -l`
-if [ $COUNT -eq 0 ];then
-    /usr/local/haproxy/sbin/haproxy -f /etc/haproxy/haproxy.cfg
-    sleep 2
-    if [ `ps -C haproxy --no-header |wc -l` -eq 0 ];then
-        killall keepalived
-    fi
-fi
-
-</code></pre><ul>
-<li>执行脚本</li>
-</ul>
-<pre><code>chmod +x /etc/keepalived/haproxy_check.sh
-//启动两台机器的keepalived
-service keepalived start | stop | status | restart
-//查看状态
-ps -ef | grep haproxy
-ps -ef | grep keepalived
-</code></pre><ul>
-<li>高可用测试</li>
-</ul>
-<p>vip在27节点上</p>
-<p><img src="/2019/06/08/rabbitcluster/c12.jpg" alt="c12"></p>
-<p>27节点宕机测试：停掉27的keepalived服务即可。</p>
-<p><img src="/2019/06/08/rabbitcluster/c13.jpg" alt="c13"></p>
-<p>查看28节点状态：我们发现VIP漂移到了28节点上，那么28节点的haproxy可以继续对外提供服务！</p>
-<p><img src="/2019/06/08/rabbitcluster/c14.jpg" alt="c14"></p>
-<h2 id="集群配置文件"><a href="#集群配置文件" class="headerlink" title="集群配置文件"></a>集群配置文件</h2><p>创建如下配置文件位于：/etc/rabbitmq目录下（这个目录需要自己创建）</p>
-<p>环境变量配置文件：rabbitmq-env.conf </p>
-<p>配置信息配置文件：rabbitmq.config（可以不创建和配置，修改）</p>
-<p>rabbitmq-env.conf配置文件：</p>
-<p>关键参数配置:</p>
-<p>RABBITMQ_NODE_IP_ADDRESS=本机IP地址</p>
-<p>RABBITMQ_NODE_PORT=5672</p>
-<p>RABBITMQ_LOG_BASE=/var/lib/rabbitmq/log</p>
-<p>RABBITMQ_MNESIA_BASE=/var/lib/rabbitmq/mnesia</p>
-<p>配置参考参数如下：</p>
-<p>RABBITMQ_NODENAME=FZTEC-240088 节点名称</p>
-<p>RABBITMQ_NODE_IP_ADDRESS=127.0.0.1 监听IP</p>
-<p>RABBITMQ_NODE_PORT=5672 监听端口</p>
-<p>RABBITMQ_LOG_BASE=/data/rabbitmq/log 日志目录</p>
-<p>RABBITMQ_PLUGINS_DIR=/data/rabbitmq/plugins 插件目录</p>
-<p>RABBITMQ_MNESIA_BASE=/data/rabbitmq/mnesia 后端存储目录</p>
-<p>更详细的配置参见： <a href="http://www.rabbitmq.com/configure.html#configuration-file" target="_blank" rel="noopener">http://www.rabbitmq.com/configure.html#configuration-file</a></p>
-<p>配置文件信息修改：</p>
-<p>/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/ebin/rabbit.app和rabbitmq.config配置文件配置任意一个即可，我们进行配置如下：</p>
-<p>vim /usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/ebin/rabbit.app</p>
-<p>关键参数配置</p>
-<p>tcp_listerners 设置rabbimq的监听端口，默认为[5672]。<br>disk_free_limit 磁盘低水位线，若磁盘容量低于指定值则停止接收数据，默认值为{mem_relative, 1.0},即与内存相关联1：1，也可定制为多少byte.<br>vm_memory_high_watermark，设置内存低水位线，若低于该水位线，则开启流控机制，默认值是0.4，即内存总量的40%。<br>hipe_compile 将部分rabbimq代码用High Performance Erlang compiler编译，可提升性能，该参数是实验性，若出现erlang vm segfaults，应关掉。<br>force_fine_statistics， 该参数属于rabbimq_management，若为true则进行精细化的统计，但会影响性能</p>
-<p>更详细的配置参见：<a href="http://www.rabbitmq.com/configure.html" target="_blank" rel="noopener">http://www.rabbitmq.com/configure.html</a></p>
-<h1 id="恢复与故障转移"><a href="#恢复与故障转移" class="headerlink" title="恢复与故障转移"></a>恢复与故障转移</h1><p>镜像队列为例</p>
-<p><img src="/2019/06/08/rabbitcluster/c15.jpg" alt="c15"></p>
-<p><img src="/2019/06/08/rabbitcluster/c16.jpg" alt="c16"></p>
-<p><img src="/2019/06/08/rabbitcluster/c17.jpg" alt="c17"></p>
-<p><img src="/2019/06/08/rabbitcluster/c18.jpg" alt="c18"></p>
-<p><img src="/2019/06/08/rabbitcluster/c19.jpg" alt="c19"></p>
-<p><img src="/2019/06/08/rabbitcluster/c20.jpg" alt="c20"></p>
-<h1 id="延迟插件"><a href="#延迟插件" class="headerlink" title="延迟插件"></a>延迟插件</h1><p>延迟队列可以用于消息的延迟推送，定时任务，削峰限流，降级等机制。</p>
-<ul>
-<li>download the ‘rabbitmq_delayed_message_exchange-0.0.1.ez’ file</li>
-</ul>
-<p><a href="https://github.com/rabbitmq/rabbitmq-delayed-message-exchange" target="_blank" rel="noopener">https://github.com/rabbitmq/rabbitmq-delayed-message-exchange</a></p>
-<p><a href="http://www.rabbitmq.com/community-plugins.html" target="_blank" rel="noopener">http://www.rabbitmq.com/community-plugins.html</a></p>
-<p><a href="https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange/v3.6.x#files/" target="_blank" rel="noopener">https://bintray.com/rabbitmq/community-plugins/rabbitmq_delayed_message_exchange/v3.6.x#files/</a></p>
-<ul>
-<li>PUT Directory</li>
-</ul>
-<p>/usr/lib/rabbitmq/lib/rabbitmq_server-3.6.4/plugins</p>
-<ul>
-<li>Then run the following command</li>
-</ul>
-<p>Start the rabbitmq cluster for command</p>
-<pre><code>rabbitmq-server -detached
-rabbitmq-plugins enable rabbitmq_delayed_message_exchange
-</code></pre><ul>
-<li>访问地址：<a href="http://192.168.1.21:15672/#/exchanges" target="_blank" rel="noopener">http://192.168.1.21:15672/#/exchanges</a>，添加延迟队列</li>
-</ul>
-<p><img src="/2019/06/08/rabbitcluster/c21.jpg" alt="c21"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>MQ</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>React Skills</title>
-    <url>/2019/07/07/react2/</url>
-    <content><![CDATA[<p>项目调试：摇动手机打开开发者菜单</p>
-<p>react native可以通过ES5,ES6，函数的方法定义组件，函数方法没有状态，不能使用this</p>
-<h1 id="组件的传参"><a href="#组件的传参" class="headerlink" title="组件的传参"></a>组件的传参</h1><p>将外部的item传给TodoItem小组件，明明为content：</p>
-<p><img src="/2019/07/07/react2/r0.jpg" alt="r0"></p>
-<p>子组件使用传递得到的内容</p>
-<p><img src="/2019/07/07/react2/r2.jpg" alt="r2"></p>
-<h1 id="设置proptype和default"><a href="#设置proptype和default" class="headerlink" title="设置proptype和default"></a>设置proptype和default</h1><p>propTypes要求格式、要求非空</p>
-<p>defaultProps设置默认值</p>
-<pre><code class="js">TodoItem.propTypes = {
-    test: PropTypes.string.isRequired,
-    content: PropTypes.arrayOf(PropTypes.number, PropTypes.string),
-    deleteItem: PropTypes.func,
-    index: PropTypes.number
-}
-
-TodoItem.defaultProps = {
-    test: &#39;hello world&#39;
-}
-</code></pre>
-<h1 id="Props-State-Render"><a href="#Props-State-Render" class="headerlink" title="Props, State, Render"></a>Props, State, Render</h1><p>当state和props发生改变时，render函数就会执行</p>
-<p>render过程效率很高，因为有虚拟DOM</p>
-<h1 id="虚拟DOM"><a href="#虚拟DOM" class="headerlink" title="虚拟DOM"></a>虚拟DOM</h1><p>render的过程</p>
-<ul>
-<li>State 数据</li>
-<li>JSX 模板</li>
-<li>数据+模板 整合生成真实DOM</li>
-<li>State发生改变</li>
-<li>数据+模板 整合生成真实DOM，替换原有DOM</li>
-</ul>
-<p>多次生成DOM非常耗费性能</p>
-<p>改良过程：</p>
-<ul>
-<li>State 数据</li>
-<li>JSX 模板</li>
-<li>数据+模板 整合生成真实DOM</li>
-<li>State发生改变</li>
-<li>数据+模板 整合生成真实DOM，并不替换原有DOM</li>
-<li>对比差异</li>
-<li>局部替换</li>
-</ul>
-<p>最终方案：虚拟DOM</p>
-<ul>
-<li>State 数据</li>
-<li>JSX 模板</li>
-<li>数据+模板 整合生成真实DOM</li>
-<li>生成虚拟DOM（一个js对象）</li>
-<li>State发生改变</li>
-<li>生成新的虚拟DOM</li>
-<li>比较两个虚拟DOM的区别</li>
-<li>直接操作DOM，改变内容</li>
-</ul>
-<h1 id="ref的使用"><a href="#ref的使用" class="headerlink" title="ref的使用"></a>ref的使用</h1><p>input中onchange函数</p>
-<p><img src="/2019/07/07/react2/r3.jpg" alt="r3"></p>
-<p>传值一个e得到DOM值，对应函数从e中得到input value</p>
-<p><img src="/2019/07/07/react2/r4.jpg" alt="r4"></p>
-<p>增加ref参数，引用dom节点为this.input</p>
-<p><img src="/2019/07/07/react2/r5.jpg" alt="r5"></p>
-<p>对应函数通过ref获得值</p>
-<p><img src="/2019/07/07/react2/r6.jpg" alt="r6"></p>
-<p>本质是直接操纵DOM（不推荐）</p>
-<h1 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h1><p>生命周期函数：某一时刻组件自动执行的函数</p>
-<p><img src="/2019/07/07/react2/r7.jpg" alt="r7"></p>
-<ul>
-<li>Iinitialization</li>
-</ul>
-<p>constructor函数，构建props和state</p>
-<ul>
-<li>Mounting挂载</li>
-</ul>
-<p>componentWillMount，即将挂载到页面时执行</p>
-<p>componentDidMount，组件挂载到页面后自动执行</p>
-<p>初次加载页面时的过程：</p>
-<p><img src="/2019/07/07/react2/r8.jpg" alt="r8"></p>
-<ul>
-<li>Updating组件更新</li>
-</ul>
-<p>ShoudComponentUpdate，组件被更新之前，自动执行，返回一个布尔类型，表示是否需要更新组件，如果返回false，不会继续后续流程</p>
-<p>ComponentWillUpdate，在should返回true后，组件更新之前执行</p>
-<p>update时的过程：</p>
-<p><img src="/2019/07/07/react2/r9.jpg" alt="r9"></p>
-<p>ComponentWillReceiveProps</p>
-<p>接受父组件props时调用，父组件render重新执行时，子组件此函数执行</p>
-<ul>
-<li>UnMounting</li>
-</ul>
-<p>组件被卸载前执行</p>
-<p>所有生命周期函数都有默认实现，唯有render函数必须自己实现才可以运行</p>
-<p>使用情景：避免子组件过度渲染</p>
-<p><img src="/2019/07/07/react2/r10.jpg" alt="r10"></p>
-<p>使用情景：发送Ajax请求，规定写在componentDidMount中</p>
-<p><img src="/2019/07/07/react2/r11.jpg" alt="r11"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>React</tag>
-        <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Redis Basic</title>
     <url>/2019/02/18/redis/</url>
     <content><![CDATA[<h1 id="缓存初识"><a href="#缓存初识" class="headerlink" title="缓存初识"></a>缓存初识</h1><h2 id="缓存在应用中的架构"><a href="#缓存在应用中的架构" class="headerlink" title="缓存在应用中的架构"></a>缓存在应用中的架构</h2><p><img src="/2019/02/18/redis/struct.jpg" alt="struct"></p>
@@ -11822,8 +11822,8 @@ pubsub numsub [channel] //list the subscriber number
         <category>study note</category>
       </categories>
       <tags>
-        <tag>MQ</tag>
         <tag>Design Patterns</tag>
+        <tag>MQ</tag>
       </tags>
   </entry>
   <entry>
@@ -12506,46 +12506,6 @@ public class MergeSort2{
       </tags>
   </entry>
   <entry>
-    <title>Spring</title>
-    <url>/2019/02/02/spring/</url>
-    <content><![CDATA[<h1 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h1><ul>
-<li>上层建筑依赖下层</li>
-</ul>
-<p><img src="/2019/02/02/spring/dependency.jpg" alt="dependency"></p>
-<ul>
-<li>依赖注入实现控制反转：由下层决定上层，到上层控制下层</li>
-</ul>
-<p><img src="/2019/02/02/spring/ioc.jpg" alt="ioc"></p>
-<p>大量new工作即为控制反转容器的工作（右框）</p>
-<p><img src="/2019/02/02/spring/struct.jpg" alt="struct"></p>
-<p><img src="/2019/02/02/spring/container.jpg" alt="container"></p>
-<p>容器的优势：</p>
-<ul>
-<li>避免大量的new工作</li>
-<li>创建实例不需要了解其中的细节</li>
-</ul>
-<p><img src="/2019/02/02/spring/process.jpg" alt="process"></p>
-<p>对使用者隐藏了内部细节</p>
-<h1 id="装配"><a href="#装配" class="headerlink" title="装配"></a>装配</h1><p>spring中，configuration定义bean后，在ApplicationContext ctx.getBean(.class)手动装配</p>
-<p>springboot中采取@component实现，@Autowired</p>
-<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><ul>
-<li>面向切面</li>
-<li>不同的问题交给不同的部分解决</li>
-<li>切面是通用化代码模块</li>
-<li>业户功能代码和切片代码分开后，系统高内聚低耦合</li>
-<li>切面最终被整合到业务中</li>
-</ul>
-<p><img src="/2019/02/02/spring/aop.jpg" alt="aop"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Spark Final Note</title>
     <url>/2019/05/04/sparknote/</url>
     <content><![CDATA[<h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p><strong>Goal of Apache Spark</strong>：<br>To design a programming model that supports a much wider class of applications than MapReduce, while retaining the properties of MapReduce (fault tolerance, data locality, scalability).</p>
@@ -12659,6 +12619,46 @@ public class MergeSort2{
         <tag>Hadoop</tag>
         <tag>Yarn</tag>
         <tag>Spark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Spring</title>
+    <url>/2019/02/02/spring/</url>
+    <content><![CDATA[<h1 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h1><ul>
+<li>上层建筑依赖下层</li>
+</ul>
+<p><img src="/2019/02/02/spring/dependency.jpg" alt="dependency"></p>
+<ul>
+<li>依赖注入实现控制反转：由下层决定上层，到上层控制下层</li>
+</ul>
+<p><img src="/2019/02/02/spring/ioc.jpg" alt="ioc"></p>
+<p>大量new工作即为控制反转容器的工作（右框）</p>
+<p><img src="/2019/02/02/spring/struct.jpg" alt="struct"></p>
+<p><img src="/2019/02/02/spring/container.jpg" alt="container"></p>
+<p>容器的优势：</p>
+<ul>
+<li>避免大量的new工作</li>
+<li>创建实例不需要了解其中的细节</li>
+</ul>
+<p><img src="/2019/02/02/spring/process.jpg" alt="process"></p>
+<p>对使用者隐藏了内部细节</p>
+<h1 id="装配"><a href="#装配" class="headerlink" title="装配"></a>装配</h1><p>spring中，configuration定义bean后，在ApplicationContext ctx.getBean(.class)手动装配</p>
+<p>springboot中采取@component实现，@Autowired</p>
+<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><ul>
+<li>面向切面</li>
+<li>不同的问题交给不同的部分解决</li>
+<li>切面是通用化代码模块</li>
+<li>业户功能代码和切片代码分开后，系统高内聚低耦合</li>
+<li>切面最终被整合到业务中</li>
+</ul>
+<p><img src="/2019/02/02/spring/aop.jpg" alt="aop"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Spring</tag>
       </tags>
   </entry>
   <entry>
