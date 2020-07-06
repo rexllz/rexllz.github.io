@@ -285,96 +285,6 @@ volumes:
       </tags>
   </entry>
   <entry>
-    <title>FTP note</title>
-    <url>/2019/01/01/FTP/</url>
-    <content><![CDATA[<h1 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a>FTP</h1><h2 id="ftp-ftps-sftp区别"><a href="#ftp-ftps-sftp区别" class="headerlink" title="ftp, ftps, sftp区别"></a>ftp, ftps, sftp区别</h2><ul>
-<li>ftp</li>
-</ul>
-<p>FTP 是File Transfer Protocol（文件传输协议）的英文简称，而中文简称为“文传协议”。用于Internet上的控制文件的双向传输。同时，它也是一个应用程序（Application）。基于不同的操作系统有不同的FTP应用程序，而所有这些应用程序都遵守同一种协议以传输文件。在FTP的使用当中，用户经常遇到两个概念：”下载”（Download）和”上传”（Upload）。”下载”文件就是从远程主机拷贝文件至自己的计算机上；”上传”文件就是将文件从自己的计算机中拷贝至远程主机上。用Internet语言来说，用户可通过客户机程序向（从）远程主机上传（下载）文件。</p>
-<ul>
-<li>ftps</li>
-</ul>
-<p>一种多传输协议，相当于加密版的FTP。当你在FTP服务器上收发文件的时候，你面临两个风险。第一个风险是在上载文件的时候为文件加密。第二个风险是，这些文件在你等待接收方下载的时候将停留在FTP服务器上，这时你如何保证这些文件的安全。你的第二个选择（创建一个支持SSL的FTP服务器）能够让你的主机使用一个FTPS连接上载这些文件。这包括使用一个在FTP协议下面的SSL层加密控制和数据通道。一种替代FTPS的协议是安全文件传输协议(SFTP)。这个协议使用SSH文件传输协议加密从客户机到服务器的FTP连接。</p>
-<p>FTPS是在安全套接层使用标准的FTP协议和指令的一种增强型FTP协议，为FTP协议和数据通道增加了SSL安全功能。FTPS也称作“FTP-SSL”和“FTP-over-SSL”。SSL是一个在客户机和具有SSL功能的服务器之间的安全连接中对数据进行加密和解密的协议。</p>
-<p>和sftp连接方法类似，在windows中可以使用FileZilla等传输软件来连接FTPS进行上传，下载文件，建立，删除目录等操作,在FileZilla连接时，有显式和隐式TLS/SSL连接之分，连接时也有指纹提示。</p>
-<ul>
-<li>sftp</li>
-</ul>
-<p>Sftp是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。sftp 与 ftp 有着几乎一样的语法和功能。SFTP 为 SSH的一部分，是一种传输档案至 Blogger 伺服器的安全方式。其实在SSH软件包中，已经包含了一个叫作SFTP(Secure File Transfer Protocol)的安全文件传输子系统，SFTP本身没有单独的守护进程，它必须使用sshd守护进程（端口号默认是22）来完成相应的连接操作，所以从某种意义上来说，SFTP并不像一个服务器程序，而更像是一个客户端程序。SFTP同样是使用加密传输认证信息和传输的数据，所以，使用SFTP是非常安全的。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多，如果您对网络安全性要求更高时，可以使用SFTP代替FTP。</p>
-<ul>
-<li>sftp vs ftps</li>
-</ul>
-<p>SFTP 和FTPS都是为ftp连接加密，协议非常相似。</p>
-<p>一个是借助ssl协议加密，一个时借助ssh加密。</p>
-<p>ssl是为http/smtp等加密设计的，ssh是为telnet/ftp等加密、建立传输通道而设计的。</p>
-<p>其实ssh建立传输通道就是为了加密和传输，而且这个通道是可以用来远程登录。如果只说它们的功能，通俗的讲，ssh就像铺管子，ssl就像打包裹，铺管子和打包裹都会使数据安全，都是一个制作密钥的过程，而因为ssh是一个管子所以它很适合ftp的安全传输。</p>
-<ul>
-<li>ssl</li>
-</ul>
-<p>SSL证书是HTTP明文协议升级HTTPS加密协议的重要渠道，是网络安全传输的加密到通道。</p>
-<h2 id="ftp-cmd"><a href="#ftp-cmd" class="headerlink" title="ftp cmd"></a>ftp cmd</h2><ul>
-<li><p>“开始”→“运行”→输入“FTP”</p>
-</li>
-<li><p>open ftp.test.com</p>
-</li>
-<li><p>dir</p>
-</li>
-</ul>
-<p>注意：你成功登陆后就可以用dir查看查看FTP服务器中的文件及目录，用ls命令只可以查看文件。</p>
-<ul>
-<li>mkdir qint</li>
-</ul>
-<p>注意：在FTP服务器上根目录下建立qint目录</p>
-<ul>
-<li>cd qint</li>
-</ul>
-<p>注意：进入目录qint,用“cd 你的目录名”可以进入当前目录的下一级目录，这跟DOS一样。</p>
-<ul>
-<li>bin</li>
-</ul>
-<p>注意：采用二进制传输。如果你要上传下载，这一步很重要，不先执行这个命令，上传下载会很慢。大多数系统(包括UNIX系统)只有两种模式：文本模式和二进制模式。文本传输器使用ASCII字符，并由回车键和换行符分开，而二进制不用转换或格式化就可传字符，二进制模式比文本模式更快，并且可以传输所有ASCII值，所以系统管理员一般将FTP设置成二进制模式。一般来说，我们最好都用binary方式，这样可以保证不出错。</p>
-<ul>
-<li>lcd d:\qint</li>
-</ul>
-<p>注意：定位本地默认文件夹，在前面已事先在D：盘创建</p>
-<ul>
-<li>!dir</li>
-</ul>
-<p>注意：查看本地文件夹中的文件及目录</p>
-<ul>
-<li>put i001.jpg</li>
-</ul>
-<p>注意：将当前目录(d:\qint)中的文件i001.jpg上传到FTP服务器默认目录。可以用“mput <em>.</em>”将所有文件上传到FTP服务器上。</p>
-<ul>
-<li>get d123.jpg</li>
-</ul>
-<p>注意：将FTP服务器默认目录中的文件d123.jpg下载到当前目录下(d:\qint)。可以用“mget <em>.</em>”将所有文件下载到d:\qint</p>
-<ul>
-<li>delete <em> . </em></li>
-</ul>
-<p>注意：删除服务器对应目录qint中的所有文件。</p>
-<ul>
-<li>cd ..</li>
-</ul>
-<p>注意：返回至上一级目录，即根目录。返回上一级目录用“cd ..”要注意，中间有空格。返回根目录用“cd \”。</p>
-<ul>
-<li>mrdir qint</li>
-</ul>
-<p>注意：删除目录qint。删除目录，在此目录下不能有文件及目录，不然将无法删除。</p>
-<ul>
-<li>bye</li>
-</ul>
-<p>注意：退出FTP服务器。</p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>FTP</tag>
-        <tag>SSL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Network basic</title>
     <url>/2019/07/03/Network/</url>
     <content><![CDATA[<h1 id="Network"><a href="#Network" class="headerlink" title="Network"></a>Network</h1><h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><h3 id="OSI-7-Level"><a href="#OSI-7-Level" class="headerlink" title="OSI -  7 Level"></a>OSI -  7 Level</h3><ul>
@@ -539,6 +449,96 @@ volumes:
       <tags>
         <tag>Network</tag>
         <tag>TCP/IP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>FTP note</title>
+    <url>/2019/01/01/FTP/</url>
+    <content><![CDATA[<h1 id="FTP"><a href="#FTP" class="headerlink" title="FTP"></a>FTP</h1><h2 id="ftp-ftps-sftp区别"><a href="#ftp-ftps-sftp区别" class="headerlink" title="ftp, ftps, sftp区别"></a>ftp, ftps, sftp区别</h2><ul>
+<li>ftp</li>
+</ul>
+<p>FTP 是File Transfer Protocol（文件传输协议）的英文简称，而中文简称为“文传协议”。用于Internet上的控制文件的双向传输。同时，它也是一个应用程序（Application）。基于不同的操作系统有不同的FTP应用程序，而所有这些应用程序都遵守同一种协议以传输文件。在FTP的使用当中，用户经常遇到两个概念：”下载”（Download）和”上传”（Upload）。”下载”文件就是从远程主机拷贝文件至自己的计算机上；”上传”文件就是将文件从自己的计算机中拷贝至远程主机上。用Internet语言来说，用户可通过客户机程序向（从）远程主机上传（下载）文件。</p>
+<ul>
+<li>ftps</li>
+</ul>
+<p>一种多传输协议，相当于加密版的FTP。当你在FTP服务器上收发文件的时候，你面临两个风险。第一个风险是在上载文件的时候为文件加密。第二个风险是，这些文件在你等待接收方下载的时候将停留在FTP服务器上，这时你如何保证这些文件的安全。你的第二个选择（创建一个支持SSL的FTP服务器）能够让你的主机使用一个FTPS连接上载这些文件。这包括使用一个在FTP协议下面的SSL层加密控制和数据通道。一种替代FTPS的协议是安全文件传输协议(SFTP)。这个协议使用SSH文件传输协议加密从客户机到服务器的FTP连接。</p>
+<p>FTPS是在安全套接层使用标准的FTP协议和指令的一种增强型FTP协议，为FTP协议和数据通道增加了SSL安全功能。FTPS也称作“FTP-SSL”和“FTP-over-SSL”。SSL是一个在客户机和具有SSL功能的服务器之间的安全连接中对数据进行加密和解密的协议。</p>
+<p>和sftp连接方法类似，在windows中可以使用FileZilla等传输软件来连接FTPS进行上传，下载文件，建立，删除目录等操作,在FileZilla连接时，有显式和隐式TLS/SSL连接之分，连接时也有指纹提示。</p>
+<ul>
+<li>sftp</li>
+</ul>
+<p>Sftp是Secure File Transfer Protocol的缩写，安全文件传送协议。可以为传输文件提供一种安全的加密方法。sftp 与 ftp 有着几乎一样的语法和功能。SFTP 为 SSH的一部分，是一种传输档案至 Blogger 伺服器的安全方式。其实在SSH软件包中，已经包含了一个叫作SFTP(Secure File Transfer Protocol)的安全文件传输子系统，SFTP本身没有单独的守护进程，它必须使用sshd守护进程（端口号默认是22）来完成相应的连接操作，所以从某种意义上来说，SFTP并不像一个服务器程序，而更像是一个客户端程序。SFTP同样是使用加密传输认证信息和传输的数据，所以，使用SFTP是非常安全的。但是，由于这种传输方式使用了加密/解密技术，所以传输效率比普通的FTP要低得多，如果您对网络安全性要求更高时，可以使用SFTP代替FTP。</p>
+<ul>
+<li>sftp vs ftps</li>
+</ul>
+<p>SFTP 和FTPS都是为ftp连接加密，协议非常相似。</p>
+<p>一个是借助ssl协议加密，一个时借助ssh加密。</p>
+<p>ssl是为http/smtp等加密设计的，ssh是为telnet/ftp等加密、建立传输通道而设计的。</p>
+<p>其实ssh建立传输通道就是为了加密和传输，而且这个通道是可以用来远程登录。如果只说它们的功能，通俗的讲，ssh就像铺管子，ssl就像打包裹，铺管子和打包裹都会使数据安全，都是一个制作密钥的过程，而因为ssh是一个管子所以它很适合ftp的安全传输。</p>
+<ul>
+<li>ssl</li>
+</ul>
+<p>SSL证书是HTTP明文协议升级HTTPS加密协议的重要渠道，是网络安全传输的加密到通道。</p>
+<h2 id="ftp-cmd"><a href="#ftp-cmd" class="headerlink" title="ftp cmd"></a>ftp cmd</h2><ul>
+<li><p>“开始”→“运行”→输入“FTP”</p>
+</li>
+<li><p>open ftp.test.com</p>
+</li>
+<li><p>dir</p>
+</li>
+</ul>
+<p>注意：你成功登陆后就可以用dir查看查看FTP服务器中的文件及目录，用ls命令只可以查看文件。</p>
+<ul>
+<li>mkdir qint</li>
+</ul>
+<p>注意：在FTP服务器上根目录下建立qint目录</p>
+<ul>
+<li>cd qint</li>
+</ul>
+<p>注意：进入目录qint,用“cd 你的目录名”可以进入当前目录的下一级目录，这跟DOS一样。</p>
+<ul>
+<li>bin</li>
+</ul>
+<p>注意：采用二进制传输。如果你要上传下载，这一步很重要，不先执行这个命令，上传下载会很慢。大多数系统(包括UNIX系统)只有两种模式：文本模式和二进制模式。文本传输器使用ASCII字符，并由回车键和换行符分开，而二进制不用转换或格式化就可传字符，二进制模式比文本模式更快，并且可以传输所有ASCII值，所以系统管理员一般将FTP设置成二进制模式。一般来说，我们最好都用binary方式，这样可以保证不出错。</p>
+<ul>
+<li>lcd d:\qint</li>
+</ul>
+<p>注意：定位本地默认文件夹，在前面已事先在D：盘创建</p>
+<ul>
+<li>!dir</li>
+</ul>
+<p>注意：查看本地文件夹中的文件及目录</p>
+<ul>
+<li>put i001.jpg</li>
+</ul>
+<p>注意：将当前目录(d:\qint)中的文件i001.jpg上传到FTP服务器默认目录。可以用“mput <em>.</em>”将所有文件上传到FTP服务器上。</p>
+<ul>
+<li>get d123.jpg</li>
+</ul>
+<p>注意：将FTP服务器默认目录中的文件d123.jpg下载到当前目录下(d:\qint)。可以用“mget <em>.</em>”将所有文件下载到d:\qint</p>
+<ul>
+<li>delete <em> . </em></li>
+</ul>
+<p>注意：删除服务器对应目录qint中的所有文件。</p>
+<ul>
+<li>cd ..</li>
+</ul>
+<p>注意：返回至上一级目录，即根目录。返回上一级目录用“cd ..”要注意，中间有空格。返回根目录用“cd \”。</p>
+<ul>
+<li>mrdir qint</li>
+</ul>
+<p>注意：删除目录qint。删除目录，在此目录下不能有文件及目录，不然将无法删除。</p>
+<ul>
+<li>bye</li>
+</ul>
+<p>注意：退出FTP服务器。</p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>FTP</tag>
+        <tag>SSL</tag>
       </tags>
   </entry>
   <entry>
@@ -1709,6 +1709,283 @@ public class SingletonExample4 {
         <tag>MapReduce</tag>
         <tag>Hadoop</tag>
         <tag>Yarn</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Database Basic</title>
+    <url>/2019/03/04/database/</url>
+    <content><![CDATA[<h1 id="数据库架构"><a href="#数据库架构" class="headerlink" title="数据库架构"></a>数据库架构</h1><h2 id="如何设计一个关系型数据库"><a href="#如何设计一个关系型数据库" class="headerlink" title="如何设计一个关系型数据库"></a>如何设计一个关系型数据库</h2><p><img src="/2019/03/04/database/design.jpg" alt="design"></p>
+<ul>
+<li>实例与os文件系统相对应</li>
+<li>io时间长，io一次将块和页至于内存，相近数据访问概率高</li>
+</ul>
+<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><ul>
+<li>数据量很大时，避免全表扫描</li>
+<li>类似字典</li>
+<li>提升查询速度</li>
+<li>主键，唯一键，普通键作为索引</li>
+</ul>
+<h3 id="如何生成索引"><a href="#如何生成索引" class="headerlink" title="如何生成索引"></a>如何生成索引</h3><h4 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h4><ul>
+<li>左小右大</li>
+<li>对半搜索，O(logn)</li>
+</ul>
+<p><img src="/2019/03/04/database/twotree.jpg" alt="twotree"></p>
+<ul>
+<li>查找速度快</li>
+<li>可能会很深，导致IO增多，速度降低（每深一层一次IO）</li>
+</ul>
+<h4 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h4><ul>
+<li><p>平衡多路查找树</p>
+<p><img src="/2019/03/04/database/btree.jpg" alt="btree"></p>
+</li>
+<li><p>平衡</p>
+</li>
+</ul>
+<h4 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+-Tree"></a>B+-Tree</h4><p><img src="/2019/03/04/database/bplustree.jpg" alt="bplustree"></p>
+<p>B+TREE更有优势</p>
+<ul>
+<li>磁盘读写代价低</li>
+<li>查询效率稳定（所有查询路径相同）</li>
+<li>有利于数据库的扫描，范围查询（叶子相连）</li>
+</ul>
+<h4 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h4><p><img src="/2019/03/04/database/hash.jpg" alt="hash"></p>
+<ul>
+<li>只能满足=，不满足IN（hash运算前后关系不确定）</li>
+<li>无法避免排序运算</li>
+<li>不能利用部分索引</li>
+<li>不能避免行扫描</li>
+<li>大量hash相等，性能低下，变为线性</li>
+</ul>
+<h4 id="BitMap索引"><a href="#BitMap索引" class="headerlink" title="BitMap索引"></a>BitMap索引</h4><p><img src="/2019/03/04/database/bitmap.jpg" alt="bitmap"></p>
+<ul>
+<li>锁力度大</li>
+<li>应用范围小，关键字有限</li>
+</ul>
+<h3 id="密集索引-amp-稀疏索引"><a href="#密集索引-amp-稀疏索引" class="headerlink" title="密集索引&amp;稀疏索引"></a>密集索引&amp;稀疏索引</h3><ul>
+<li>密集索引：每个搜索码值对应一个索引</li>
+<li>稀疏索引：只为索引码的某些值建立索引项</li>
+</ul>
+<p><img src="/2019/03/04/database/mijixishu.jpg" alt="mijixishu"></p>
+<p>代表：（mysql两个引擎）</p>
+<ul>
+<li>InnoDB：密集索引（数据索引存储在.ibd文件）</li>
+<li>MyISAM：稀疏索引（数据索引分开存储.MYI.MYD）</li>
+</ul>
+<p><img src="/2019/03/04/database/innodb.jpg" alt="innodb"></p>
+<p>检索过程：</p>
+<p><img src="/2019/03/04/database/jiansuo.jpg" alt="jiansuo"></p>
+<h3 id="如何调优sql"><a href="#如何调优sql" class="headerlink" title="如何调优sql"></a>如何调优sql</h3><ul>
+<li>根据慢日志定位慢查询sql</li>
+</ul>
+<blockquote>
+<p>show variables like ‘%quer%’;        //查看相关变量</p>
+</blockquote>
+<p><img src="/2019/03/04/database/slowlog.jpg" alt="slowlog"></p>
+<blockquote>
+<p>show status like ‘%slow_queries’;        //慢查询数量</p>
+</blockquote>
+<blockquote>
+<p>set global slow_query_log = on;</p>
+<p>set global long_query_time = 1;    //需要重连</p>
+</blockquote>
+<ul>
+<li>Explain分析sql</li>
+</ul>
+<p>加在执行语句前，查看结果项</p>
+<p>type：index，all需要优化</p>
+<p>extra：Using filesort/Using temporary</p>
+<ul>
+<li>修改sql尽量让sql走索引</li>
+</ul>
+<h3 id="mysql联合索引最左匹配原则"><a href="#mysql联合索引最左匹配原则" class="headerlink" title="mysql联合索引最左匹配原则"></a>mysql联合索引最左匹配原则</h3><p>index（a，b）</p>
+<p>只用b select 不走索引</p>
+<p><img src="/2019/03/04/database/unionindex.jpg" alt="unionindex"></p>
+<h3 id="索引越多越好吗"><a href="#索引越多越好吗" class="headerlink" title="索引越多越好吗"></a>索引越多越好吗</h3><ul>
+<li>数据量小不需要建立索引</li>
+<li>数据变更需要维护索引，维护成本变高</li>
+<li>更多索引占用更多空间</li>
+</ul>
+<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="数据库锁的分类"><a href="#数据库锁的分类" class="headerlink" title="数据库锁的分类"></a>数据库锁的分类</h3><h4 id="按粒度划分"><a href="#按粒度划分" class="headerlink" title="按粒度划分"></a>按粒度划分</h4><ul>
+<li>表级锁</li>
+<li>行级锁</li>
+<li>页级锁</li>
+</ul>
+<h4 id="按锁级别划分"><a href="#按锁级别划分" class="headerlink" title="按锁级别划分"></a>按锁级别划分</h4><ul>
+<li>共享锁</li>
+<li>排他锁</li>
+</ul>
+<h4 id="按枷锁方式划分"><a href="#按枷锁方式划分" class="headerlink" title="按枷锁方式划分"></a>按枷锁方式划分</h4><ul>
+<li>自动锁</li>
+<li>显式锁</li>
+</ul>
+<h4 id="按操作划分"><a href="#按操作划分" class="headerlink" title="按操作划分"></a>按操作划分</h4><ul>
+<li>DML锁（对数据操作）</li>
+<li>DDL锁（对表结构操作）</li>
+</ul>
+<h4 id="按使用方式划分"><a href="#按使用方式划分" class="headerlink" title="按使用方式划分"></a>按使用方式划分</h4><ul>
+<li>乐观锁（基于数据版本）</li>
+<li>悲观锁（对外界修改保守态度）</li>
+</ul>
+<h3 id="MyISAM-amp-InnoDB锁的区别"><a href="#MyISAM-amp-InnoDB锁的区别" class="headerlink" title="MyISAM&amp;InnoDB锁的区别"></a>MyISAM&amp;InnoDB锁的区别</h3><ul>
+<li>MyISAM默认表级锁，不支持行级锁</li>
+</ul>
+<p>对一个表进行操作时，会将表锁，其他session不能操作</p>
+<p>读锁（共享锁）不释放，无法增加写锁</p>
+<p>读锁（共享锁）不释放，可以增加读锁</p>
+<p>写锁（排他锁）不释放，无法增加读锁</p>
+<p>写锁不释放，无法增加写锁</p>
+<blockquote>
+<p>lock tables table_name read;</p>
+<p>unlock tables;</p>
+</blockquote>
+<ul>
+<li>InnoDB默认行级锁，也支持表级锁</li>
+</ul>
+<p>InnoDB采用二段锁</p>
+<p>行级锁只锁一行数据</p>
+<p>但是不走索引时，整张表都会被锁住</p>
+<h4 id="MyISAM适合的场景"><a href="#MyISAM适合的场景" class="headerlink" title="MyISAM适合的场景"></a>MyISAM适合的场景</h4><ul>
+<li>频繁执行全表count语句（保存行数变量）</li>
+<li>对数据增删改频率低，查询频率高（增删改锁表）</li>
+<li>没有事务</li>
+</ul>
+<h4 id="InnoDB适合的场景"><a href="#InnoDB适合的场景" class="headerlink" title="InnoDB适合的场景"></a>InnoDB适合的场景</h4><ul>
+<li>数据增删改查都频繁（行级锁）</li>
+<li>可靠性要求高</li>
+<li>支持事务</li>
+</ul>
+<h3 id="数据库事务四大特性"><a href="#数据库事务四大特性" class="headerlink" title="数据库事务四大特性"></a>数据库事务四大特性</h3><p>ACID</p>
+<ul>
+<li>原子性（Atomic）操作一体化</li>
+<li>一致性（Consistency）总体一致eg转账</li>
+<li>隔离性（Isolation）并发互不影响</li>
+<li>持久性（Durability）可恢复，储存持久</li>
+</ul>
+<h3 id="事务隔离级别以及各级别下并发访问"><a href="#事务隔离级别以及各级别下并发访问" class="headerlink" title="事务隔离级别以及各级别下并发访问"></a>事务隔离级别以及各级别下并发访问</h3><h4 id="事务并发访问可能引起的问题"><a href="#事务并发访问可能引起的问题" class="headerlink" title="事务并发访问可能引起的问题"></a>事务并发访问可能引起的问题</h4><ul>
+<li>更新丢失</li>
+</ul>
+<p>一个事务的更新覆盖了另一个事务的更新</p>
+<p><img src="/2019/03/04/database/updatelost.jpg" alt="updatelost"></p>
+<p>（mysql所有事务隔离级别已经避免）</p>
+<ul>
+<li>Dirty Read</li>
+</ul>
+<p>一个事务读到另一个事务未提交的更新数据（回滚发生问题）</p>
+<blockquote>
+<p>select @@tx_isolation;        //查看事务隔离级别</p>
+<p>set session transaction isolation level read uncommitted;    //设置隔离级别</p>
+</blockquote>
+<p>（READ-COMMITTED事务隔离级别以上可避免）</p>
+<ul>
+<li>不可重复读</li>
+</ul>
+<p>A多次读取数据，B在过程中更新数据，导致事务A读取数据不一致</p>
+<p>（REPEATABLE-READ事务隔离级别以上可避免）InnoDB default</p>
+<ul>
+<li>幻读</li>
+</ul>
+<p>事务A读取与搜索条件匹配的若干行，事务B插入或删除行的方式修改了A的结果集，导致事务A像出现幻觉</p>
+<p>（SERIALIZABLE事务隔离级别以上可避免）Top Level</p>
+<h4 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h4><p><img src="/2019/03/04/database/level.jpg" alt="level"></p>
+<p>事务隔离级别越高，串行程度越高，并行化越低，效率越低</p>
+<p>Oracle默认为READ-COMMITTED，MySQL默认为REPEATABLE-READ</p>
+<h4 id="InnoDB可重复读隔离级别下避免幻读"><a href="#InnoDB可重复读隔离级别下避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下避免幻读"></a>InnoDB可重复读隔离级别下避免幻读</h4><h5 id="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"><a href="#表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）" class="headerlink" title="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"></a>表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）</h5><ul>
+<li>当前读：select…lock in share mode, select…for update</li>
+</ul>
+<p>update, delete, insert（）</p>
+<p>加了锁的增删改查，读取最新版本，并且锁住避免其他事务修改当前记录</p>
+<p><img src="/2019/03/04/database/dangqian.jpg" alt="dangqian"></p>
+<ul>
+<li>快照读：不加锁（SERIALIZABLE事务隔离级别不成立）</li>
+</ul>
+<p>可能读到的是历史版本数据</p>
+<h5 id="内在：next-key锁（行锁-gap锁）"><a href="#内在：next-key锁（行锁-gap锁）" class="headerlink" title="内在：next-key锁（行锁+gap锁）"></a>内在：next-key锁（行锁+gap锁）</h5><p>RR级别以上支持gap锁，防止两次当前读出现幻读</p>
+<p>不锁内容本身，锁周围数据</p>
+<p>对主键和唯一键索引时：</p>
+<ul>
+<li>where条件全部命中，不会加gap锁，只加记录锁</li>
+</ul>
+<p><img src="/2019/03/04/database/recordlock.jpg" alt="recordlock"></p>
+<ul>
+<li>where条件部分命中或全不命中，加gap锁</li>
+</ul>
+<p>gap锁用在非唯一索引或不走索引的当前读中</p>
+<p>1、非唯一索引</p>
+<p><img src="/2019/03/04/database/gaplock1.jpg" alt="gaplock1"></p>
+<p>(6,9], (9,11] 被锁住（不仅id在范围内，而是范围内所有数据，可能id是20也会被锁住）</p>
+<p>官方定义：</p>
+<p><img src="/2019/03/04/database/gaplock2.jpg" alt="gaplock2"></p>
+<p>2、不走索引</p>
+<p><img src="/2019/03/04/database/gaplock3.jpg" alt="gaplock3"></p>
+<p>对所有gap上锁</p>
+<h3 id="RC、RR级别下InnoDB的非阻塞读的实现"><a href="#RC、RR级别下InnoDB的非阻塞读的实现" class="headerlink" title="RC、RR级别下InnoDB的非阻塞读的实现"></a>RC、RR级别下InnoDB的非阻塞读的实现</h3><ul>
+<li>数据行里DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID字段</li>
+</ul>
+<p>DB_TRX_ID：最后一次对本行数据做修改的事务ID</p>
+<p>DB_ROLL_PTR：回滚指针，undo日志记录</p>
+<p>DB_ROW_ID：行号</p>
+<ul>
+<li>undo log，提交后丢弃</li>
+<li>update undo log，回滚，快照都需要此log</li>
+</ul>
+<p><img src="/2019/03/04/database/undolog.jpg" alt="undolog"></p>
+<ul>
+<li>read view，能看到的数据，根据算法处理</li>
+</ul>
+<h2 id="关键语法"><a href="#关键语法" class="headerlink" title="关键语法"></a>关键语法</h2><h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><ul>
+<li>SELECT子句中的列名必须为分组列或列函数</li>
+<li>列函数对于GROUP BY子句定义的每个组返回一个结果</li>
+</ul>
+<p><img src="/2019/03/04/database/groupby.jpg" alt="groupby"></p>
+<p>1、查询所有同学的学号、选课数、总成绩</p>
+<pre><code class="sql">select student_id,count(course_id),sum(score)
+
+from score
+
+group by student_id
+</code></pre>
+<p>GROUP BY会缓存临时数据表</p>
+<p>2、查询所有同学的学号、姓名、选课数、总成绩</p>
+<pre><code class="sql">select s.student_id,stu.name,count(s.course_id),sum(s.score)
+from
+    score s,
+    student stu
+where
+s.student_id = stu.student_id
+group by s.student_id;
+</code></pre>
+<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><ul>
+<li>通常与GROUP BY子句一起使用</li>
+<li>WHERE过滤行，HAVING过滤组</li>
+<li>出现顺序：WHERE&gt;GROUP BY&gt;HAVING</li>
+</ul>
+<p>3、查询平均成绩大于60的同学的学号和平均成绩</p>
+<pre><code class="sql">select student_id,avg(score)
+from score
+group by student_id
+having avg(score)&gt;60
+</code></pre>
+<p>4、查询没有学全所有课的同学的学号、姓名</p>
+<pre><code class="sql">select stu.student_id,stu.name
+from
+student stu,
+score s
+where stu.student_id = s.student_id
+group by s.student_id
+having count(*) &lt;
+(select count(*) from course)
+</code></pre>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Database</tag>
+        <tag>Lock</tag>
+        <tag>MySQL</tag>
+        <tag>MyISAM</tag>
+        <tag>InnoDB</tag>
+        <tag>SQL</tag>
       </tags>
   </entry>
   <entry>
@@ -3728,283 +4005,6 @@ class Solution {
       </tags>
   </entry>
   <entry>
-    <title>Database Basic</title>
-    <url>/2019/03/04/database/</url>
-    <content><![CDATA[<h1 id="数据库架构"><a href="#数据库架构" class="headerlink" title="数据库架构"></a>数据库架构</h1><h2 id="如何设计一个关系型数据库"><a href="#如何设计一个关系型数据库" class="headerlink" title="如何设计一个关系型数据库"></a>如何设计一个关系型数据库</h2><p><img src="/2019/03/04/database/design.jpg" alt="design"></p>
-<ul>
-<li>实例与os文件系统相对应</li>
-<li>io时间长，io一次将块和页至于内存，相近数据访问概率高</li>
-</ul>
-<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><ul>
-<li>数据量很大时，避免全表扫描</li>
-<li>类似字典</li>
-<li>提升查询速度</li>
-<li>主键，唯一键，普通键作为索引</li>
-</ul>
-<h3 id="如何生成索引"><a href="#如何生成索引" class="headerlink" title="如何生成索引"></a>如何生成索引</h3><h4 id="二叉查找树"><a href="#二叉查找树" class="headerlink" title="二叉查找树"></a>二叉查找树</h4><ul>
-<li>左小右大</li>
-<li>对半搜索，O(logn)</li>
-</ul>
-<p><img src="/2019/03/04/database/twotree.jpg" alt="twotree"></p>
-<ul>
-<li>查找速度快</li>
-<li>可能会很深，导致IO增多，速度降低（每深一层一次IO）</li>
-</ul>
-<h4 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h4><ul>
-<li><p>平衡多路查找树</p>
-<p><img src="/2019/03/04/database/btree.jpg" alt="btree"></p>
-</li>
-<li><p>平衡</p>
-</li>
-</ul>
-<h4 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+-Tree"></a>B+-Tree</h4><p><img src="/2019/03/04/database/bplustree.jpg" alt="bplustree"></p>
-<p>B+TREE更有优势</p>
-<ul>
-<li>磁盘读写代价低</li>
-<li>查询效率稳定（所有查询路径相同）</li>
-<li>有利于数据库的扫描，范围查询（叶子相连）</li>
-</ul>
-<h4 id="Hash索引"><a href="#Hash索引" class="headerlink" title="Hash索引"></a>Hash索引</h4><p><img src="/2019/03/04/database/hash.jpg" alt="hash"></p>
-<ul>
-<li>只能满足=，不满足IN（hash运算前后关系不确定）</li>
-<li>无法避免排序运算</li>
-<li>不能利用部分索引</li>
-<li>不能避免行扫描</li>
-<li>大量hash相等，性能低下，变为线性</li>
-</ul>
-<h4 id="BitMap索引"><a href="#BitMap索引" class="headerlink" title="BitMap索引"></a>BitMap索引</h4><p><img src="/2019/03/04/database/bitmap.jpg" alt="bitmap"></p>
-<ul>
-<li>锁力度大</li>
-<li>应用范围小，关键字有限</li>
-</ul>
-<h3 id="密集索引-amp-稀疏索引"><a href="#密集索引-amp-稀疏索引" class="headerlink" title="密集索引&amp;稀疏索引"></a>密集索引&amp;稀疏索引</h3><ul>
-<li>密集索引：每个搜索码值对应一个索引</li>
-<li>稀疏索引：只为索引码的某些值建立索引项</li>
-</ul>
-<p><img src="/2019/03/04/database/mijixishu.jpg" alt="mijixishu"></p>
-<p>代表：（mysql两个引擎）</p>
-<ul>
-<li>InnoDB：密集索引（数据索引存储在.ibd文件）</li>
-<li>MyISAM：稀疏索引（数据索引分开存储.MYI.MYD）</li>
-</ul>
-<p><img src="/2019/03/04/database/innodb.jpg" alt="innodb"></p>
-<p>检索过程：</p>
-<p><img src="/2019/03/04/database/jiansuo.jpg" alt="jiansuo"></p>
-<h3 id="如何调优sql"><a href="#如何调优sql" class="headerlink" title="如何调优sql"></a>如何调优sql</h3><ul>
-<li>根据慢日志定位慢查询sql</li>
-</ul>
-<blockquote>
-<p>show variables like ‘%quer%’;        //查看相关变量</p>
-</blockquote>
-<p><img src="/2019/03/04/database/slowlog.jpg" alt="slowlog"></p>
-<blockquote>
-<p>show status like ‘%slow_queries’;        //慢查询数量</p>
-</blockquote>
-<blockquote>
-<p>set global slow_query_log = on;</p>
-<p>set global long_query_time = 1;    //需要重连</p>
-</blockquote>
-<ul>
-<li>Explain分析sql</li>
-</ul>
-<p>加在执行语句前，查看结果项</p>
-<p>type：index，all需要优化</p>
-<p>extra：Using filesort/Using temporary</p>
-<ul>
-<li>修改sql尽量让sql走索引</li>
-</ul>
-<h3 id="mysql联合索引最左匹配原则"><a href="#mysql联合索引最左匹配原则" class="headerlink" title="mysql联合索引最左匹配原则"></a>mysql联合索引最左匹配原则</h3><p>index（a，b）</p>
-<p>只用b select 不走索引</p>
-<p><img src="/2019/03/04/database/unionindex.jpg" alt="unionindex"></p>
-<h3 id="索引越多越好吗"><a href="#索引越多越好吗" class="headerlink" title="索引越多越好吗"></a>索引越多越好吗</h3><ul>
-<li>数据量小不需要建立索引</li>
-<li>数据变更需要维护索引，维护成本变高</li>
-<li>更多索引占用更多空间</li>
-</ul>
-<h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h3 id="数据库锁的分类"><a href="#数据库锁的分类" class="headerlink" title="数据库锁的分类"></a>数据库锁的分类</h3><h4 id="按粒度划分"><a href="#按粒度划分" class="headerlink" title="按粒度划分"></a>按粒度划分</h4><ul>
-<li>表级锁</li>
-<li>行级锁</li>
-<li>页级锁</li>
-</ul>
-<h4 id="按锁级别划分"><a href="#按锁级别划分" class="headerlink" title="按锁级别划分"></a>按锁级别划分</h4><ul>
-<li>共享锁</li>
-<li>排他锁</li>
-</ul>
-<h4 id="按枷锁方式划分"><a href="#按枷锁方式划分" class="headerlink" title="按枷锁方式划分"></a>按枷锁方式划分</h4><ul>
-<li>自动锁</li>
-<li>显式锁</li>
-</ul>
-<h4 id="按操作划分"><a href="#按操作划分" class="headerlink" title="按操作划分"></a>按操作划分</h4><ul>
-<li>DML锁（对数据操作）</li>
-<li>DDL锁（对表结构操作）</li>
-</ul>
-<h4 id="按使用方式划分"><a href="#按使用方式划分" class="headerlink" title="按使用方式划分"></a>按使用方式划分</h4><ul>
-<li>乐观锁（基于数据版本）</li>
-<li>悲观锁（对外界修改保守态度）</li>
-</ul>
-<h3 id="MyISAM-amp-InnoDB锁的区别"><a href="#MyISAM-amp-InnoDB锁的区别" class="headerlink" title="MyISAM&amp;InnoDB锁的区别"></a>MyISAM&amp;InnoDB锁的区别</h3><ul>
-<li>MyISAM默认表级锁，不支持行级锁</li>
-</ul>
-<p>对一个表进行操作时，会将表锁，其他session不能操作</p>
-<p>读锁（共享锁）不释放，无法增加写锁</p>
-<p>读锁（共享锁）不释放，可以增加读锁</p>
-<p>写锁（排他锁）不释放，无法增加读锁</p>
-<p>写锁不释放，无法增加写锁</p>
-<blockquote>
-<p>lock tables table_name read;</p>
-<p>unlock tables;</p>
-</blockquote>
-<ul>
-<li>InnoDB默认行级锁，也支持表级锁</li>
-</ul>
-<p>InnoDB采用二段锁</p>
-<p>行级锁只锁一行数据</p>
-<p>但是不走索引时，整张表都会被锁住</p>
-<h4 id="MyISAM适合的场景"><a href="#MyISAM适合的场景" class="headerlink" title="MyISAM适合的场景"></a>MyISAM适合的场景</h4><ul>
-<li>频繁执行全表count语句（保存行数变量）</li>
-<li>对数据增删改频率低，查询频率高（增删改锁表）</li>
-<li>没有事务</li>
-</ul>
-<h4 id="InnoDB适合的场景"><a href="#InnoDB适合的场景" class="headerlink" title="InnoDB适合的场景"></a>InnoDB适合的场景</h4><ul>
-<li>数据增删改查都频繁（行级锁）</li>
-<li>可靠性要求高</li>
-<li>支持事务</li>
-</ul>
-<h3 id="数据库事务四大特性"><a href="#数据库事务四大特性" class="headerlink" title="数据库事务四大特性"></a>数据库事务四大特性</h3><p>ACID</p>
-<ul>
-<li>原子性（Atomic）操作一体化</li>
-<li>一致性（Consistency）总体一致eg转账</li>
-<li>隔离性（Isolation）并发互不影响</li>
-<li>持久性（Durability）可恢复，储存持久</li>
-</ul>
-<h3 id="事务隔离级别以及各级别下并发访问"><a href="#事务隔离级别以及各级别下并发访问" class="headerlink" title="事务隔离级别以及各级别下并发访问"></a>事务隔离级别以及各级别下并发访问</h3><h4 id="事务并发访问可能引起的问题"><a href="#事务并发访问可能引起的问题" class="headerlink" title="事务并发访问可能引起的问题"></a>事务并发访问可能引起的问题</h4><ul>
-<li>更新丢失</li>
-</ul>
-<p>一个事务的更新覆盖了另一个事务的更新</p>
-<p><img src="/2019/03/04/database/updatelost.jpg" alt="updatelost"></p>
-<p>（mysql所有事务隔离级别已经避免）</p>
-<ul>
-<li>Dirty Read</li>
-</ul>
-<p>一个事务读到另一个事务未提交的更新数据（回滚发生问题）</p>
-<blockquote>
-<p>select @@tx_isolation;        //查看事务隔离级别</p>
-<p>set session transaction isolation level read uncommitted;    //设置隔离级别</p>
-</blockquote>
-<p>（READ-COMMITTED事务隔离级别以上可避免）</p>
-<ul>
-<li>不可重复读</li>
-</ul>
-<p>A多次读取数据，B在过程中更新数据，导致事务A读取数据不一致</p>
-<p>（REPEATABLE-READ事务隔离级别以上可避免）InnoDB default</p>
-<ul>
-<li>幻读</li>
-</ul>
-<p>事务A读取与搜索条件匹配的若干行，事务B插入或删除行的方式修改了A的结果集，导致事务A像出现幻觉</p>
-<p>（SERIALIZABLE事务隔离级别以上可避免）Top Level</p>
-<h4 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h4><p><img src="/2019/03/04/database/level.jpg" alt="level"></p>
-<p>事务隔离级别越高，串行程度越高，并行化越低，效率越低</p>
-<p>Oracle默认为READ-COMMITTED，MySQL默认为REPEATABLE-READ</p>
-<h4 id="InnoDB可重复读隔离级别下避免幻读"><a href="#InnoDB可重复读隔离级别下避免幻读" class="headerlink" title="InnoDB可重复读隔离级别下避免幻读"></a>InnoDB可重复读隔离级别下避免幻读</h4><h5 id="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"><a href="#表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）" class="headerlink" title="表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）"></a>表象：快照读（非阻塞读）——伪MVCC（多版本并发控制）</h5><ul>
-<li>当前读：select…lock in share mode, select…for update</li>
-</ul>
-<p>update, delete, insert（）</p>
-<p>加了锁的增删改查，读取最新版本，并且锁住避免其他事务修改当前记录</p>
-<p><img src="/2019/03/04/database/dangqian.jpg" alt="dangqian"></p>
-<ul>
-<li>快照读：不加锁（SERIALIZABLE事务隔离级别不成立）</li>
-</ul>
-<p>可能读到的是历史版本数据</p>
-<h5 id="内在：next-key锁（行锁-gap锁）"><a href="#内在：next-key锁（行锁-gap锁）" class="headerlink" title="内在：next-key锁（行锁+gap锁）"></a>内在：next-key锁（行锁+gap锁）</h5><p>RR级别以上支持gap锁，防止两次当前读出现幻读</p>
-<p>不锁内容本身，锁周围数据</p>
-<p>对主键和唯一键索引时：</p>
-<ul>
-<li>where条件全部命中，不会加gap锁，只加记录锁</li>
-</ul>
-<p><img src="/2019/03/04/database/recordlock.jpg" alt="recordlock"></p>
-<ul>
-<li>where条件部分命中或全不命中，加gap锁</li>
-</ul>
-<p>gap锁用在非唯一索引或不走索引的当前读中</p>
-<p>1、非唯一索引</p>
-<p><img src="/2019/03/04/database/gaplock1.jpg" alt="gaplock1"></p>
-<p>(6,9], (9,11] 被锁住（不仅id在范围内，而是范围内所有数据，可能id是20也会被锁住）</p>
-<p>官方定义：</p>
-<p><img src="/2019/03/04/database/gaplock2.jpg" alt="gaplock2"></p>
-<p>2、不走索引</p>
-<p><img src="/2019/03/04/database/gaplock3.jpg" alt="gaplock3"></p>
-<p>对所有gap上锁</p>
-<h3 id="RC、RR级别下InnoDB的非阻塞读的实现"><a href="#RC、RR级别下InnoDB的非阻塞读的实现" class="headerlink" title="RC、RR级别下InnoDB的非阻塞读的实现"></a>RC、RR级别下InnoDB的非阻塞读的实现</h3><ul>
-<li>数据行里DB_TRX_ID, DB_ROLL_PTR, DB_ROW_ID字段</li>
-</ul>
-<p>DB_TRX_ID：最后一次对本行数据做修改的事务ID</p>
-<p>DB_ROLL_PTR：回滚指针，undo日志记录</p>
-<p>DB_ROW_ID：行号</p>
-<ul>
-<li>undo log，提交后丢弃</li>
-<li>update undo log，回滚，快照都需要此log</li>
-</ul>
-<p><img src="/2019/03/04/database/undolog.jpg" alt="undolog"></p>
-<ul>
-<li>read view，能看到的数据，根据算法处理</li>
-</ul>
-<h2 id="关键语法"><a href="#关键语法" class="headerlink" title="关键语法"></a>关键语法</h2><h3 id="GROUP-BY"><a href="#GROUP-BY" class="headerlink" title="GROUP BY"></a>GROUP BY</h3><ul>
-<li>SELECT子句中的列名必须为分组列或列函数</li>
-<li>列函数对于GROUP BY子句定义的每个组返回一个结果</li>
-</ul>
-<p><img src="/2019/03/04/database/groupby.jpg" alt="groupby"></p>
-<p>1、查询所有同学的学号、选课数、总成绩</p>
-<pre><code class="sql">select student_id,count(course_id),sum(score)
-
-from score
-
-group by student_id
-</code></pre>
-<p>GROUP BY会缓存临时数据表</p>
-<p>2、查询所有同学的学号、姓名、选课数、总成绩</p>
-<pre><code class="sql">select s.student_id,stu.name,count(s.course_id),sum(s.score)
-from
-    score s,
-    student stu
-where
-s.student_id = stu.student_id
-group by s.student_id;
-</code></pre>
-<h3 id="HAVING"><a href="#HAVING" class="headerlink" title="HAVING"></a>HAVING</h3><ul>
-<li>通常与GROUP BY子句一起使用</li>
-<li>WHERE过滤行，HAVING过滤组</li>
-<li>出现顺序：WHERE&gt;GROUP BY&gt;HAVING</li>
-</ul>
-<p>3、查询平均成绩大于60的同学的学号和平均成绩</p>
-<pre><code class="sql">select student_id,avg(score)
-from score
-group by student_id
-having avg(score)&gt;60
-</code></pre>
-<p>4、查询没有学全所有课的同学的学号、姓名</p>
-<pre><code class="sql">select stu.student_id,stu.name
-from
-student stu,
-score s
-where stu.student_id = s.student_id
-group by s.student_id
-having count(*) &lt;
-(select count(*) from course)
-</code></pre>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Database</tag>
-        <tag>Lock</tag>
-        <tag>MySQL</tag>
-        <tag>MyISAM</tag>
-        <tag>InnoDB</tag>
-        <tag>SQL</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Golang Advanced Features</title>
     <url>/2019/06/23/goad/</url>
     <content><![CDATA[<h1 id="面向函数编程"><a href="#面向函数编程" class="headerlink" title="面向函数编程"></a>面向函数编程</h1><h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>变量、参数、返回值可以是函数</p>
@@ -4937,6 +4937,148 @@ func main() {
       </tags>
   </entry>
   <entry>
+    <title>Hadoop basic concept</title>
+    <url>/2019/02/01/hadoop/</url>
+    <content><![CDATA[<h1 id="HADOOP"><a href="#HADOOP" class="headerlink" title="HADOOP"></a>HADOOP</h1><h2 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
+<li>master/slave architecture</li>
+</ul>
+<ul>
+<li>an HDFS cluster has one master(NameNode/NN)  -  N slaves(DataNode/DN)</li>
+<li>一个文件拆分成多个block，分散存储</li>
+<li>NN：负责客户端请求响应，元数据管理（文件名称、副本系数、DN地址）</li>
+<li>DN：存储对应Block，心跳信息，健康状况</li>
+<li>一个文件的Block只有最后一个可能大小不同</li>
+<li>Files in HDFS are write-once  and have strictly one writer at any time</li>
+</ul>
+<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><ul>
+<li><p>CDH download <a href="http://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/</a> + filename</p>
+</li>
+<li><p>JDK</p>
+</li>
+<li><p>SSH 免密</p>
+</li>
+<li><p>下载hadoop解压</p>
+</li>
+<li><p>修改java_home, core-site.xml, hdfs-site.xml, slave</p>
+</li>
+<li><pre><code>$ bin/hdfs namenode -format
+</code></pre></li>
+<li><pre><code> $ sbin/start-dfs.sh
+</code></pre><h3 id="shell操作"><a href="#shell操作" class="headerlink" title="shell操作"></a>shell操作</h3></li>
+<li><p>hadoop fs -command</p>
+</li>
+<li>hdfs dfs -command</li>
+<li>添加hadoop/bin到环境变量~/.bash_profile     source</li>
+</ul>
+<h3 id="Java-API操作"><a href="#Java-API操作" class="headerlink" title="Java API操作"></a>Java API操作</h3><ul>
+<li>maven导入对应版本依赖</li>
+</ul>
+<h2 id="YARN"><a href="#YARN" class="headerlink" title="YARN"></a>YARN</h2><h3 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h3><ul>
+<li><p>ResourceManager: RM</p>
+<p>同一时间一个集群只有一个（有备份）</p>
+<p>处理客户端请求：提交作业，杀死作业</p>
+<p>监控NM，挂了重新处理</p>
+</li>
+<li><p>NodeManager: NM</p>
+<p>集群中有多个，负责本身节点资源管理</p>
+<p>定时向RM汇报本节点资源使用情况</p>
+<p>接受并处理来自RM的命令：启动Container</p>
+<p>处理来自AM的命令</p>
+</li>
+<li><p>ApplicationMaster: AM</p>
+<p>每个应用程序对应一个：MapReduce, Spark，负责应用程序管理</p>
+<p>为应用程序向RM申请资源（core, memory），分配给内部Task</p>
+<p>需要与NM通信：启动，停止task，task运行于container中</p>
+</li>
+<li><p>Container</p>
+<p>封装CPU，Memory等资源的容器</p>
+</li>
+<li><p>Client</p>
+<p>提交、查看、杀死作业</p>
+</li>
+</ul>
+<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><h3 id="编程模型"><a href="#编程模型" class="headerlink" title="编程模型"></a>编程模型</h3><ul>
+<li>Input</li>
+<li>Splitting</li>
+<li>Mapping</li>
+<li>Shuffling</li>
+<li>Reducing</li>
+<li>Final Result</li>
+</ul>
+<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul>
+<li><p>Split：交由MapReduce作业处理的最小计算单元</p>
+<p>默认与HDFS blocksize（最小存储单元）对应</p>
+</li>
+<li><p>InputFormat：将输入的数据进行分片（split）</p>
+<p>TextInputFormat：处理文本格式数据</p>
+</li>
+<li><p>OutputFormat：结果数据</p>
+</li>
+<li><p>Combiner：本地的Reduce，减少MapTask输出数据量</p>
+</li>
+<li><p>Partitioner：规定MapTask输出的数据交由哪个ReduceTask处理</p>
+</li>
+</ul>
+<h3 id="MapReduce1-x架构"><a href="#MapReduce1-x架构" class="headerlink" title="MapReduce1.x架构"></a>MapReduce1.x架构</h3><ul>
+<li><p>JobTracker：JT</p>
+<p>作业管理者</p>
+<p>将作业分解成多个任务：Task（MapTask，ReduceTaask）</p>
+<p>将任务分派给TaskTracker运行</p>
+<p>作业的监控、容错处理（Task作业挂了，重新指派）</p>
+<p>接受TT心跳</p>
+</li>
+<li><p>TaskTracker：TT</p>
+<p>任务执行者</p>
+<p>与JT交互</p>
+</li>
+<li><p>MapTask</p>
+<p>解析数据，交给自己的map方法</p>
+<p>将map输出结果写到本地磁盘（如果没有Reduce，则写入HDFS）</p>
+</li>
+<li><p>ReduceTask</p>
+<p>将MapTask输出的数据进行读取</p>
+<p>按照数据进行分组传给自己的reduce方法处理</p>
+<p>输出结果到HDFS</p>
+</li>
+</ul>
+<h3 id="MapReduce2-x架构"><a href="#MapReduce2-x架构" class="headerlink" title="MapReduce2.x架构"></a>MapReduce2.x架构</h3><ul>
+<li>同YARN</li>
+</ul>
+<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="日志数据内容"><a href="#日志数据内容" class="headerlink" title="日志数据内容"></a>日志数据内容</h3><ul>
+<li>访问系统属性</li>
+<li>访问特征：URL，停留时间</li>
+<li>访问信息：session_id，ip</li>
+<li>Nginx记录</li>
+</ul>
+<h3 id="数据处理流程"><a href="#数据处理流程" class="headerlink" title="数据处理流程"></a>数据处理流程</h3><ul>
+<li><p>数据采集</p>
+<p>Flume：web日志写入HDFS</p>
+</li>
+<li><p>数据清洗</p>
+<p>剔除脏数据：Spark，Hive，MapReduce</p>
+</li>
+<li><p>数据处理</p>
+<p>Spark，Hive，MapReduce</p>
+</li>
+<li><p>处理结果入库</p>
+<p>RDBMS，NoSQL</p>
+</li>
+<li><p>数据可视化</p>
+<p>图形化展示，渲染：ECharts、HUE、Zeppelin</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>MapReduce</tag>
+        <tag>Hadoop</tag>
+        <tag>Yarn</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Golang Basic</title>
     <url>/2019/06/15/golang/</url>
     <content><![CDATA[<h1 id="Golang语法"><a href="#Golang语法" class="headerlink" title="Golang语法"></a>Golang语法</h1><ul>
@@ -5728,145 +5870,247 @@ func (r *Retriever) Get(url string) string {
       </tags>
   </entry>
   <entry>
-    <title>Hadoop basic concept</title>
-    <url>/2019/02/01/hadoop/</url>
-    <content><![CDATA[<h1 id="HADOOP"><a href="#HADOOP" class="headerlink" title="HADOOP"></a>HADOOP</h1><h2 id="HDFS"><a href="#HDFS" class="headerlink" title="HDFS"></a>HDFS</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ul>
-<li>master/slave architecture</li>
+    <title>Java GC</title>
+    <url>/2019/02/22/javagc/</url>
+    <content><![CDATA[<h1 id="垃圾判定"><a href="#垃圾判定" class="headerlink" title="垃圾判定"></a>垃圾判定</h1><ul>
+<li>没有被其他对象引用</li>
 </ul>
+<h2 id="判定算法"><a href="#判定算法" class="headerlink" title="判定算法"></a>判定算法</h2><h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><ul>
+<li>判断对象的引用数量</li>
+<li>每个对象都有一个引用计数器，被引用+1，完成引用-1</li>
+<li>任何引用计数为0的对象实例可以被当作垃圾收集</li>
+</ul>
+<p>优点：执行效率高，程序执行受影响小</p>
+<p>缺点：无法检测出循环引用，导致内存泄露（引用计数永不为0）</p>
+<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><ul>
+<li>通过判断对象的引用链是否可达来决定对象是否被回收</li>
+</ul>
+<p><img src="/2019/02/22/javagc/access.jpg" alt="access"></p>
+<h4 id="GC-Root对象"><a href="#GC-Root对象" class="headerlink" title="GC Root对象"></a>GC Root对象</h4><ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>本地方法栈中JNI（Native方法）的引用对象</li>
+<li>活跃线程的引用对象</li>
+</ul>
+<h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h1><h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><h3 id="标记-清除算法（Mark-amp-Sweep）"><a href="#标记-清除算法（Mark-amp-Sweep）" class="headerlink" title="标记-清除算法（Mark &amp; Sweep）"></a>标记-清除算法（Mark &amp; Sweep）</h3><ul>
+<li>标记：从根集合扫描，对存活对象进行标记</li>
+<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象</li>
+</ul>
+<p><img src="/2019/02/22/javagc/sweep.jpg" alt="sweep"></p>
 <ul>
-<li>an HDFS cluster has one master(NameNode/NN)  -  N slaves(DataNode/DN)</li>
-<li>一个文件拆分成多个block，分散存储</li>
-<li>NN：负责客户端请求响应，元数据管理（文件名称、副本系数、DN地址）</li>
-<li>DN：存储对应Block，心跳信息，健康状况</li>
-<li>一个文件的Block只有最后一个可能大小不同</li>
-<li>Files in HDFS are write-once  and have strictly one writer at any time</li>
+<li>缺点：碎片化严重</li>
 </ul>
-<h3 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h3><ul>
-<li><p>CDH download <a href="http://archive.cloudera.com/cdh5/cdh/5/" target="_blank" rel="noopener">http://archive.cloudera.com/cdh5/cdh/5/</a> + filename</p>
-</li>
-<li><p>JDK</p>
-</li>
-<li><p>SSH 免密</p>
-</li>
-<li><p>下载hadoop解压</p>
-</li>
-<li><p>修改java_home, core-site.xml, hdfs-site.xml, slave</p>
-</li>
-<li><pre><code>$ bin/hdfs namenode -format
-</code></pre></li>
-<li><pre><code> $ sbin/start-dfs.sh
-</code></pre><h3 id="shell操作"><a href="#shell操作" class="headerlink" title="shell操作"></a>shell操作</h3></li>
-<li><p>hadoop fs -command</p>
-</li>
-<li>hdfs dfs -command</li>
-<li>添加hadoop/bin到环境变量~/.bash_profile     source</li>
+<h3 id="复制算法（Copying）"><a href="#复制算法（Copying）" class="headerlink" title="复制算法（Copying）"></a>复制算法（Copying）</h3><ul>
+<li>内存被分为对象面和空闲面</li>
+<li>对象在对象面创建</li>
+<li>对象面用完，将存活的对象复制到空闲面</li>
+<li>将对象面所有对象清理</li>
 </ul>
-<h3 id="Java-API操作"><a href="#Java-API操作" class="headerlink" title="Java API操作"></a>Java API操作</h3><ul>
-<li>maven导入对应版本依赖</li>
+<p><img src="/2019/02/22/javagc/copy.jpg" alt="copy"></p>
+<ul>
+<li>解决碎片化问题</li>
+<li>顺序分配内存，简单高效</li>
+<li>适合存活率低的场景（不适合老年代）</li>
 </ul>
-<h2 id="YARN"><a href="#YARN" class="headerlink" title="YARN"></a>YARN</h2><h3 id="YARN架构"><a href="#YARN架构" class="headerlink" title="YARN架构"></a>YARN架构</h3><ul>
-<li><p>ResourceManager: RM</p>
-<p>同一时间一个集群只有一个（有备份）</p>
-<p>处理客户端请求：提交作业，杀死作业</p>
-<p>监控NM，挂了重新处理</p>
-</li>
-<li><p>NodeManager: NM</p>
-<p>集群中有多个，负责本身节点资源管理</p>
-<p>定时向RM汇报本节点资源使用情况</p>
-<p>接受并处理来自RM的命令：启动Container</p>
-<p>处理来自AM的命令</p>
-</li>
-<li><p>ApplicationMaster: AM</p>
-<p>每个应用程序对应一个：MapReduce, Spark，负责应用程序管理</p>
-<p>为应用程序向RM申请资源（core, memory），分配给内部Task</p>
-<p>需要与NM通信：启动，停止task，task运行于container中</p>
-</li>
-<li><p>Container</p>
-<p>封装CPU，Memory等资源的容器</p>
-</li>
-<li><p>Client</p>
-<p>提交、查看、杀死作业</p>
-</li>
+<h3 id="标记-整理算法（Compacting）"><a href="#标记-整理算法（Compacting）" class="headerlink" title="标记-整理算法（Compacting）"></a>标记-整理算法（Compacting）</h3><ul>
+<li>标记：从根集合扫描，对存活对象进行标记</li>
+<li>清除：移动所有存活对象，按照内存地址重新依次排列，将末端内存地址以后的内存全部回收</li>
 </ul>
-<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><h3 id="编程模型"><a href="#编程模型" class="headerlink" title="编程模型"></a>编程模型</h3><ul>
-<li>Input</li>
-<li>Splitting</li>
-<li>Mapping</li>
-<li>Shuffling</li>
-<li>Reducing</li>
-<li>Final Result</li>
+<p><img src="/2019/02/22/javagc/sc.png" alt="compact"></p>
+<ul>
+<li>避免了碎片化</li>
+<li>不用设置两块内存空间</li>
+<li>适用于存活率高的场景（老年代）</li>
 </ul>
-<h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><ul>
-<li><p>Split：交由MapReduce作业处理的最小计算单元</p>
-<p>默认与HDFS blocksize（最小存储单元）对应</p>
-</li>
-<li><p>InputFormat：将输入的数据进行分片（split）</p>
-<p>TextInputFormat：处理文本格式数据</p>
-</li>
-<li><p>OutputFormat：结果数据</p>
-</li>
-<li><p>Combiner：本地的Reduce，减少MapTask输出数据量</p>
-</li>
-<li><p>Partitioner：规定MapTask输出的数据交由哪个ReduceTask处理</p>
-</li>
+<h3 id="分代收集算法（Generational-Collector）"><a href="#分代收集算法（Generational-Collector）" class="headerlink" title="分代收集算法（Generational Collector）"></a>分代收集算法（Generational Collector）</h3><ul>
+<li>回收算法组合拳</li>
+<li>按照对象生命周期不同划分区域采取不同算法</li>
 </ul>
-<h3 id="MapReduce1-x架构"><a href="#MapReduce1-x架构" class="headerlink" title="MapReduce1.x架构"></a>MapReduce1.x架构</h3><ul>
-<li><p>JobTracker：JT</p>
-<p>作业管理者</p>
-<p>将作业分解成多个任务：Task（MapTask，ReduceTaask）</p>
-<p>将任务分派给TaskTracker运行</p>
-<p>作业的监控、容错处理（Task作业挂了，重新指派）</p>
-<p>接受TT心跳</p>
-</li>
-<li><p>TaskTracker：TT</p>
-<p>任务执行者</p>
-<p>与JT交互</p>
-</li>
-<li><p>MapTask</p>
-<p>解析数据，交给自己的map方法</p>
-<p>将map输出结果写到本地磁盘（如果没有Reduce，则写入HDFS）</p>
-</li>
-<li><p>ReduceTask</p>
-<p>将MapTask输出的数据进行读取</p>
-<p>按照数据进行分组传给自己的reduce方法处理</p>
-<p>输出结果到HDFS</p>
-</li>
+<p><img src="/2019/02/22/javagc/gcold.jpg" alt="gcold"></p>
+<ul>
+<li>jdk8以后取消永久代</li>
 </ul>
-<h3 id="MapReduce2-x架构"><a href="#MapReduce2-x架构" class="headerlink" title="MapReduce2.x架构"></a>MapReduce2.x架构</h3><ul>
-<li>同YARN</li>
+<p><img src="/2019/02/22/javagc/gcnow.jpg" alt="gcnow"></p>
+<ul>
+<li>年轻代存活率低，采用复制算法</li>
+<li>老年代存活率高，采用标记清除/整理算法</li>
 </ul>
-<h2 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h2><h3 id="日志数据内容"><a href="#日志数据内容" class="headerlink" title="日志数据内容"></a>日志数据内容</h3><ul>
-<li>访问系统属性</li>
-<li>访问特征：URL，停留时间</li>
-<li>访问信息：session_id，ip</li>
-<li>Nginx记录</li>
+<h4 id="Minor-GC"><a href="#Minor-GC" class="headerlink" title="Minor GC"></a>Minor GC</h4><ul>
+<li>年轻代GC</li>
+<li>复制算法</li>
+<li>频繁</li>
 </ul>
-<h3 id="数据处理流程"><a href="#数据处理流程" class="headerlink" title="数据处理流程"></a>数据处理流程</h3><ul>
-<li><p>数据采集</p>
-<p>Flume：web日志写入HDFS</p>
-</li>
-<li><p>数据清洗</p>
-<p>剔除脏数据：Spark，Hive，MapReduce</p>
-</li>
-<li><p>数据处理</p>
-<p>Spark，Hive，MapReduce</p>
-</li>
-<li><p>处理结果入库</p>
-<p>RDBMS，NoSQL</p>
-</li>
-<li><p>数据可视化</p>
-<p>图形化展示，渲染：ECharts、HUE、Zeppelin</p>
-</li>
+<p>年轻代分为两个区域</p>
+<ul>
+<li>Eden</li>
+<li>两个Survivor：From，To</li>
+<li>8：1：1</li>
 </ul>
+<p><img src="/2019/02/22/javagc/young.jpg" alt="young"></p>
+<p>对象在Eden出生，确定存活转移到s0</p>
+<p><img src="/2019/02/22/javagc/y1.jpg" alt="y1"></p>
+<p>清除所有eden区对象，并将存活对象年龄设置为1</p>
+<p><img src="/2019/02/22/javagc/y2.jpg" alt="y2"></p>
+<p>Eden重新加载对象，重复上述过程到s2，年龄+1</p>
+<p><img src="/2019/02/22/javagc/y3.jpg" alt="y2"></p>
+<p>清空Eden和s0</p>
+<p><img src="/2019/02/22/javagc/y4.jpg" alt="y2"></p>
+<p>周而复始</p>
+<p><img src="/2019/02/22/javagc/y5.jpg" alt="y2"></p>
+<p>年龄达到某值，进入老年区</p>
+<blockquote>
+<p>-XX:MaxTenuringThreshold     //可调整此年龄</p>
+</blockquote>
+<p>年轻代溢出对象也会转移至老年代</p>
+<p>晋升到老年代的对象：</p>
+<ul>
+<li>经理多数Minor GC，年龄超过一定数值</li>
+<li>Survivor中放不下的对象</li>
+<li>新生成的大对象</li>
+</ul>
+<blockquote>
+<p>-XX:+PretenuerSizeThreshold</p>
+</blockquote>
+<h4 id="调优参数"><a href="#调优参数" class="headerlink" title="调优参数"></a>调优参数</h4><blockquote>
+<p>-XX:SurvivorRatio        //Eden,Survivor比例，默认8：1</p>
+<p>-XX:NewRatio            //年轻代与老年代比例，默认1：2</p>
+</blockquote>
+<h4 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h4><ul>
+<li>老年代存放周期较长的对象</li>
+<li>采用标记清理/整理算法GC</li>
+<li>速度慢</li>
+<li>频率低</li>
+</ul>
+<p>触发条件：</p>
+<ul>
+<li>老年代空间不足</li>
+<li>永久代空间不足（JDK7以后取消）</li>
+<li>CMS GC出现promotion/concurrent mode fail</li>
+<li>Minor GC晋升老年代平均大小大于剩余空间</li>
+<li>调用System.gc() 显式但不强制</li>
+<li>使用RMI进行RPC或管理的JDK应用，一小时执行一次</li>
+</ul>
+<h2 id="年轻代垃圾回收器"><a href="#年轻代垃圾回收器" class="headerlink" title="年轻代垃圾回收器"></a>年轻代垃圾回收器</h2><h3 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop-the-World"></a>Stop-the-World</h3><ul>
+<li>JVM由于要执行GC而停止应用程序的执行</li>
+<li>任何GC算法都会发生</li>
+<li>减少stop-the-world实现GC优化</li>
+</ul>
+<h3 id="Safepoint"><a href="#Safepoint" class="headerlink" title="Safepoint"></a>Safepoint</h3><ul>
+<li>GC时不再产生垃圾</li>
+<li>分析过程中对象引用关系不会发生变化的点</li>
+<li>到达安全点程序才会暂停</li>
+<li>多在方法调用，循环跳转，异常跳转等</li>
+<li>安全点数量适中</li>
+</ul>
+<h3 id="JVM运行模式"><a href="#JVM运行模式" class="headerlink" title="JVM运行模式"></a>JVM运行模式</h3><ul>
+<li>server，启动慢运行快</li>
+<li>client，启动快运行慢</li>
+</ul>
+<blockquote>
+<p>java -version</p>
+</blockquote>
+<h3 id="垃圾收集器关系"><a href="#垃圾收集器关系" class="headerlink" title="垃圾收集器关系"></a>垃圾收集器关系</h3><p><img src="/2019/02/22/javagc/collector.jpg" alt="collector"></p>
+<h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><blockquote>
+<p>-XX:+UseSerialGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>单线程收集，GC时，必须暂停所有工作线程</li>
+<li>简单高效，client默认年轻代收集器</li>
+</ul>
+<h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><blockquote>
+<p>-XX:+UserParNewGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>多线程收集</li>
+<li>单核执行效率不及Serial，多核下有优势</li>
+</ul>
+<h3 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h3><blockquote>
+<p>-XX:+UserParallelGC        //复制算法</p>
+</blockquote>
+<ul>
+<li>吞吐量=运行用户代码时间/(运行用户代码时间+GC时间)</li>
+<li>关注吞吐量，忽视用户线程卡顿</li>
+<li>Server模式下默认的年轻代收集器</li>
+</ul>
+<h2 id="老年代垃圾回收器"><a href="#老年代垃圾回收器" class="headerlink" title="老年代垃圾回收器"></a>老年代垃圾回收器</h2><h3 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h3><blockquote>
+<p>-XX:+UseSerialOldGC        //标记整理算法</p>
+</blockquote>
+<ul>
+<li>单线程收集，必须停止工作线程</li>
+<li>简单高效</li>
+</ul>
+<h3 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h3><blockquote>
+<p>-XX:+UseParallelOldGC        //标记整理算法</p>
+</blockquote>
+<ul>
+<li>多线程，吞吐量优先</li>
+</ul>
+<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a><strong>CMS收集器</strong></h3><blockquote>
+<p>-XX:UseConcMarkSweepGC        //标记清除算法</p>
+</blockquote>
+<ul>
+<li>初始标记：stop-the-world，JVM停顿，时间短</li>
+<li>并发标记：并发追溯标记，程序不停顿</li>
+<li>并发预处理：查找执行并发标记时晋升老年代的对象，不停顿</li>
+<li>重新标记：暂停虚拟机，扫描CMS堆中剩余对象</li>
+<li>并发清理：清理垃圾对象，程序不卡顿</li>
+<li>并发重置：重置CMS收集器的数据结构</li>
+</ul>
+<p>特点：边产生边回收、碎片化严重</p>
+<h3 id="Garbage-First"><a href="#Garbage-First" class="headerlink" title="Garbage First"></a>Garbage First</h3><ul>
+<li>并行和并发</li>
+<li>分代收集</li>
+<li>空间整合</li>
+<li>可预测停顿</li>
+</ul>
+<p>1、将整个Java堆内存划分为多个大小相等的Region</p>
+<p>2、年轻代老年代不再物理隔阂</p>
+<p><img src="/2019/02/22/javagc/gf.jpg" alt="gf"></p>
+<h3 id="收集器结合情况"><a href="#收集器结合情况" class="headerlink" title="收集器结合情况"></a>收集器结合情况</h3><p><img src="/2019/02/22/javagc/gclink.jpg" alt="gclink"></p>
+<h2 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h2><ul>
+<li>Object.finalize()是否与C++析构函数作用相同</li>
+</ul>
+<p>不同</p>
+<p>析构函数调用确定，finalize()不确定，也就是还未运行完已经被GC</p>
+<ul>
+<li>Java中的强引用、软引用、弱引用和虚引用</li>
+</ul>
+<p>强引用：</p>
+<blockquote>
+<p>Object obj = new Object();</p>
+</blockquote>
+<p>1、即使抛出OutOfMemoryError也不会回收该对象</p>
+<p>2、可以通过设置为null来弱化作用，使其被回收</p>
+<p>软引用：</p>
+<blockquote>
+<p>SoftReference<string> softRef=new SoftReference<string>(str);</string></string></p>
+</blockquote>
+<p>1、对象有用但非必须状态</p>
+<p>2、只有当内存不足，GC才会回收</p>
+<p>3、可用来实现高速缓存</p>
+<p>弱引用</p>
+<blockquote>
+<p>WeakReference<string> weakRef=new WeakReference<string>(str);</string></string></p>
+</blockquote>
+<p>1、比软引用更弱</p>
+<p>2、GC时被回收</p>
+<p>3、GC优先级低，所以被回收概率也不大</p>
+<p>虚引用：</p>
+<p>1、形同虚设</p>
+<p>2、任何时候都可能被回收</p>
+<p>3、跟踪对象被GC的活动，起哨兵作用</p>
+<p>4、必须和引用队列ReferenceQueue联合使用</p>
+<p><img src="/2019/02/22/javagc/ref.jpg" alt="ref"></p>
+<p>四种引用的关系：</p>
+<p><img src="/2019/02/22/javagc/ref4.jpg" alt="ref4"></p>
 ]]></content>
       <categories>
         <category>study note</category>
       </categories>
       <tags>
         <tag>Java</tag>
-        <tag>MapReduce</tag>
-        <tag>Hadoop</tag>
-        <tag>Yarn</tag>
+        <tag>JVM</tag>
       </tags>
   </entry>
   <entry>
@@ -6890,250 +7134,6 @@ func init(){
       </tags>
   </entry>
   <entry>
-    <title>Java GC</title>
-    <url>/2019/02/22/javagc/</url>
-    <content><![CDATA[<h1 id="垃圾判定"><a href="#垃圾判定" class="headerlink" title="垃圾判定"></a>垃圾判定</h1><ul>
-<li>没有被其他对象引用</li>
-</ul>
-<h2 id="判定算法"><a href="#判定算法" class="headerlink" title="判定算法"></a>判定算法</h2><h3 id="引用计数算法"><a href="#引用计数算法" class="headerlink" title="引用计数算法"></a>引用计数算法</h3><ul>
-<li>判断对象的引用数量</li>
-<li>每个对象都有一个引用计数器，被引用+1，完成引用-1</li>
-<li>任何引用计数为0的对象实例可以被当作垃圾收集</li>
-</ul>
-<p>优点：执行效率高，程序执行受影响小</p>
-<p>缺点：无法检测出循环引用，导致内存泄露（引用计数永不为0）</p>
-<h3 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h3><ul>
-<li>通过判断对象的引用链是否可达来决定对象是否被回收</li>
-</ul>
-<p><img src="/2019/02/22/javagc/access.jpg" alt="access"></p>
-<h4 id="GC-Root对象"><a href="#GC-Root对象" class="headerlink" title="GC Root对象"></a>GC Root对象</h4><ul>
-<li>虚拟机栈中引用的对象</li>
-<li>方法区中常量引用的对象</li>
-<li>方法区中类静态属性引用的对象</li>
-<li>本地方法栈中JNI（Native方法）的引用对象</li>
-<li>活跃线程的引用对象</li>
-</ul>
-<h1 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h1><h2 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h2><h3 id="标记-清除算法（Mark-amp-Sweep）"><a href="#标记-清除算法（Mark-amp-Sweep）" class="headerlink" title="标记-清除算法（Mark &amp; Sweep）"></a>标记-清除算法（Mark &amp; Sweep）</h3><ul>
-<li>标记：从根集合扫描，对存活对象进行标记</li>
-<li>清除：对堆内存从头到尾进行线性遍历，回收不可达对象</li>
-</ul>
-<p><img src="/2019/02/22/javagc/sweep.jpg" alt="sweep"></p>
-<ul>
-<li>缺点：碎片化严重</li>
-</ul>
-<h3 id="复制算法（Copying）"><a href="#复制算法（Copying）" class="headerlink" title="复制算法（Copying）"></a>复制算法（Copying）</h3><ul>
-<li>内存被分为对象面和空闲面</li>
-<li>对象在对象面创建</li>
-<li>对象面用完，将存活的对象复制到空闲面</li>
-<li>将对象面所有对象清理</li>
-</ul>
-<p><img src="/2019/02/22/javagc/copy.jpg" alt="copy"></p>
-<ul>
-<li>解决碎片化问题</li>
-<li>顺序分配内存，简单高效</li>
-<li>适合存活率低的场景（不适合老年代）</li>
-</ul>
-<h3 id="标记-整理算法（Compacting）"><a href="#标记-整理算法（Compacting）" class="headerlink" title="标记-整理算法（Compacting）"></a>标记-整理算法（Compacting）</h3><ul>
-<li>标记：从根集合扫描，对存活对象进行标记</li>
-<li>清除：移动所有存活对象，按照内存地址重新依次排列，将末端内存地址以后的内存全部回收</li>
-</ul>
-<p><img src="/2019/02/22/javagc/sc.png" alt="compact"></p>
-<ul>
-<li>避免了碎片化</li>
-<li>不用设置两块内存空间</li>
-<li>适用于存活率高的场景（老年代）</li>
-</ul>
-<h3 id="分代收集算法（Generational-Collector）"><a href="#分代收集算法（Generational-Collector）" class="headerlink" title="分代收集算法（Generational Collector）"></a>分代收集算法（Generational Collector）</h3><ul>
-<li>回收算法组合拳</li>
-<li>按照对象生命周期不同划分区域采取不同算法</li>
-</ul>
-<p><img src="/2019/02/22/javagc/gcold.jpg" alt="gcold"></p>
-<ul>
-<li>jdk8以后取消永久代</li>
-</ul>
-<p><img src="/2019/02/22/javagc/gcnow.jpg" alt="gcnow"></p>
-<ul>
-<li>年轻代存活率低，采用复制算法</li>
-<li>老年代存活率高，采用标记清除/整理算法</li>
-</ul>
-<h4 id="Minor-GC"><a href="#Minor-GC" class="headerlink" title="Minor GC"></a>Minor GC</h4><ul>
-<li>年轻代GC</li>
-<li>复制算法</li>
-<li>频繁</li>
-</ul>
-<p>年轻代分为两个区域</p>
-<ul>
-<li>Eden</li>
-<li>两个Survivor：From，To</li>
-<li>8：1：1</li>
-</ul>
-<p><img src="/2019/02/22/javagc/young.jpg" alt="young"></p>
-<p>对象在Eden出生，确定存活转移到s0</p>
-<p><img src="/2019/02/22/javagc/y1.jpg" alt="y1"></p>
-<p>清除所有eden区对象，并将存活对象年龄设置为1</p>
-<p><img src="/2019/02/22/javagc/y2.jpg" alt="y2"></p>
-<p>Eden重新加载对象，重复上述过程到s2，年龄+1</p>
-<p><img src="/2019/02/22/javagc/y3.jpg" alt="y2"></p>
-<p>清空Eden和s0</p>
-<p><img src="/2019/02/22/javagc/y4.jpg" alt="y2"></p>
-<p>周而复始</p>
-<p><img src="/2019/02/22/javagc/y5.jpg" alt="y2"></p>
-<p>年龄达到某值，进入老年区</p>
-<blockquote>
-<p>-XX:MaxTenuringThreshold     //可调整此年龄</p>
-</blockquote>
-<p>年轻代溢出对象也会转移至老年代</p>
-<p>晋升到老年代的对象：</p>
-<ul>
-<li>经理多数Minor GC，年龄超过一定数值</li>
-<li>Survivor中放不下的对象</li>
-<li>新生成的大对象</li>
-</ul>
-<blockquote>
-<p>-XX:+PretenuerSizeThreshold</p>
-</blockquote>
-<h4 id="调优参数"><a href="#调优参数" class="headerlink" title="调优参数"></a>调优参数</h4><blockquote>
-<p>-XX:SurvivorRatio        //Eden,Survivor比例，默认8：1</p>
-<p>-XX:NewRatio            //年轻代与老年代比例，默认1：2</p>
-</blockquote>
-<h4 id="Full-GC"><a href="#Full-GC" class="headerlink" title="Full GC"></a>Full GC</h4><ul>
-<li>老年代存放周期较长的对象</li>
-<li>采用标记清理/整理算法GC</li>
-<li>速度慢</li>
-<li>频率低</li>
-</ul>
-<p>触发条件：</p>
-<ul>
-<li>老年代空间不足</li>
-<li>永久代空间不足（JDK7以后取消）</li>
-<li>CMS GC出现promotion/concurrent mode fail</li>
-<li>Minor GC晋升老年代平均大小大于剩余空间</li>
-<li>调用System.gc() 显式但不强制</li>
-<li>使用RMI进行RPC或管理的JDK应用，一小时执行一次</li>
-</ul>
-<h2 id="年轻代垃圾回收器"><a href="#年轻代垃圾回收器" class="headerlink" title="年轻代垃圾回收器"></a>年轻代垃圾回收器</h2><h3 id="Stop-the-World"><a href="#Stop-the-World" class="headerlink" title="Stop-the-World"></a>Stop-the-World</h3><ul>
-<li>JVM由于要执行GC而停止应用程序的执行</li>
-<li>任何GC算法都会发生</li>
-<li>减少stop-the-world实现GC优化</li>
-</ul>
-<h3 id="Safepoint"><a href="#Safepoint" class="headerlink" title="Safepoint"></a>Safepoint</h3><ul>
-<li>GC时不再产生垃圾</li>
-<li>分析过程中对象引用关系不会发生变化的点</li>
-<li>到达安全点程序才会暂停</li>
-<li>多在方法调用，循环跳转，异常跳转等</li>
-<li>安全点数量适中</li>
-</ul>
-<h3 id="JVM运行模式"><a href="#JVM运行模式" class="headerlink" title="JVM运行模式"></a>JVM运行模式</h3><ul>
-<li>server，启动慢运行快</li>
-<li>client，启动快运行慢</li>
-</ul>
-<blockquote>
-<p>java -version</p>
-</blockquote>
-<h3 id="垃圾收集器关系"><a href="#垃圾收集器关系" class="headerlink" title="垃圾收集器关系"></a>垃圾收集器关系</h3><p><img src="/2019/02/22/javagc/collector.jpg" alt="collector"></p>
-<h3 id="Serial收集器"><a href="#Serial收集器" class="headerlink" title="Serial收集器"></a>Serial收集器</h3><blockquote>
-<p>-XX:+UseSerialGC        //复制算法</p>
-</blockquote>
-<ul>
-<li>单线程收集，GC时，必须暂停所有工作线程</li>
-<li>简单高效，client默认年轻代收集器</li>
-</ul>
-<h3 id="ParNew收集器"><a href="#ParNew收集器" class="headerlink" title="ParNew收集器"></a>ParNew收集器</h3><blockquote>
-<p>-XX:+UserParNewGC        //复制算法</p>
-</blockquote>
-<ul>
-<li>多线程收集</li>
-<li>单核执行效率不及Serial，多核下有优势</li>
-</ul>
-<h3 id="Parallel-Scavenge收集器"><a href="#Parallel-Scavenge收集器" class="headerlink" title="Parallel Scavenge收集器"></a>Parallel Scavenge收集器</h3><blockquote>
-<p>-XX:+UserParallelGC        //复制算法</p>
-</blockquote>
-<ul>
-<li>吞吐量=运行用户代码时间/(运行用户代码时间+GC时间)</li>
-<li>关注吞吐量，忽视用户线程卡顿</li>
-<li>Server模式下默认的年轻代收集器</li>
-</ul>
-<h2 id="老年代垃圾回收器"><a href="#老年代垃圾回收器" class="headerlink" title="老年代垃圾回收器"></a>老年代垃圾回收器</h2><h3 id="Serial-Old收集器"><a href="#Serial-Old收集器" class="headerlink" title="Serial Old收集器"></a>Serial Old收集器</h3><blockquote>
-<p>-XX:+UseSerialOldGC        //标记整理算法</p>
-</blockquote>
-<ul>
-<li>单线程收集，必须停止工作线程</li>
-<li>简单高效</li>
-</ul>
-<h3 id="Parallel-Old收集器"><a href="#Parallel-Old收集器" class="headerlink" title="Parallel Old收集器"></a>Parallel Old收集器</h3><blockquote>
-<p>-XX:+UseParallelOldGC        //标记整理算法</p>
-</blockquote>
-<ul>
-<li>多线程，吞吐量优先</li>
-</ul>
-<h3 id="CMS收集器"><a href="#CMS收集器" class="headerlink" title="CMS收集器"></a><strong>CMS收集器</strong></h3><blockquote>
-<p>-XX:UseConcMarkSweepGC        //标记清除算法</p>
-</blockquote>
-<ul>
-<li>初始标记：stop-the-world，JVM停顿，时间短</li>
-<li>并发标记：并发追溯标记，程序不停顿</li>
-<li>并发预处理：查找执行并发标记时晋升老年代的对象，不停顿</li>
-<li>重新标记：暂停虚拟机，扫描CMS堆中剩余对象</li>
-<li>并发清理：清理垃圾对象，程序不卡顿</li>
-<li>并发重置：重置CMS收集器的数据结构</li>
-</ul>
-<p>特点：边产生边回收、碎片化严重</p>
-<h3 id="Garbage-First"><a href="#Garbage-First" class="headerlink" title="Garbage First"></a>Garbage First</h3><ul>
-<li>并行和并发</li>
-<li>分代收集</li>
-<li>空间整合</li>
-<li>可预测停顿</li>
-</ul>
-<p>1、将整个Java堆内存划分为多个大小相等的Region</p>
-<p>2、年轻代老年代不再物理隔阂</p>
-<p><img src="/2019/02/22/javagc/gf.jpg" alt="gf"></p>
-<h3 id="收集器结合情况"><a href="#收集器结合情况" class="headerlink" title="收集器结合情况"></a>收集器结合情况</h3><p><img src="/2019/02/22/javagc/gclink.jpg" alt="gclink"></p>
-<h2 id="Q"><a href="#Q" class="headerlink" title="Q"></a>Q</h2><ul>
-<li>Object.finalize()是否与C++析构函数作用相同</li>
-</ul>
-<p>不同</p>
-<p>析构函数调用确定，finalize()不确定，也就是还未运行完已经被GC</p>
-<ul>
-<li>Java中的强引用、软引用、弱引用和虚引用</li>
-</ul>
-<p>强引用：</p>
-<blockquote>
-<p>Object obj = new Object();</p>
-</blockquote>
-<p>1、即使抛出OutOfMemoryError也不会回收该对象</p>
-<p>2、可以通过设置为null来弱化作用，使其被回收</p>
-<p>软引用：</p>
-<blockquote>
-<p>SoftReference<string> softRef=new SoftReference<string>(str);</string></string></p>
-</blockquote>
-<p>1、对象有用但非必须状态</p>
-<p>2、只有当内存不足，GC才会回收</p>
-<p>3、可用来实现高速缓存</p>
-<p>弱引用</p>
-<blockquote>
-<p>WeakReference<string> weakRef=new WeakReference<string>(str);</string></string></p>
-</blockquote>
-<p>1、比软引用更弱</p>
-<p>2、GC时被回收</p>
-<p>3、GC优先级低，所以被回收概率也不大</p>
-<p>虚引用：</p>
-<p>1、形同虚设</p>
-<p>2、任何时候都可能被回收</p>
-<p>3、跟踪对象被GC的活动，起哨兵作用</p>
-<p>4、必须和引用队列ReferenceQueue联合使用</p>
-<p><img src="/2019/02/22/javagc/ref.jpg" alt="ref"></p>
-<p>四种引用的关系：</p>
-<p><img src="/2019/02/22/javagc/ref4.jpg" alt="ref4"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>JVM</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java Thread Basic</title>
     <url>/2019/02/24/javamt/</url>
     <content><![CDATA[<h1 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h1><p> <img src="/2019/02/24/javamt/thread.jpg" alt></p>
@@ -7610,6 +7610,64 @@ public class InterruptDemo {
       </tags>
   </entry>
   <entry>
+    <title>K8S Concepts</title>
+    <url>/2020/06/07/k8sintro/</url>
+    <content><![CDATA[<p>Concepts study here: </p>
+<p><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/</a></p>
+<h2 id="kubeadm-init"><a href="#kubeadm-init" class="headerlink" title="kubeadm init"></a>kubeadm init</h2><ol>
+<li><p>Kubeadmin init pre-flight check </p>
+<p>Check the version of K8S/OS, user(root), host, port, tools etc. </p>
+</li>
+<li><p>Genrate key and certification </p>
+<p>/etc/kubernetes/pki</p>
+</li>
+<li><p>Generate kubeconfig file </p>
+<p>.kube/config    /etc/kubernetes/*.conf    KUBECONFIG</p>
+</li>
+<li><p>Generate manifest file</p>
+<p>/etc/kubernetes/manifests</p>
+</li>
+<li><p>Download the image, wait for starting</p>
+<p>Download from k8s.gcr.io </p>
+<p>kubeadmin waits for response from localhost:6443.healthz (liveessProde, config by manifests/kube-piserver.yaml)</p>
+</li>
+<li><p>Save master configuration information </p>
+</li>
+<li><p>Mark master sign on current node</p>
+</li>
+<li><p>Config TLS</p>
+</li>
+<li><p>Install DNS and kube-proxy</p>
+<p>deploy kube-proxy via daemonSet</p>
+<p>deploy kibe-dns </p>
+</li>
+</ol>
+<h2 id="kubeadm-join"><a href="#kubeadm-join" class="headerlink" title="kubeadm join"></a>kubeadm join</h2><p>add nodes to cluster </p>
+<p>Disovery-token-ca-cert-hash: used by node to check master</p>
+<p>token: used by master to check node</p>
+<h2 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h2><p>Kubelet runs on all K8S nodes (including master), launched by OS init process(like systemd).</p>
+<p>Node pod manager</p>
+<p>config by /etc/systmd/system/kubelet.service.d/10 -kubeadm.conf</p>
+<p><code>systemctl daemon-reload &amp; systemctl estart kubelet</code></p>
+<h2 id="kube-apiserver"><a href="#kube-apiserver" class="headerlink" title="kube-apiserver"></a>kube-apiserver</h2><p>lauched by kubelet via static pod</p>
+<p>Pod spec: /etc/kubernetes/manifests/kube-apiserver.yaml</p>
+<h2 id="Etcd"><a href="#Etcd" class="headerlink" title="Etcd"></a>Etcd</h2><p>Lauched by kubelet via static pod</p>
+<p>Communicate with api-server based on TLS</p>
+<p>Runtime data saved in /var/lib/etcd</p>
+<h2 id="kube-controller-manager"><a href="#kube-controller-manager" class="headerlink" title="kube-controller-manager"></a>kube-controller-manager</h2><p>Responsible for nodes/pod/namespace/service account/service endpoint/resource in cluster</p>
+<p>/etc/kubernetes/manifests/kube-controller-manager.yaml</p>
+<h2 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h2><p>Scheduler for pod</p>
+<p>Lauched by kubelet via static pod</p>
+<h2 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h2><p>Config: /var/lib/kube-proxy/config.conf (pod)</p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>K8S</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Java Common Class</title>
     <url>/2019/02/25/jclass/</url>
     <content><![CDATA[<h1 id="Exception"><a href="#Exception" class="headerlink" title="Exception"></a>Exception</h1><h2 id="Error-amp-Exception"><a href="#Error-amp-Exception" class="headerlink" title="Error &amp; Exception"></a>Error &amp; Exception</h2><ul>
@@ -7994,97 +8052,6 @@ public class NIOPlainEchoServer {
       </tags>
   </entry>
   <entry>
-    <title>K8S Concepts</title>
-    <url>/2020/06/07/k8sintro/</url>
-    <content><![CDATA[<p>Concepts study here: </p>
-<p><a href="https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/</a></p>
-<h2 id="kubeadm-init"><a href="#kubeadm-init" class="headerlink" title="kubeadm init"></a>kubeadm init</h2><ol>
-<li><p>Kubeadmin init pre-flight check </p>
-<p>Check the version of K8S/OS, user(root), host, port, tools etc. </p>
-</li>
-<li><p>Genrate key and certification </p>
-<p>/etc/kubernetes/pki</p>
-</li>
-<li><p>Generate kubeconfig file </p>
-<p>.kube/config    /etc/kubernetes/*.conf    KUBECONFIG</p>
-</li>
-<li><p>Generate manifest file</p>
-<p>/etc/kubernetes/manifests</p>
-</li>
-<li><p>Download the image, wait for starting</p>
-<p>Download from k8s.gcr.io </p>
-<p>kubeadmin waits for response from localhost:6443.healthz (liveessProde, config by manifests/kube-piserver.yaml)</p>
-</li>
-<li><p>Save master configuration information </p>
-</li>
-<li><p>Mark master sign on current node</p>
-</li>
-<li><p>Config TLS</p>
-</li>
-<li><p>Install DNS and kube-proxy</p>
-<p>deploy kube-proxy via daemonSet</p>
-<p>deploy kibe-dns </p>
-</li>
-</ol>
-<h2 id="kubeadm-join"><a href="#kubeadm-join" class="headerlink" title="kubeadm join"></a>kubeadm join</h2><p>add nodes to cluster </p>
-<p>Disovery-token-ca-cert-hash: used by node to check master</p>
-<p>token: used by master to check node</p>
-<h2 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h2><p>Kubelet runs on all K8S nodes (including master), launched by OS init process(like systemd).</p>
-<p>Node pod manager</p>
-<p>config by /etc/systmd/system/kubelet.service.d/10 -kubeadm.conf</p>
-<p><code>systemctl daemon-reload &amp; systemctl estart kubelet</code></p>
-<h2 id="kube-apiserver"><a href="#kube-apiserver" class="headerlink" title="kube-apiserver"></a>kube-apiserver</h2><p>lauched by kubelet via static pod</p>
-<p>Pod spec: /etc/kubernetes/manifests/kube-apiserver.yaml</p>
-<h2 id="Etcd"><a href="#Etcd" class="headerlink" title="Etcd"></a>Etcd</h2><p>Lauched by kubelet via static pod</p>
-<p>Communicate with api-server based on TLS</p>
-<p>Runtime data saved in /var/lib/etcd</p>
-<h2 id="kube-controller-manager"><a href="#kube-controller-manager" class="headerlink" title="kube-controller-manager"></a>kube-controller-manager</h2><p>Responsible for nodes/pod/namespace/service account/service endpoint/resource in cluster</p>
-<p>/etc/kubernetes/manifests/kube-controller-manager.yaml</p>
-<h2 id="kube-scheduler"><a href="#kube-scheduler" class="headerlink" title="kube-scheduler"></a>kube-scheduler</h2><p>Scheduler for pod</p>
-<p>Lauched by kubelet via static pod</p>
-<h2 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h2><p>Config: /var/lib/kube-proxy/config.conf (pod)</p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>K8S</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Linux Tips1</title>
-    <url>/2019/01/10/linux/</url>
-    <content><![CDATA[<h1 id="Linux体系架构"><a href="#Linux体系架构" class="headerlink" title="Linux体系架构"></a>Linux体系架构</h1><p><img src="/2019/01/10/linux/struct.jpg" alt="struct"></p>
-<h1 id="查找检索"><a href="#查找检索" class="headerlink" title="查找检索"></a>查找检索</h1><h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><blockquote>
-<p>find path [options] params</p>
-<p>find -name “file*”        //当前目录</p>
-<p>find / -name “file.txt”        //全局</p>
-</blockquote>
-<p>在指定目录下查找文件</p>
-<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><blockquote>
-<p>grep “haha” file.txt</p>
-</blockquote>
-<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><ul>
-<li>可将指令连接</li>
-<li><p>|</p>
-<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2></li>
-</ul>
-<p><img src="/2019/01/10/linux/awk.jpg" alt="awk"></p>
-<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><ul>
-<li>sed [option] command filename</li>
-<li>stream editor</li>
-<li>适合行内容编辑</li>
-</ul>
-<p><img src="/2019/01/10/linux/sed.jpg" alt="sed"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Java Memory Model</title>
     <url>/2019/02/22/memory/</url>
     <content><![CDATA[<h1 id="JVM内存模型架构"><a href="#JVM内存模型架构" class="headerlink" title="JVM内存模型架构"></a>JVM内存模型架构</h1><p><img src="/2019/02/22/memory/jvm.jpg" alt="jvm"></p>
@@ -8172,354 +8139,532 @@ public class NIOPlainEchoServer {
       </tags>
   </entry>
   <entry>
-    <title>Seven Principles of Software Design</title>
-    <url>/2019/04/10/principles/</url>
-    <content><![CDATA[<blockquote>
-<p><a href="https://github.com/rexllz/design" target="_blank" rel="noopener">https://github.com/rexllz/design</a></p>
-</blockquote>
-<h1 id="开闭原则（Open-Closed-）"><a href="#开闭原则（Open-Closed-）" class="headerlink" title="开闭原则（Open/Closed ）"></a>开闭原则（Open/Closed ）</h1><p><strong>对扩展开放、对修改关闭</strong></p>
+    <title>Netty Demo</title>
+    <url>/2019/06/11/nettydemo/</url>
+    <content><![CDATA[<h1 id="初识Netty"><a href="#初识Netty" class="headerlink" title="初识Netty"></a>初识Netty</h1><p>Netty是一个提供了易于使用的API的客户端/服务器框架</p>
 <ul>
-<li><p>提高软件的可复用和可维护性</p>
-</li>
-<li><p>面向抽象编程</p>
-</li>
-<li><p>面向接口编程</p>
-</li>
+<li>高并发</li>
+<li>NIO（非阻塞IO）</li>
+<li>传输快，零拷贝</li>
 </ul>
-<pre><code class="java">public interface ICourse {
-    Integer getId();
-    String getName();
-    Double getPrice();
-}
-</code></pre>
-<pre><code class="java">public class JavaCourse implements ICourse{
-    private Integer Id;
-    private String name;
-    private Double price;
-
-    public JavaCourse(Integer id, String name, Double price) {
-        this.Id = id;
-        this.name = name;
-        this.price = price;
-    }
-
-    public Integer getId() {
-        return this.Id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Double getPrice() {
-        return this.price;
-    }
-}
-
-</code></pre>
-<pre><code class="java">public class JavaDiscountCourse extends JavaCourse{
-
-    public JavaDiscountCourse(Integer id, String name, Double price) {
-        super(id, name, price);
-    }
-
-    public Double getDiscountPrice(){
-        return super.getPrice()*0.8;
-    }
-
-    public Double getOriginPrice(){
-        return super.getPrice();
-    }
-}
-</code></pre>
-<p><img src="/2019/04/10/principles/oc.jpg" alt="oc"></p>
-<h1 id="依赖倒置原则（Dependency-Inversion）"><a href="#依赖倒置原则（Dependency-Inversion）" class="headerlink" title="依赖倒置原则（Dependency Inversion）"></a>依赖倒置原则（Dependency Inversion）</h1><p><strong>高层模块不应该依赖底层模块，二者都应该依赖抽象</strong></p>
+<p><img src="/2019/06/11/nettydemo/n1.jpg" alt="n1"></p>
+<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>线程访问资源，该资源是否准备就绪的一种处理方式</p>
 <ul>
-<li>抽象不应该依赖细节，细节应该依赖抽象</li>
-<li>针对接口编程，不可针对实现编程</li>
+<li><p>阻塞：如果资源占用，则一直等待</p>
+</li>
+<li><p>非阻塞：如果资源占用，则返回一个结果</p>
+</li>
 </ul>
-<h2 id="高层依赖底层的情况"><a href="#高层依赖底层的情况" class="headerlink" title="高层依赖底层的情况"></a>高层依赖底层的情况</h2><pre><code class="java">public class Rex {
-    public void studyJava(){
-        System.out.println(&quot;study java&quot;);
-    }
-    public void studyPython(){
-        System.out.println(&quot;study python&quot;);
-    }
-    public void studyJs(){
-        System.out.println(&quot;study js&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">//v1 面向实现编程
-//高层依赖底层
-//test 依赖 rex
-public static void main(String[] args) {
-        Rex rex = new Rex();
-        rex.studyJava();
-        rex.studyJs();
-        rex.studyPython();
-    }
-</code></pre>
-<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><pre><code class="java">public class Rex {
-    public void studyCourse(ICourse iCourse){
-        iCourse.studyCourse();
-    }
-}
-</code></pre>
-<pre><code class="java">//依赖倒置
-    public static void main(String[] args) {
-        Rex rex = new Rex();
-        rex.studyCourse(new JavaCourse());
-        rex.studyCourse(new JsCourse());
-        rex.studyCourse(new PythonCourse());
-    }
-</code></pre>
-<p><img src="/2019/04/10/principles/di.jpg" alt="di"></p>
-<h2 id="构造器注入-单例"><a href="#构造器注入-单例" class="headerlink" title="构造器注入(单例)"></a>构造器注入(单例)</h2><pre><code class="java">public class Rex {
-    private ICourse iCourse;
-    public Rex(ICourse iCourse) {
-        this.iCourse = iCourse;
-    }
-    public void studyImoocCourse(){
-        iCourse.studyCourse();
-    }
-}
-</code></pre>
-<pre><code class="java">//v3 构造器注入
-public static void main(String[] args) {
-        Rex rex = new Rex(new JavaCourse());
-        rex.studyImoocCourse();
-}
-</code></pre>
-<h2 id="setter注入"><a href="#setter注入" class="headerlink" title="setter注入"></a>setter注入</h2><pre><code class="java">public class Rex {
-    private ICourse iCourse;
-    public void setiCourse(ICourse iCourse){
-        this.iCourse = iCourse;
-    }
-    public void studyImoocCourse(){
-        iCourse.studyCourse();
-    }
-}
-</code></pre>
-<pre><code class="java">//v4 setter injection
-public static void main(String[] args) {
-        Rex rex = new Rex();
-        rex.setiCourse(new JavaCourse());
-        rex.studyImoocCourse();
-
-        rex.setiCourse(new PythonCourse());
-        rex.studyImoocCourse();
-
-        rex.setiCourse(new JsCourse());
-        rex.studyImoocCourse();
-}
-</code></pre>
-<h1 id="单一职责原则（Single-Responsibility-）"><a href="#单一职责原则（Single-Responsibility-）" class="headerlink" title="单一职责原则（Single Responsibility ）"></a>单一职责原则（Single Responsibility ）</h1><ul>
-<li>不存在多于一个导致类变更的原因</li>
-<li>一个类、接口、方法只负责一个职责</li>
-<li>降低复杂度，提高可读性、可维护性、降低风险</li>
+<h2 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h2><p>访问数据的一种机制</p>
+<p><img src="/2019/06/11/nettydemo/n2.jpg" alt="n2"></p>
+<h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><ul>
+<li><p>BIO</p>
+<p>同步阻塞IO，Block IO</p>
+<p>并发处理能力差，依赖网速带宽</p>
+</li>
 </ul>
-<h2 id="类的单一原则"><a href="#类的单一原则" class="headerlink" title="类的单一原则"></a>类的单一原则</h2><p><strong>不遵循单一职责原则的例子</strong></p>
-<pre><code class="java">public class Bird {
-    public void mainMoveMode(String birdName){
-        if(&quot;鸵鸟&quot;.equals(birdName)){
-            System.out.println(birdName+&quot;用脚走&quot;);
-        }else{
-            System.out.println(birdName+&quot;用翅膀飞&quot;);
+<p><img src="/2019/06/11/nettydemo/n3.jpg" alt="n3"></p>
+<p>通过增加线程，一应一答，改良后引入线程池</p>
+<ul>
+<li><p>NIO</p>
+<p>非堵塞IO，Non-Block IO</p>
+<p>线程会做其他事情，定时再去查看资源情况</p>
+<p>引入selector多路复用选择器，buffer等</p>
+</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n4.jpg" alt="n4"></p>
+<p>客户端增多，不会影响性能</p>
+<ul>
+<li><p>AIO</p>
+<p>异步非阻塞</p>
+<p>线程做其他事情，释放资源者通知线程</p>
+</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n5.jpg" alt="n5"></p>
+<p><img src="/2019/06/11/nettydemo/n6.jpg" alt="n6"></p>
+<h2 id="Netty的线程模型"><a href="#Netty的线程模型" class="headerlink" title="Netty的线程模型"></a>Netty的线程模型</h2><ul>
+<li>单线程模型：所有操作由一个NIO单线程处理</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n7.jpg" alt="n7"></p>
+<ul>
+<li>多线程模型：由一组NIO线程处理IO操作</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n8.jpg" alt="n8"></p>
+<ul>
+<li>主从线程模型：一组线程池接受请求，一组线程池处理IO</li>
+</ul>
+<p><img src="/2019/06/11/nettydemo/n9.jpg" alt="n9"></p>
+<h1 id="简单服务器编写"><a href="#简单服务器编写" class="headerlink" title="简单服务器编写"></a>简单服务器编写</h1><p>引入依赖</p>
+<pre><code class="xml">&lt;dependency&gt;
+            &lt;groupId&gt;io.netty&lt;/groupId&gt;
+            &lt;artifactId&gt;netty-all&lt;/artifactId&gt;
+            &lt;version&gt;4.1.25.Final&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<pre><code class="java">public class HelloServer {
+    public static void main(String[] args) throws Exception{
+
+        //declare a thread group, to accept the connect from the client
+        //bossgroup
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        //workergroup,do the task from the bossgroup
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+
+        try {
+            //create the netty server
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(bossGroup,workerGroup)
+                    .channel(NioServerSocketChannel.class)   //set nio pattern
+                    .childHandler(new HelloServerIni());
+
+            //start the server and set the port
+            ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();
+
+            //listen the closed channel and set sync
+            channelFuture.channel().closeFuture().sync();
+        }finally {
+            bossGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
         }
     }
 }
 </code></pre>
-<pre><code class="java">public class Test {
-    public static void main(String[] args) {
-        Bird bird = new Bird();
-        bird.mainMoveMode(&quot;鸵鸟&quot;);
-        bird.mainMoveMode(&quot;大雁&quot;);
-    }
-}
-</code></pre>
-<p><strong>类的单一原则修改</strong></p>
-<pre><code class="java">public class FlyBird {
-    public void mainMoveMode(String birdName){
-        System.out.println(birdName+&quot;用翅膀飞&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">public class WalkBird {
-    public void mainMoveMode(String birdName){
-        System.out.println(birdName+&quot;用脚走&quot;);
-    }
-}
-</code></pre>
-<pre><code class="java">public class Test {
-    public static void main(String[] args) {
-        WalkBird walkBird = new WalkBird();
-        walkBird.mainMoveMode(&quot;鸵鸟&quot;);
-        FlyBird flyBird = new FlyBird();
-        flyBird.mainMoveMode(&quot;大雁&quot;);
-    }
-}
-</code></pre>
-<p><img src="/2019/04/10/principles/sr.jpg" alt="sr"></p>
-<h2 id="接口的单一原则"><a href="#接口的单一原则" class="headerlink" title="接口的单一原则"></a>接口的单一原则</h2><p><img src="/2019/04/10/principles/isr.jpg" alt="isr"></p>
-<h2 id="方法的单一原则"><a href="#方法的单一原则" class="headerlink" title="方法的单一原则"></a>方法的单一原则</h2><p>每个方法对单一属性进行修改或者实现单一功能</p>
-<h1 id="接口隔离原则（Interface-Segregation）"><a href="#接口隔离原则（Interface-Segregation）" class="headerlink" title="接口隔离原则（Interface Segregation）"></a>接口隔离原则（Interface Segregation）</h1><ul>
-<li>采用多个接口，而不依赖于单一总接口</li>
-<li>一个类与一个类的依赖应该建立在最小的接口上</li>
-<li>接口尽量小、尽量细化</li>
-</ul>
-<pre><code class="java">public interface IAnimalAction {
-    void eat();
-
-    void fly();
-
-    void swim();
-}
-</code></pre>
-<pre><code class="java">public interface IFlyAnimalAction {
-    void fly();
-}
-</code></pre>
-<pre><code class="java">public interface ISwimAnimalAction {
-    void swim();
-}
-</code></pre>
-<pre><code class="java">public interface IEatAnimalAction {
-    void eat();
-}
-</code></pre>
-<p><strong>需要适度</strong></p>
-<p><img src="/2019/04/10/principles/is.jpg" alt="is"></p>
-<p>比起单一职责，更倾向于架构，接口，而不是功能</p>
-<h1 id="迪米特原则（最少知道）"><a href="#迪米特原则（最少知道）" class="headerlink" title="迪米特原则（最少知道）"></a>迪米特原则（最少知道）</h1><ul>
-<li>一个对象应该对其他对象保持最少的了解</li>
-<li>降低类与类的耦合</li>
-<li>只和朋友类保持关系（内部使用的类不是朋友类）</li>
-</ul>
-<p><img src="/2019/04/10/principles/demeter.jpg" alt="demeter"></p>
-<h1 id="里氏替换原则（Liskov-Substitution，LSP）"><a href="#里氏替换原则（Liskov-Substitution，LSP）" class="headerlink" title="里氏替换原则（Liskov Substitution，LSP）"></a>里氏替换原则（Liskov Substitution，LSP）</h1><ul>
-<li>如果软件可以适用父类，那一定能适用子类</li>
-<li>子类可以拓展父类的功能，但不能改变已有的功能</li>
-<li>子类可以实现父类的抽象方法，但不能修改非抽象方法</li>
-<li>子类可以增加方法</li>
-<li>重载方法时，入参应当更宽松</li>
-<li><p>子类重载或重写方法时，输出要更严格</p>
-</li>
-<li><p><strong>有效约束继承泛滥，体现开闭原则</strong></p>
-</li>
-<li><strong>增加健壮性、拓展性</strong></li>
-</ul>
-<p>不符合里氏替换的例子</p>
-<pre><code class="java">public class Rectangle {
-    private long length;
-    private long width;
-
+<p>每个channel由多个handler组成管道pipeline</p>
+<p><img src="/2019/06/11/nettydemo/n10.jpg" alt="n10"></p>
+<pre><code class="java">public class HelloServerIni extends ChannelInitializer&lt;SocketChannel&gt; {
     @Override
-    public long getWidth() {
-        return width;
-    }
+    protected void initChannel(SocketChannel channel) throws Exception {
+        //get pipeline
+        ChannelPipeline channelPipeline = channel.pipeline();
+        //add handler by pipeline
+        channelPipeline.addLast(&quot;HttpServerCodec&quot;,new HttpServerCodec());
+        channelPipeline.addLast(&quot;customHandler&quot;,new CustomHandler());
 
-    @Override
-    public long getLength() {
-        return length;
-    }
-
-    public void setLength(long length) {
-        this.length = length;
-    }
-
-    public void setWidth(long width) {
-        this.width = width;
     }
 }
 </code></pre>
-<pre><code class="java">public class Square extends Rectangle {
-    private long sideLength;
-
-    public long getSideLength() {
-        return sideLength;
-    }
-
-    public void setSideLength(long sideLength) {
-        this.sideLength = sideLength;
-    }
-
+<pre><code class="java">public class CustomHandler extends SimpleChannelInboundHandler&lt;HttpObject&gt; {
     @Override
-    public long getWidth() {
-        return sideLength;
-    }
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpObject httpObject) throws Exception {
 
-    @Override
-    public long getLength() {
-        return sideLength;
-    }
-}
-</code></pre>
-<pre><code class="java">public static void resize(Rectangle rectangle){
-        while (rectangle.getWidth() &lt;= rectangle.getLength()){
-            rectangle.setWidth(rectangle.getWidth()+1);
-            System.out.println(&quot;width:&quot;+rectangle.getWidth() + &quot; length:&quot;+rectangle.getLength());
+        Channel channel = channelHandlerContext.channel();
+
+        if (httpObject instanceof HttpRequest){
+
+            System.out.println(channel.remoteAddress());
+
+            ByteBuf content = Unpooled.copiedBuffer(&quot;Hello Netty&quot;, CharsetUtil.UTF_8);
+
+            FullHttpResponse fullHttpResponse =
+                    new DefaultFullHttpResponse(HttpVersion.HTTP_1_0,
+                            HttpResponseStatus.OK,
+                            content);
+
+            fullHttpResponse.headers().set(HttpHeaderNames.CONTENT_TYPE,&quot;text/plain&quot;);
+            fullHttpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH,content.readableBytes());
+
+            channel.writeAndFlush(fullHttpResponse);
         }
-        System.out.println(&quot;resize方法结束 width:&quot;+rectangle.getWidth() + 
-                           &quot; length:&quot;+rectangle.getLength());
+
     }
+}
 </code></pre>
-<p>新建上层接口</p>
-<p><img src="/2019/04/10/principles/lsp.jpg" alt="lsp"></p>
-<p>从而避免了resize中传入square，因为square不再是rectangle子类</p>
-<h1 id="合成复用原则"><a href="#合成复用原则" class="headerlink" title="合成复用原则"></a>合成复用原则</h1><ul>
-<li>has-A &amp; contains-A 代替 is-A</li>
-<li>降低耦合</li>
+<h1 id="Netty生命周期"><a href="#Netty生命周期" class="headerlink" title="Netty生命周期"></a>Netty生命周期</h1><p><img src="/2019/06/11/nettydemo/n11.jpg" alt="n11"></p>
+<p><img src="/2019/06/11/nettydemo/n12.jpg" alt="n12"></p>
+<h1 id="实时通讯Demo"><a href="#实时通讯Demo" class="headerlink" title="实时通讯Demo"></a>实时通讯Demo</h1><p>三种实现方式：</p>
+<ul>
+<li>Ajax轮询</li>
+<li>Long pull</li>
+<li>websocket</li>
 </ul>
-<pre><code class="java">public abstract class DBConnection {
-    //    public String getConnection(){
-//        return &quot;MySQL数据库连接&quot;;
-//    }
-    public abstract String getConnection();
-}
-</code></pre>
-<pre><code class="java">public class MySQLConnection extends DBConnection {
-    @Override
-    public String getConnection() {
-        return &quot;MySQL数据库连接&quot;;
-    }
-}
-</code></pre>
-<pre><code class="java">public class PostgreSQLConnection extends DBConnection {
-    @Override
-    public String getConnection() {
-        return &quot;PostgreSQL数据库连接&quot;;
-    }
-}
-</code></pre>
-<pre><code class="java">public class ProductDao{
-    private DBConnection dbConnection;
+<h2 id="server端"><a href="#server端" class="headerlink" title="server端"></a>server端</h2><p>chatserver</p>
+<pre><code class="java">public class ChatServer {
+    public static void main(String[] args) throws Exception{
+        EventLoopGroup maingroup = new NioEventLoopGroup();
+        EventLoopGroup subgroup = new NioEventLoopGroup();
 
-    public void setDbConnection(DBConnection dbConnection) {
-        this.dbConnection = dbConnection;
+        try {
+
+            ServerBootstrap serverBootstrap = new ServerBootstrap();
+            serverBootstrap.group(maingroup,subgroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new ChatServerIni());
+
+            ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();
+            channelFuture.channel().closeFuture().sync();
+
+        }finally {
+            maingroup.shutdownGracefully();
+            subgroup.shutdownGracefully();
+
+        }
+
+    }
+}
+</code></pre>
+<p>chatserverini</p>
+<pre><code class="java">public class ChatServerIni extends ChannelInitializer&lt;SocketChannel&gt; {
+
+    @Override
+    protected void initChannel(SocketChannel channel) throws Exception {
+        ChannelPipeline channelPipeline = channel.pipeline();
+
+        channelPipeline.addLast(new HttpServerCodec());
+
+        //support write big data stream
+        channelPipeline.addLast(new ChunkedWriteHandler());
+
+        //max contend length
+        //aggregate the http request and http response
+        channelPipeline.addLast(new HttpObjectAggregator(1024*64));
+
+        //--------------to support http---------------------
+
+        //to set the websocket route
+        //do something about handshaking(close, ping, pong)
+        channelPipeline.addLast(new WebSocketServerProtocolHandler(&quot;/ws&quot;));
+
+        //custom handler
+        channelPipeline.addLast(new ChatHandler());
+    }
+}
+</code></pre>
+<p>chatserver handler</p>
+<pre><code class="java">public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFrame&gt; {
+
+    //manage the clients channels
+    private static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+
+        //add client channel to channel group
+        clients.add(ctx.channel());
     }
 
-    public void addProduct(){
-        String conn = dbConnection.getConnection();
-        System.out.println(&quot;使用&quot;+conn+&quot;增加产品&quot;);
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        super.handlerRemoved(ctx);
+
+        System.out.println(ctx.channel().id().asLongText());
+        System.out.println(ctx.channel().id().asShortText());
+
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
+
+        String content = msg.text();
+        System.out.println(content);
+
+        for (Channel channel: clients){
+            channel.writeAndFlush(
+                    new TextWebSocketFrame(&quot;[server get message:]&quot;
+                            + LocalDateTime.now() + content));
+
+        }
+
+//        clients.writeAndFlush (
+//                new TextWebSocketFrame(&quot;[server get message:]&quot;
+//                + LocalDateTime.now() + content));
     }
 }
 </code></pre>
-<pre><code class="java">public class Test {
-    public static void main(String[] args) {
-        ProductDao productDao = new ProductDao();
-        productDao.setDbConnection(new PostgreSQLConnection());
-        productDao.addProduct();
+<h2 id="client端"><a href="#client端" class="headerlink" title="client端"></a>client端</h2><pre><code class="js">var socket = new WebSocket(&quot;ws://[ip]:[port]&quot;); 
+</code></pre>
+<p>生命周期：</p>
+<ul>
+<li>onopen()</li>
+<li>onmessage()</li>
+<li>onerror()</li>
+<li>onclose()</li>
+</ul>
+<p>主动方法：</p>
+<ul>
+<li>Socket.send()</li>
+<li>Socket.close()</li>
+</ul>
+<pre><code class="html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;meta charset=&quot;utf-8&quot; /&gt;
+        &lt;title&gt;&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+
+        &lt;div&gt;send message:&lt;/div&gt;
+        &lt;input type=&quot;text&quot; id=&quot;msgContent&quot; /&gt;
+        &lt;input type=&quot;button&quot; value=&quot;send&quot; onclick=&quot;CHAT.chat()&quot;/&gt;
+
+        &lt;div&gt;get message:&lt;/div&gt;
+        &lt;div id=&quot;receiveMsg&quot; style=&quot;background-color: antiquewhite;&quot;&gt;&lt;/div&gt;
+
+        &lt;script type=&quot;application/javascript&quot;&gt;
+
+            window.CHAT = {
+                socket: null,
+                init: function(){
+                    if(window.WebSocket){
+                        CHAT.socket = new WebSocket(&quot;ws://127.0.0.1:8088/ws&quot;);
+                        CHAT.socket.onopen = function(){
+                            console.log(&quot;on open&quot;);
+                        };
+                        CHAT.socket.onclose = function(){
+                            console.log(&quot;on close&quot;);
+                        };
+                        CHAT.socket.onerror = function(){
+                            console.log(&quot;on error&quot;);
+                        };
+                        CHAT.socket.onmessage = function(e){
+                            console.log(&quot;on message&quot; + e.data);
+                            var receiveMsg = document.getElementById(&quot;receiveMsg&quot;);
+                            var html = receiveMsg.innerHTML;
+                            receiveMsg.innerHTML = html + &quot;&lt;br/&gt;&quot; + e.data;
+                        };
+
+                    }else{
+                        alert(&quot;no support for websocket&quot;);
+                    }
+                },
+                chat: function(){
+                    var msg = document.getElementById(&quot;msgContent&quot;);
+                    CHAT.socket.send(msg.value);
+                }
+            }
+            CHAT.init();
+
+        &lt;/script&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+
+</code></pre>
+<p><img src="/2019/06/11/nettydemo/n13.jpg" alt="n13"></p>
+<h2 id="Springboot中整合"><a href="#Springboot中整合" class="headerlink" title="Springboot中整合"></a>Springboot中整合</h2><p>修改chatserver</p>
+<pre><code class="java">@Component
+public class ChatServer {
+
+    private static class SingletionChatServer{
+        static final ChatServer instance = new ChatServer();
+    }
+
+    public static ChatServer getInstance(){
+        return SingletionChatServer.instance;
+    }
+
+    private EventLoopGroup maingroup;
+    private EventLoopGroup subgroup;
+    private ChannelFuture channelFuture;
+    private ServerBootstrap serverBootstrap;
+
+    public ChatServer() {
+        maingroup = new NioEventLoopGroup();
+        subgroup = new NioEventLoopGroup();
+        serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(maingroup,subgroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChatServerIni());
+
+    }
+
+    public void start() {
+        this.channelFuture = serverBootstrap.bind(8088);
+        System.err.println(&quot;netty started&quot;);
     }
 }
 </code></pre>
-<p><img src="/2019/04/10/principles/ca.jpg" alt="ca"></p>
+<p>在springapplication同级目录下创建nettybooter类</p>
+<pre><code class="java">@Component
+public class NettyBooter implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        if(contextRefreshedEvent.getApplicationContext().getParent() == null){
+            try {
+                ChatServer.getInstance().start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+}
+</code></pre>
+<h1 id="项目部分代码"><a href="#项目部分代码" class="headerlink" title="项目部分代码"></a>项目部分代码</h1><pre><code class="java">package hku.knowname.weasel.chatmanagement.chatserver;
+
+import hku.knowname.weasel.chatmanagement.ChatService.ChatService;
+import hku.knowname.weasel.chatmanagement.SpringUtil;
+import hku.knowname.weasel.chatmanagement.enums.MsgActionEnum;
+import hku.knowname.weasel.chatmanagement.utils.JsonUtils;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.group.ChannelGroup;
+import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import org.apache.commons.lang3.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFrame&gt; {
+
+    //manage the clients channels
+    public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+
+        //add client channel to channel group
+        clients.add(ctx.channel());
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        super.handlerRemoved(ctx);
+
+        System.out.println(ctx.channel().id().asLongText());
+        System.out.println(ctx.channel().id().asShortText());
+
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
+
+        String content = msg.text();
+//        System.out.println(content);
+
+        Channel currentChannel = ctx.channel();
+
+        //1. get the message from client
+        DataContent dataContent = JsonUtils.jsonToPojo(content, DataContent.class);
+        Integer action = dataContent.getAction();
+
+        //2. judge the message type
+        if (action == MsgActionEnum.CONNECT.type){
+            // 2.1 link the channel and user id
+            int sendID = dataContent.getChatMsg().getSendId();
+            UserChannelRel.put(sendID, currentChannel);
+
+            //test
+            for (Channel c : clients){
+                System.out.println(c.id().asLongText());
+            }
+            UserChannelRel.output();
+
+        }else if (action == MsgActionEnum.CHAT.type){
+            ChatMsg chatMsg = dataContent.getChatMsg();
+            String msgText = chatMsg.getMsg();
+            int receivedid = chatMsg.getReceiveId();
+            int sendid = chatMsg.getSendId();
+
+            // 2.2 chat type: save the chat message in db, tag the status[no read]
+            //save chat to db
+            ChatService chatService = (ChatService) SpringUtil.getBean(&quot;chatServiceImp&quot;);
+
+            String msgId = chatService.saveMsg(chatMsg);
+            chatMsg.setChatId(msgId);
+
+            //send msg
+            Channel receiverChannel = UserChannelRel.get(receivedid);
+            if (receiverChannel == null){
+                // receiver user offline , send msg TODO
+            }else {
+                // find this receiver in channel group
+                Channel findChannel = clients.find(receiverChannel.id());
+                if (findChannel != null){
+                    //user online
+                    receiverChannel.writeAndFlush(
+                            new TextWebSocketFrame(JsonUtils.objectToJson(chatMsg)));
+
+                }else {
+                    // user offline TODO
+
+                }
+            }
+
+
+
+
+        }else if (action == MsgActionEnum.SIGNED.type){
+            // 2.3 read type: change the status to the [already read]
+            ChatService chatService = (ChatService) SpringUtil.getBean(&quot;chatServiceImp&quot;);
+            //extand means the chatid in the signed type, with comma
+            String chatidstr = dataContent.getExtand();
+            String[] chatids = chatidstr.split(&quot;,&quot;);
+            List&lt;String&gt; chatidList = new ArrayList&lt;&gt;();
+            for (String mid: chatids){
+                if (StringUtils.isNotBlank(mid)){
+                    chatidList.add(mid);
+                }
+            }
+            System.out.println(chatidList.toString());
+
+            if (chatidList != null &amp;&amp; !chatidList.isEmpty() &amp;&amp; chatidList.size()&gt;0){
+                //sign the msg batch
+                chatService.updateMsgSigned(chatidList);
+
+            }
+        }else if (action == MsgActionEnum.KEEPALIVE.type){
+            // 2.4 heartbeat
+        }
+
+//        for (Channel channel: clients){
+//            channel.writeAndFlush(
+//                    new TextWebSocketFrame(&quot;[server get message:]&quot;
+//                            + LocalDateTime.now() + content));
+//        }
+
+        clients.writeAndFlush (
+                new TextWebSocketFrame(&quot;[server get message:]&quot;
+                + LocalDateTime.now() + content));
+
+
+    }
+}
+
+</code></pre>
 ]]></content>
       <categories>
         <category>study note</category>
       </categories>
       <tags>
-        <tag>Design Patterns</tag>
+        <tag>Java</tag>
+        <tag>Netty</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Linux Tips1</title>
+    <url>/2019/01/10/linux/</url>
+    <content><![CDATA[<h1 id="Linux体系架构"><a href="#Linux体系架构" class="headerlink" title="Linux体系架构"></a>Linux体系架构</h1><p><img src="/2019/01/10/linux/struct.jpg" alt="struct"></p>
+<h1 id="查找检索"><a href="#查找检索" class="headerlink" title="查找检索"></a>查找检索</h1><h2 id="find"><a href="#find" class="headerlink" title="find"></a>find</h2><blockquote>
+<p>find path [options] params</p>
+<p>find -name “file*”        //当前目录</p>
+<p>find / -name “file.txt”        //全局</p>
+</blockquote>
+<p>在指定目录下查找文件</p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><blockquote>
+<p>grep “haha” file.txt</p>
+</blockquote>
+<h2 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h2><ul>
+<li>可将指令连接</li>
+<li><p>|</p>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2></li>
+</ul>
+<p><img src="/2019/01/10/linux/awk.jpg" alt="awk"></p>
+<h2 id="sed"><a href="#sed" class="headerlink" title="sed"></a>sed</h2><ul>
+<li>sed [option] command filename</li>
+<li>stream editor</li>
+<li>适合行内容编辑</li>
+</ul>
+<p><img src="/2019/01/10/linux/sed.jpg" alt="sed"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -9717,6 +9862,357 @@ public class Producer {
       </tags>
   </entry>
   <entry>
+    <title>Seven Principles of Software Design</title>
+    <url>/2019/04/10/principles/</url>
+    <content><![CDATA[<blockquote>
+<p><a href="https://github.com/rexllz/design" target="_blank" rel="noopener">https://github.com/rexllz/design</a></p>
+</blockquote>
+<h1 id="开闭原则（Open-Closed-）"><a href="#开闭原则（Open-Closed-）" class="headerlink" title="开闭原则（Open/Closed ）"></a>开闭原则（Open/Closed ）</h1><p><strong>对扩展开放、对修改关闭</strong></p>
+<ul>
+<li><p>提高软件的可复用和可维护性</p>
+</li>
+<li><p>面向抽象编程</p>
+</li>
+<li><p>面向接口编程</p>
+</li>
+</ul>
+<pre><code class="java">public interface ICourse {
+    Integer getId();
+    String getName();
+    Double getPrice();
+}
+</code></pre>
+<pre><code class="java">public class JavaCourse implements ICourse{
+    private Integer Id;
+    private String name;
+    private Double price;
+
+    public JavaCourse(Integer id, String name, Double price) {
+        this.Id = id;
+        this.name = name;
+        this.price = price;
+    }
+
+    public Integer getId() {
+        return this.Id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public Double getPrice() {
+        return this.price;
+    }
+}
+
+</code></pre>
+<pre><code class="java">public class JavaDiscountCourse extends JavaCourse{
+
+    public JavaDiscountCourse(Integer id, String name, Double price) {
+        super(id, name, price);
+    }
+
+    public Double getDiscountPrice(){
+        return super.getPrice()*0.8;
+    }
+
+    public Double getOriginPrice(){
+        return super.getPrice();
+    }
+}
+</code></pre>
+<p><img src="/2019/04/10/principles/oc.jpg" alt="oc"></p>
+<h1 id="依赖倒置原则（Dependency-Inversion）"><a href="#依赖倒置原则（Dependency-Inversion）" class="headerlink" title="依赖倒置原则（Dependency Inversion）"></a>依赖倒置原则（Dependency Inversion）</h1><p><strong>高层模块不应该依赖底层模块，二者都应该依赖抽象</strong></p>
+<ul>
+<li>抽象不应该依赖细节，细节应该依赖抽象</li>
+<li>针对接口编程，不可针对实现编程</li>
+</ul>
+<h2 id="高层依赖底层的情况"><a href="#高层依赖底层的情况" class="headerlink" title="高层依赖底层的情况"></a>高层依赖底层的情况</h2><pre><code class="java">public class Rex {
+    public void studyJava(){
+        System.out.println(&quot;study java&quot;);
+    }
+    public void studyPython(){
+        System.out.println(&quot;study python&quot;);
+    }
+    public void studyJs(){
+        System.out.println(&quot;study js&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">//v1 面向实现编程
+//高层依赖底层
+//test 依赖 rex
+public static void main(String[] args) {
+        Rex rex = new Rex();
+        rex.studyJava();
+        rex.studyJs();
+        rex.studyPython();
+    }
+</code></pre>
+<h2 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h2><pre><code class="java">public class Rex {
+    public void studyCourse(ICourse iCourse){
+        iCourse.studyCourse();
+    }
+}
+</code></pre>
+<pre><code class="java">//依赖倒置
+    public static void main(String[] args) {
+        Rex rex = new Rex();
+        rex.studyCourse(new JavaCourse());
+        rex.studyCourse(new JsCourse());
+        rex.studyCourse(new PythonCourse());
+    }
+</code></pre>
+<p><img src="/2019/04/10/principles/di.jpg" alt="di"></p>
+<h2 id="构造器注入-单例"><a href="#构造器注入-单例" class="headerlink" title="构造器注入(单例)"></a>构造器注入(单例)</h2><pre><code class="java">public class Rex {
+    private ICourse iCourse;
+    public Rex(ICourse iCourse) {
+        this.iCourse = iCourse;
+    }
+    public void studyImoocCourse(){
+        iCourse.studyCourse();
+    }
+}
+</code></pre>
+<pre><code class="java">//v3 构造器注入
+public static void main(String[] args) {
+        Rex rex = new Rex(new JavaCourse());
+        rex.studyImoocCourse();
+}
+</code></pre>
+<h2 id="setter注入"><a href="#setter注入" class="headerlink" title="setter注入"></a>setter注入</h2><pre><code class="java">public class Rex {
+    private ICourse iCourse;
+    public void setiCourse(ICourse iCourse){
+        this.iCourse = iCourse;
+    }
+    public void studyImoocCourse(){
+        iCourse.studyCourse();
+    }
+}
+</code></pre>
+<pre><code class="java">//v4 setter injection
+public static void main(String[] args) {
+        Rex rex = new Rex();
+        rex.setiCourse(new JavaCourse());
+        rex.studyImoocCourse();
+
+        rex.setiCourse(new PythonCourse());
+        rex.studyImoocCourse();
+
+        rex.setiCourse(new JsCourse());
+        rex.studyImoocCourse();
+}
+</code></pre>
+<h1 id="单一职责原则（Single-Responsibility-）"><a href="#单一职责原则（Single-Responsibility-）" class="headerlink" title="单一职责原则（Single Responsibility ）"></a>单一职责原则（Single Responsibility ）</h1><ul>
+<li>不存在多于一个导致类变更的原因</li>
+<li>一个类、接口、方法只负责一个职责</li>
+<li>降低复杂度，提高可读性、可维护性、降低风险</li>
+</ul>
+<h2 id="类的单一原则"><a href="#类的单一原则" class="headerlink" title="类的单一原则"></a>类的单一原则</h2><p><strong>不遵循单一职责原则的例子</strong></p>
+<pre><code class="java">public class Bird {
+    public void mainMoveMode(String birdName){
+        if(&quot;鸵鸟&quot;.equals(birdName)){
+            System.out.println(birdName+&quot;用脚走&quot;);
+        }else{
+            System.out.println(birdName+&quot;用翅膀飞&quot;);
+        }
+    }
+}
+</code></pre>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        Bird bird = new Bird();
+        bird.mainMoveMode(&quot;鸵鸟&quot;);
+        bird.mainMoveMode(&quot;大雁&quot;);
+    }
+}
+</code></pre>
+<p><strong>类的单一原则修改</strong></p>
+<pre><code class="java">public class FlyBird {
+    public void mainMoveMode(String birdName){
+        System.out.println(birdName+&quot;用翅膀飞&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">public class WalkBird {
+    public void mainMoveMode(String birdName){
+        System.out.println(birdName+&quot;用脚走&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        WalkBird walkBird = new WalkBird();
+        walkBird.mainMoveMode(&quot;鸵鸟&quot;);
+        FlyBird flyBird = new FlyBird();
+        flyBird.mainMoveMode(&quot;大雁&quot;);
+    }
+}
+</code></pre>
+<p><img src="/2019/04/10/principles/sr.jpg" alt="sr"></p>
+<h2 id="接口的单一原则"><a href="#接口的单一原则" class="headerlink" title="接口的单一原则"></a>接口的单一原则</h2><p><img src="/2019/04/10/principles/isr.jpg" alt="isr"></p>
+<h2 id="方法的单一原则"><a href="#方法的单一原则" class="headerlink" title="方法的单一原则"></a>方法的单一原则</h2><p>每个方法对单一属性进行修改或者实现单一功能</p>
+<h1 id="接口隔离原则（Interface-Segregation）"><a href="#接口隔离原则（Interface-Segregation）" class="headerlink" title="接口隔离原则（Interface Segregation）"></a>接口隔离原则（Interface Segregation）</h1><ul>
+<li>采用多个接口，而不依赖于单一总接口</li>
+<li>一个类与一个类的依赖应该建立在最小的接口上</li>
+<li>接口尽量小、尽量细化</li>
+</ul>
+<pre><code class="java">public interface IAnimalAction {
+    void eat();
+
+    void fly();
+
+    void swim();
+}
+</code></pre>
+<pre><code class="java">public interface IFlyAnimalAction {
+    void fly();
+}
+</code></pre>
+<pre><code class="java">public interface ISwimAnimalAction {
+    void swim();
+}
+</code></pre>
+<pre><code class="java">public interface IEatAnimalAction {
+    void eat();
+}
+</code></pre>
+<p><strong>需要适度</strong></p>
+<p><img src="/2019/04/10/principles/is.jpg" alt="is"></p>
+<p>比起单一职责，更倾向于架构，接口，而不是功能</p>
+<h1 id="迪米特原则（最少知道）"><a href="#迪米特原则（最少知道）" class="headerlink" title="迪米特原则（最少知道）"></a>迪米特原则（最少知道）</h1><ul>
+<li>一个对象应该对其他对象保持最少的了解</li>
+<li>降低类与类的耦合</li>
+<li>只和朋友类保持关系（内部使用的类不是朋友类）</li>
+</ul>
+<p><img src="/2019/04/10/principles/demeter.jpg" alt="demeter"></p>
+<h1 id="里氏替换原则（Liskov-Substitution，LSP）"><a href="#里氏替换原则（Liskov-Substitution，LSP）" class="headerlink" title="里氏替换原则（Liskov Substitution，LSP）"></a>里氏替换原则（Liskov Substitution，LSP）</h1><ul>
+<li>如果软件可以适用父类，那一定能适用子类</li>
+<li>子类可以拓展父类的功能，但不能改变已有的功能</li>
+<li>子类可以实现父类的抽象方法，但不能修改非抽象方法</li>
+<li>子类可以增加方法</li>
+<li>重载方法时，入参应当更宽松</li>
+<li><p>子类重载或重写方法时，输出要更严格</p>
+</li>
+<li><p><strong>有效约束继承泛滥，体现开闭原则</strong></p>
+</li>
+<li><strong>增加健壮性、拓展性</strong></li>
+</ul>
+<p>不符合里氏替换的例子</p>
+<pre><code class="java">public class Rectangle {
+    private long length;
+    private long width;
+
+    @Override
+    public long getWidth() {
+        return width;
+    }
+
+    @Override
+    public long getLength() {
+        return length;
+    }
+
+    public void setLength(long length) {
+        this.length = length;
+    }
+
+    public void setWidth(long width) {
+        this.width = width;
+    }
+}
+</code></pre>
+<pre><code class="java">public class Square extends Rectangle {
+    private long sideLength;
+
+    public long getSideLength() {
+        return sideLength;
+    }
+
+    public void setSideLength(long sideLength) {
+        this.sideLength = sideLength;
+    }
+
+    @Override
+    public long getWidth() {
+        return sideLength;
+    }
+
+    @Override
+    public long getLength() {
+        return sideLength;
+    }
+}
+</code></pre>
+<pre><code class="java">public static void resize(Rectangle rectangle){
+        while (rectangle.getWidth() &lt;= rectangle.getLength()){
+            rectangle.setWidth(rectangle.getWidth()+1);
+            System.out.println(&quot;width:&quot;+rectangle.getWidth() + &quot; length:&quot;+rectangle.getLength());
+        }
+        System.out.println(&quot;resize方法结束 width:&quot;+rectangle.getWidth() + 
+                           &quot; length:&quot;+rectangle.getLength());
+    }
+</code></pre>
+<p>新建上层接口</p>
+<p><img src="/2019/04/10/principles/lsp.jpg" alt="lsp"></p>
+<p>从而避免了resize中传入square，因为square不再是rectangle子类</p>
+<h1 id="合成复用原则"><a href="#合成复用原则" class="headerlink" title="合成复用原则"></a>合成复用原则</h1><ul>
+<li>has-A &amp; contains-A 代替 is-A</li>
+<li>降低耦合</li>
+</ul>
+<pre><code class="java">public abstract class DBConnection {
+    //    public String getConnection(){
+//        return &quot;MySQL数据库连接&quot;;
+//    }
+    public abstract String getConnection();
+}
+</code></pre>
+<pre><code class="java">public class MySQLConnection extends DBConnection {
+    @Override
+    public String getConnection() {
+        return &quot;MySQL数据库连接&quot;;
+    }
+}
+</code></pre>
+<pre><code class="java">public class PostgreSQLConnection extends DBConnection {
+    @Override
+    public String getConnection() {
+        return &quot;PostgreSQL数据库连接&quot;;
+    }
+}
+</code></pre>
+<pre><code class="java">public class ProductDao{
+    private DBConnection dbConnection;
+
+    public void setDbConnection(DBConnection dbConnection) {
+        this.dbConnection = dbConnection;
+    }
+
+    public void addProduct(){
+        String conn = dbConnection.getConnection();
+        System.out.println(&quot;使用&quot;+conn+&quot;增加产品&quot;);
+    }
+}
+</code></pre>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        ProductDao productDao = new ProductDao();
+        productDao.setDbConnection(new PostgreSQLConnection());
+        productDao.addProduct();
+    }
+}
+</code></pre>
+<p><img src="/2019/04/10/principles/ca.jpg" alt="ca"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Design Patterns</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>React Basic</title>
     <url>/2019/06/25/react/</url>
     <content><![CDATA[<p>学习一下前端知识来完成基本的项目。。</p>
@@ -10085,502 +10581,6 @@ export default TodoItem;
       <tags>
         <tag>React</tag>
         <tag>JavaScript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Netty Demo</title>
-    <url>/2019/06/11/nettydemo/</url>
-    <content><![CDATA[<h1 id="初识Netty"><a href="#初识Netty" class="headerlink" title="初识Netty"></a>初识Netty</h1><p>Netty是一个提供了易于使用的API的客户端/服务器框架</p>
-<ul>
-<li>高并发</li>
-<li>NIO（非阻塞IO）</li>
-<li>传输快，零拷贝</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n1.jpg" alt="n1"></p>
-<h2 id="阻塞与非阻塞"><a href="#阻塞与非阻塞" class="headerlink" title="阻塞与非阻塞"></a>阻塞与非阻塞</h2><p>线程访问资源，该资源是否准备就绪的一种处理方式</p>
-<ul>
-<li><p>阻塞：如果资源占用，则一直等待</p>
-</li>
-<li><p>非阻塞：如果资源占用，则返回一个结果</p>
-</li>
-</ul>
-<h2 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h2><p>访问数据的一种机制</p>
-<p><img src="/2019/06/11/nettydemo/n2.jpg" alt="n2"></p>
-<h2 id="IO模型"><a href="#IO模型" class="headerlink" title="IO模型"></a>IO模型</h2><ul>
-<li><p>BIO</p>
-<p>同步阻塞IO，Block IO</p>
-<p>并发处理能力差，依赖网速带宽</p>
-</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n3.jpg" alt="n3"></p>
-<p>通过增加线程，一应一答，改良后引入线程池</p>
-<ul>
-<li><p>NIO</p>
-<p>非堵塞IO，Non-Block IO</p>
-<p>线程会做其他事情，定时再去查看资源情况</p>
-<p>引入selector多路复用选择器，buffer等</p>
-</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n4.jpg" alt="n4"></p>
-<p>客户端增多，不会影响性能</p>
-<ul>
-<li><p>AIO</p>
-<p>异步非阻塞</p>
-<p>线程做其他事情，释放资源者通知线程</p>
-</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n5.jpg" alt="n5"></p>
-<p><img src="/2019/06/11/nettydemo/n6.jpg" alt="n6"></p>
-<h2 id="Netty的线程模型"><a href="#Netty的线程模型" class="headerlink" title="Netty的线程模型"></a>Netty的线程模型</h2><ul>
-<li>单线程模型：所有操作由一个NIO单线程处理</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n7.jpg" alt="n7"></p>
-<ul>
-<li>多线程模型：由一组NIO线程处理IO操作</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n8.jpg" alt="n8"></p>
-<ul>
-<li>主从线程模型：一组线程池接受请求，一组线程池处理IO</li>
-</ul>
-<p><img src="/2019/06/11/nettydemo/n9.jpg" alt="n9"></p>
-<h1 id="简单服务器编写"><a href="#简单服务器编写" class="headerlink" title="简单服务器编写"></a>简单服务器编写</h1><p>引入依赖</p>
-<pre><code class="xml">&lt;dependency&gt;
-            &lt;groupId&gt;io.netty&lt;/groupId&gt;
-            &lt;artifactId&gt;netty-all&lt;/artifactId&gt;
-            &lt;version&gt;4.1.25.Final&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<pre><code class="java">public class HelloServer {
-    public static void main(String[] args) throws Exception{
-
-        //declare a thread group, to accept the connect from the client
-        //bossgroup
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        //workergroup,do the task from the bossgroup
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-
-
-        try {
-            //create the netty server
-            ServerBootstrap serverBootstrap = new ServerBootstrap();
-            serverBootstrap.group(bossGroup,workerGroup)
-                    .channel(NioServerSocketChannel.class)   //set nio pattern
-                    .childHandler(new HelloServerIni());
-
-            //start the server and set the port
-            ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();
-
-            //listen the closed channel and set sync
-            channelFuture.channel().closeFuture().sync();
-        }finally {
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
-    }
-}
-</code></pre>
-<p>每个channel由多个handler组成管道pipeline</p>
-<p><img src="/2019/06/11/nettydemo/n10.jpg" alt="n10"></p>
-<pre><code class="java">public class HelloServerIni extends ChannelInitializer&lt;SocketChannel&gt; {
-    @Override
-    protected void initChannel(SocketChannel channel) throws Exception {
-        //get pipeline
-        ChannelPipeline channelPipeline = channel.pipeline();
-        //add handler by pipeline
-        channelPipeline.addLast(&quot;HttpServerCodec&quot;,new HttpServerCodec());
-        channelPipeline.addLast(&quot;customHandler&quot;,new CustomHandler());
-
-    }
-}
-</code></pre>
-<pre><code class="java">public class CustomHandler extends SimpleChannelInboundHandler&lt;HttpObject&gt; {
-    @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, HttpObject httpObject) throws Exception {
-
-        Channel channel = channelHandlerContext.channel();
-
-        if (httpObject instanceof HttpRequest){
-
-            System.out.println(channel.remoteAddress());
-
-            ByteBuf content = Unpooled.copiedBuffer(&quot;Hello Netty&quot;, CharsetUtil.UTF_8);
-
-            FullHttpResponse fullHttpResponse =
-                    new DefaultFullHttpResponse(HttpVersion.HTTP_1_0,
-                            HttpResponseStatus.OK,
-                            content);
-
-            fullHttpResponse.headers().set(HttpHeaderNames.CONTENT_TYPE,&quot;text/plain&quot;);
-            fullHttpResponse.headers().set(HttpHeaderNames.CONTENT_LENGTH,content.readableBytes());
-
-            channel.writeAndFlush(fullHttpResponse);
-        }
-
-    }
-}
-</code></pre>
-<h1 id="Netty生命周期"><a href="#Netty生命周期" class="headerlink" title="Netty生命周期"></a>Netty生命周期</h1><p><img src="/2019/06/11/nettydemo/n11.jpg" alt="n11"></p>
-<p><img src="/2019/06/11/nettydemo/n12.jpg" alt="n12"></p>
-<h1 id="实时通讯Demo"><a href="#实时通讯Demo" class="headerlink" title="实时通讯Demo"></a>实时通讯Demo</h1><p>三种实现方式：</p>
-<ul>
-<li>Ajax轮询</li>
-<li>Long pull</li>
-<li>websocket</li>
-</ul>
-<h2 id="server端"><a href="#server端" class="headerlink" title="server端"></a>server端</h2><p>chatserver</p>
-<pre><code class="java">public class ChatServer {
-    public static void main(String[] args) throws Exception{
-        EventLoopGroup maingroup = new NioEventLoopGroup();
-        EventLoopGroup subgroup = new NioEventLoopGroup();
-
-        try {
-
-            ServerBootstrap serverBootstrap = new ServerBootstrap();
-            serverBootstrap.group(maingroup,subgroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new ChatServerIni());
-
-            ChannelFuture channelFuture = serverBootstrap.bind(8088).sync();
-            channelFuture.channel().closeFuture().sync();
-
-        }finally {
-            maingroup.shutdownGracefully();
-            subgroup.shutdownGracefully();
-
-        }
-
-    }
-}
-</code></pre>
-<p>chatserverini</p>
-<pre><code class="java">public class ChatServerIni extends ChannelInitializer&lt;SocketChannel&gt; {
-
-    @Override
-    protected void initChannel(SocketChannel channel) throws Exception {
-        ChannelPipeline channelPipeline = channel.pipeline();
-
-        channelPipeline.addLast(new HttpServerCodec());
-
-        //support write big data stream
-        channelPipeline.addLast(new ChunkedWriteHandler());
-
-        //max contend length
-        //aggregate the http request and http response
-        channelPipeline.addLast(new HttpObjectAggregator(1024*64));
-
-        //--------------to support http---------------------
-
-        //to set the websocket route
-        //do something about handshaking(close, ping, pong)
-        channelPipeline.addLast(new WebSocketServerProtocolHandler(&quot;/ws&quot;));
-
-        //custom handler
-        channelPipeline.addLast(new ChatHandler());
-    }
-}
-</code></pre>
-<p>chatserver handler</p>
-<pre><code class="java">public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFrame&gt; {
-
-    //manage the clients channels
-    private static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-
-        //add client channel to channel group
-        clients.add(ctx.channel());
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        super.handlerRemoved(ctx);
-
-        System.out.println(ctx.channel().id().asLongText());
-        System.out.println(ctx.channel().id().asShortText());
-
-    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-
-        String content = msg.text();
-        System.out.println(content);
-
-        for (Channel channel: clients){
-            channel.writeAndFlush(
-                    new TextWebSocketFrame(&quot;[server get message:]&quot;
-                            + LocalDateTime.now() + content));
-
-        }
-
-//        clients.writeAndFlush (
-//                new TextWebSocketFrame(&quot;[server get message:]&quot;
-//                + LocalDateTime.now() + content));
-    }
-}
-</code></pre>
-<h2 id="client端"><a href="#client端" class="headerlink" title="client端"></a>client端</h2><pre><code class="js">var socket = new WebSocket(&quot;ws://[ip]:[port]&quot;); 
-</code></pre>
-<p>生命周期：</p>
-<ul>
-<li>onopen()</li>
-<li>onmessage()</li>
-<li>onerror()</li>
-<li>onclose()</li>
-</ul>
-<p>主动方法：</p>
-<ul>
-<li>Socket.send()</li>
-<li>Socket.close()</li>
-</ul>
-<pre><code class="html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-    &lt;head&gt;
-        &lt;meta charset=&quot;utf-8&quot; /&gt;
-        &lt;title&gt;&lt;/title&gt;
-    &lt;/head&gt;
-    &lt;body&gt;
-
-        &lt;div&gt;send message:&lt;/div&gt;
-        &lt;input type=&quot;text&quot; id=&quot;msgContent&quot; /&gt;
-        &lt;input type=&quot;button&quot; value=&quot;send&quot; onclick=&quot;CHAT.chat()&quot;/&gt;
-
-        &lt;div&gt;get message:&lt;/div&gt;
-        &lt;div id=&quot;receiveMsg&quot; style=&quot;background-color: antiquewhite;&quot;&gt;&lt;/div&gt;
-
-        &lt;script type=&quot;application/javascript&quot;&gt;
-
-            window.CHAT = {
-                socket: null,
-                init: function(){
-                    if(window.WebSocket){
-                        CHAT.socket = new WebSocket(&quot;ws://127.0.0.1:8088/ws&quot;);
-                        CHAT.socket.onopen = function(){
-                            console.log(&quot;on open&quot;);
-                        };
-                        CHAT.socket.onclose = function(){
-                            console.log(&quot;on close&quot;);
-                        };
-                        CHAT.socket.onerror = function(){
-                            console.log(&quot;on error&quot;);
-                        };
-                        CHAT.socket.onmessage = function(e){
-                            console.log(&quot;on message&quot; + e.data);
-                            var receiveMsg = document.getElementById(&quot;receiveMsg&quot;);
-                            var html = receiveMsg.innerHTML;
-                            receiveMsg.innerHTML = html + &quot;&lt;br/&gt;&quot; + e.data;
-                        };
-
-                    }else{
-                        alert(&quot;no support for websocket&quot;);
-                    }
-                },
-                chat: function(){
-                    var msg = document.getElementById(&quot;msgContent&quot;);
-                    CHAT.socket.send(msg.value);
-                }
-            }
-            CHAT.init();
-
-        &lt;/script&gt;
-    &lt;/body&gt;
-&lt;/html&gt;
-
-</code></pre>
-<p><img src="/2019/06/11/nettydemo/n13.jpg" alt="n13"></p>
-<h2 id="Springboot中整合"><a href="#Springboot中整合" class="headerlink" title="Springboot中整合"></a>Springboot中整合</h2><p>修改chatserver</p>
-<pre><code class="java">@Component
-public class ChatServer {
-
-    private static class SingletionChatServer{
-        static final ChatServer instance = new ChatServer();
-    }
-
-    public static ChatServer getInstance(){
-        return SingletionChatServer.instance;
-    }
-
-    private EventLoopGroup maingroup;
-    private EventLoopGroup subgroup;
-    private ChannelFuture channelFuture;
-    private ServerBootstrap serverBootstrap;
-
-    public ChatServer() {
-        maingroup = new NioEventLoopGroup();
-        subgroup = new NioEventLoopGroup();
-        serverBootstrap = new ServerBootstrap();
-        serverBootstrap.group(maingroup,subgroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChatServerIni());
-
-    }
-
-    public void start() {
-        this.channelFuture = serverBootstrap.bind(8088);
-        System.err.println(&quot;netty started&quot;);
-    }
-}
-</code></pre>
-<p>在springapplication同级目录下创建nettybooter类</p>
-<pre><code class="java">@Component
-public class NettyBooter implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        if(contextRefreshedEvent.getApplicationContext().getParent() == null){
-            try {
-                ChatServer.getInstance().start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-}
-</code></pre>
-<h1 id="项目部分代码"><a href="#项目部分代码" class="headerlink" title="项目部分代码"></a>项目部分代码</h1><pre><code class="java">package hku.knowname.weasel.chatmanagement.chatserver;
-
-import hku.knowname.weasel.chatmanagement.ChatService.ChatService;
-import hku.knowname.weasel.chatmanagement.SpringUtil;
-import hku.knowname.weasel.chatmanagement.enums.MsgActionEnum;
-import hku.knowname.weasel.chatmanagement.utils.JsonUtils;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.group.ChannelGroup;
-import io.netty.channel.group.DefaultChannelGroup;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import io.netty.util.concurrent.GlobalEventExecutor;
-import org.apache.commons.lang3.StringUtils;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-public class ChatHandler extends SimpleChannelInboundHandler&lt;TextWebSocketFrame&gt; {
-
-    //manage the clients channels
-    public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    @Override
-    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-
-        //add client channel to channel group
-        clients.add(ctx.channel());
-    }
-
-    @Override
-    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        super.handlerRemoved(ctx);
-
-        System.out.println(ctx.channel().id().asLongText());
-        System.out.println(ctx.channel().id().asShortText());
-
-    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-
-        String content = msg.text();
-//        System.out.println(content);
-
-        Channel currentChannel = ctx.channel();
-
-        //1. get the message from client
-        DataContent dataContent = JsonUtils.jsonToPojo(content, DataContent.class);
-        Integer action = dataContent.getAction();
-
-        //2. judge the message type
-        if (action == MsgActionEnum.CONNECT.type){
-            // 2.1 link the channel and user id
-            int sendID = dataContent.getChatMsg().getSendId();
-            UserChannelRel.put(sendID, currentChannel);
-
-            //test
-            for (Channel c : clients){
-                System.out.println(c.id().asLongText());
-            }
-            UserChannelRel.output();
-
-        }else if (action == MsgActionEnum.CHAT.type){
-            ChatMsg chatMsg = dataContent.getChatMsg();
-            String msgText = chatMsg.getMsg();
-            int receivedid = chatMsg.getReceiveId();
-            int sendid = chatMsg.getSendId();
-
-            // 2.2 chat type: save the chat message in db, tag the status[no read]
-            //save chat to db
-            ChatService chatService = (ChatService) SpringUtil.getBean(&quot;chatServiceImp&quot;);
-
-            String msgId = chatService.saveMsg(chatMsg);
-            chatMsg.setChatId(msgId);
-
-            //send msg
-            Channel receiverChannel = UserChannelRel.get(receivedid);
-            if (receiverChannel == null){
-                // receiver user offline , send msg TODO
-            }else {
-                // find this receiver in channel group
-                Channel findChannel = clients.find(receiverChannel.id());
-                if (findChannel != null){
-                    //user online
-                    receiverChannel.writeAndFlush(
-                            new TextWebSocketFrame(JsonUtils.objectToJson(chatMsg)));
-
-                }else {
-                    // user offline TODO
-
-                }
-            }
-
-
-
-
-        }else if (action == MsgActionEnum.SIGNED.type){
-            // 2.3 read type: change the status to the [already read]
-            ChatService chatService = (ChatService) SpringUtil.getBean(&quot;chatServiceImp&quot;);
-            //extand means the chatid in the signed type, with comma
-            String chatidstr = dataContent.getExtand();
-            String[] chatids = chatidstr.split(&quot;,&quot;);
-            List&lt;String&gt; chatidList = new ArrayList&lt;&gt;();
-            for (String mid: chatids){
-                if (StringUtils.isNotBlank(mid)){
-                    chatidList.add(mid);
-                }
-            }
-            System.out.println(chatidList.toString());
-
-            if (chatidList != null &amp;&amp; !chatidList.isEmpty() &amp;&amp; chatidList.size()&gt;0){
-                //sign the msg batch
-                chatService.updateMsgSigned(chatidList);
-
-            }
-        }else if (action == MsgActionEnum.KEEPALIVE.type){
-            // 2.4 heartbeat
-        }
-
-//        for (Channel channel: clients){
-//            channel.writeAndFlush(
-//                    new TextWebSocketFrame(&quot;[server get message:]&quot;
-//                            + LocalDateTime.now() + content));
-//        }
-
-        clients.writeAndFlush (
-                new TextWebSocketFrame(&quot;[server get message:]&quot;
-                + LocalDateTime.now() + content));
-
-
-    }
-}
-
-</code></pre>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Netty</tag>
       </tags>
   </entry>
   <entry>
@@ -11822,8 +11822,8 @@ pubsub numsub [channel] //list the subscriber number
         <category>study note</category>
       </categories>
       <tags>
-        <tag>Design Patterns</tag>
         <tag>MQ</tag>
+        <tag>Design Patterns</tag>
       </tags>
   </entry>
   <entry>
@@ -12506,6 +12506,46 @@ public class MergeSort2{
       </tags>
   </entry>
   <entry>
+    <title>Spring</title>
+    <url>/2019/02/02/spring/</url>
+    <content><![CDATA[<h1 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h1><ul>
+<li>上层建筑依赖下层</li>
+</ul>
+<p><img src="/2019/02/02/spring/dependency.jpg" alt="dependency"></p>
+<ul>
+<li>依赖注入实现控制反转：由下层决定上层，到上层控制下层</li>
+</ul>
+<p><img src="/2019/02/02/spring/ioc.jpg" alt="ioc"></p>
+<p>大量new工作即为控制反转容器的工作（右框）</p>
+<p><img src="/2019/02/02/spring/struct.jpg" alt="struct"></p>
+<p><img src="/2019/02/02/spring/container.jpg" alt="container"></p>
+<p>容器的优势：</p>
+<ul>
+<li>避免大量的new工作</li>
+<li>创建实例不需要了解其中的细节</li>
+</ul>
+<p><img src="/2019/02/02/spring/process.jpg" alt="process"></p>
+<p>对使用者隐藏了内部细节</p>
+<h1 id="装配"><a href="#装配" class="headerlink" title="装配"></a>装配</h1><p>spring中，configuration定义bean后，在ApplicationContext ctx.getBean(.class)手动装配</p>
+<p>springboot中采取@component实现，@Autowired</p>
+<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><ul>
+<li>面向切面</li>
+<li>不同的问题交给不同的部分解决</li>
+<li>切面是通用化代码模块</li>
+<li>业户功能代码和切片代码分开后，系统高内聚低耦合</li>
+<li>切面最终被整合到业务中</li>
+</ul>
+<p><img src="/2019/02/02/spring/aop.jpg" alt="aop"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Spark Final Note</title>
     <url>/2019/05/04/sparknote/</url>
     <content><![CDATA[<h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p><strong>Goal of Apache Spark</strong>：<br>To design a programming model that supports a much wider class of applications than MapReduce, while retaining the properties of MapReduce (fault tolerance, data locality, scalability).</p>
@@ -12622,36 +12662,496 @@ public class MergeSort2{
       </tags>
   </entry>
   <entry>
-    <title>Spring</title>
-    <url>/2019/02/02/spring/</url>
-    <content><![CDATA[<h1 id="IOC"><a href="#IOC" class="headerlink" title="IOC"></a>IOC</h1><ul>
-<li>上层建筑依赖下层</li>
-</ul>
-<p><img src="/2019/02/02/spring/dependency.jpg" alt="dependency"></p>
+    <title>Springcloud Basic</title>
+    <url>/2019/05/25/springcloud/</url>
+    <content><![CDATA[<h1 id="架构演变"><a href="#架构演变" class="headerlink" title="架构演变"></a>架构演变</h1><h2 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h2><p><img src="/2019/05/25/springcloud/single.jpg" alt="single"></p>
 <ul>
-<li>依赖注入实现控制反转：由下层决定上层，到上层控制下层</li>
+<li>容易测试，没有外部依赖</li>
+<li>容易运行</li>
+<li>开发效率低</li>
+<li>维护困难</li>
+<li>部署不灵活，整体部署</li>
+<li>稳定性不高</li>
+<li>拓展性不够</li>
 </ul>
-<p><img src="/2019/02/02/spring/ioc.jpg" alt="ioc"></p>
-<p>大量new工作即为控制反转容器的工作（右框）</p>
-<p><img src="/2019/02/02/spring/struct.jpg" alt="struct"></p>
-<p><img src="/2019/02/02/spring/container.jpg" alt="container"></p>
-<p>容器的优势：</p>
+<h2 id="基于Ajax前后端分离"><a href="#基于Ajax前后端分离" class="headerlink" title="基于Ajax前后端分离"></a>基于Ajax前后端分离</h2><p><img src="/2019/05/25/springcloud/ajax.jpg" alt="ajax"></p>
+<p><img src="/2019/05/25/springcloud/ajax2.jpg" alt="ajax2"></p>
+<h2 id="分布式系统与集群"><a href="#分布式系统与集群" class="headerlink" title="分布式系统与集群"></a>分布式系统与集群</h2><ul>
+<li>分布式：不同工种</li>
+<li>集群：同一工种</li>
+</ul>
+<h2 id="简单的微服务架构"><a href="#简单的微服务架构" class="headerlink" title="简单的微服务架构"></a>简单的微服务架构</h2><p><img src="/2019/05/25/springcloud/micro.jpg" alt="micro"></p>
+<h1 id="微服务的架构和组件"><a href="#微服务的架构和组件" class="headerlink" title="微服务的架构和组件"></a>微服务的架构和组件</h1><h2 id="服务注册发现"><a href="#服务注册发现" class="headerlink" title="服务注册发现"></a>服务注册发现</h2><ul>
+<li>服务提供方的注册</li>
+<li>服务调用方的发现</li>
+</ul>
+<h2 id="服务网关"><a href="#服务网关" class="headerlink" title="服务网关"></a>服务网关</h2><ul>
+<li>将服务暴露给外部</li>
+<li>屏蔽后台服务细节</li>
+<li>路由功能</li>
+<li>限流、容错</li>
+</ul>
+<h2 id="后端通用服务（中间层服务）"><a href="#后端通用服务（中间层服务）" class="headerlink" title="后端通用服务（中间层服务）"></a>后端通用服务（中间层服务）</h2><h2 id="前端服务（边缘服务）"><a href="#前端服务（边缘服务）" class="headerlink" title="前端服务（边缘服务）"></a>前端服务（边缘服务）</h2><ul>
+<li>将后端服务聚合裁剪，从而暴露给外部</li>
+<li>聚合：多个API聚合为一个</li>
+<li>裁剪：将信息减少返回</li>
+</ul>
+<h1 id="Eureka"><a href="#Eureka" class="headerlink" title="Eureka"></a>Eureka</h1><ul>
+<li><p>Eureka Server</p>
+<p>注册中心</p>
+</li>
+<li><p>Eureka Client</p>
+<p>服务注册</p>
+</li>
+</ul>
+<p>心跳检测、健康检查、负载均衡</p>
+<h2 id="Eureka-Server"><a href="#Eureka-Server" class="headerlink" title="Eureka Server"></a>Eureka Server</h2><p>记录应用的信息和状态</p>
+<p>建立Eureka项目并配置</p>
+<p>注意@EnableEurekaServer</p>
+<pre><code class="yml">eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: false
+  server:
+    enable-self-preservation: false
+spring:
+  application:
+    name: eureka
+server:
+  port: 8761
+</code></pre>
+<p><img src="/2019/05/25/springcloud/eureka.jpg" alt="eureka"></p>
+<p>使用maven后台启动</p>
+<p>mvn clean package</p>
+<p>java -jar </p>
+<h2 id="Eureka-Client"><a href="#Eureka-Client" class="headerlink" title="Eureka Client"></a>Eureka Client</h2><p>注意@EnableDiscoveryClient</p>
+<p>配置</p>
+<pre><code class="yml">eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+#   instance:
+#     hostname: clientName
+spring:
+  application:
+    name: client
+</code></pre>
+<p>hostname可以diy此处的链接</p>
+<p><img src="/2019/05/25/springcloud/diyurl.jpg" alt="diyurl"></p>
+<h2 id="Eureka高可用"><a href="#Eureka高可用" class="headerlink" title="Eureka高可用"></a>Eureka高可用</h2><p>使两个Eureka互相注册</p>
+<p><img src="/2019/05/25/springcloud/eu2.jpg" alt="eu2"></p>
+<p>同时启动两个eureka在两个端口</p>
+<p><img src="/2019/05/25/springcloud/eu3.jpg" alt="eu3"></p>
+<p>使这两个交叉相互注册</p>
+<p>两个eureka信息同步（client只需要注册一个）</p>
+<p>为保险起见，应该在client中配置多个eureka注册</p>
+<p><img src="/2019/05/25/springcloud/eu4.jpg" alt="eu4"></p>
+<pre><code class="yml">eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/,http://localhost:8761/eureka/
+#    instance:
+#      hostname: clientName
+spring:
+  application:
+    name: client
+</code></pre>
+<p>结构：eureka两两注册，client注册所有eureka</p>
+<p><img src="/2019/05/25/springcloud/eu5.jpg" alt="eu5"></p>
+<h2 id="分布式系统中服务发现的作用"><a href="#分布式系统中服务发现的作用" class="headerlink" title="分布式系统中服务发现的作用"></a>分布式系统中服务发现的作用</h2><p>避免了动态配置和配置过多问题</p>
+<p>注册中心是分布式系统中最重要的部分</p>
+<p><img src="/2019/05/25/springcloud/eu6.jpg" alt="eu6"></p>
 <ul>
-<li>避免大量的new工作</li>
-<li>创建实例不需要了解其中的细节</li>
+<li><p>客户端发现</p>
+<p>A来挑选B从而完成服务或者负载均衡</p>
+<p>客户可以知道所有可用的服务地址</p>
+<p>Eureka</p>
+</li>
+<li><p>服务端发现</p>
+<p>代理替代A来挑选B，完成服务与负载均衡</p>
+<p>使得服务对A不可见</p>
+<p>Nginx</p>
+<p>Zookeeper</p>
+<p>K8S</p>
+</li>
 </ul>
-<p><img src="/2019/02/02/spring/process.jpg" alt="process"></p>
-<p>对使用者隐藏了内部细节</p>
-<h1 id="装配"><a href="#装配" class="headerlink" title="装配"></a>装配</h1><p>spring中，configuration定义bean后，在ApplicationContext ctx.getBean(.class)手动装配</p>
-<p>springboot中采取@component实现，@Autowired</p>
-<h1 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h1><ul>
-<li>面向切面</li>
-<li>不同的问题交给不同的部分解决</li>
-<li>切面是通用化代码模块</li>
-<li>业户功能代码和切片代码分开后，系统高内聚低耦合</li>
-<li>切面最终被整合到业务中</li>
+<p>微服务支持异构（不同语言、数据库），通过轻通讯（http&amp;RPC）</p>
+<h1 id="服务的拆分"><a href="#服务的拆分" class="headerlink" title="服务的拆分"></a>服务的拆分</h1><h2 id="康威定律"><a href="#康威定律" class="headerlink" title="康威定律"></a>康威定律</h2><p>交付结构与沟通结构一致</p>
+<h2 id="扩展立方模型"><a href="#扩展立方模型" class="headerlink" title="扩展立方模型"></a>扩展立方模型</h2><p><img src="/2019/05/25/springcloud/fu1.jpg" alt="fu1"></p>
+<ul>
+<li><p>拆功能</p>
+<p>单一职责（松耦合，高内聚）</p>
+<p>关注点分离：按职责、通用性、粒度级别</p>
+</li>
+<li><p>服务与数据</p>
+<p>优先考虑业务服务，再考虑数据</p>
+<p>无状态服务</p>
+</li>
 </ul>
-<p><img src="/2019/02/02/spring/aop.jpg" alt="aop"></p>
+<h1 id="应用间通信"><a href="#应用间通信" class="headerlink" title="应用间通信"></a>应用间通信</h1><h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><ul>
+<li>Dubbo</li>
+</ul>
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><ul>
+<li><p>Springcloud</p>
+<p>1、RestTemplate</p>
+<p>2、Feign</p>
+</li>
+</ul>
+<p>RestTemplate三种方式</p>
+<p><img src="/2019/05/25/springcloud/tran.jpg" alt="tran"></p>
+<p>第三种，使用注解</p>
+<p><img src="/2019/05/25/springcloud/tran1.jpg" alt="tran1"></p>
+<p><img src="/2019/05/25/springcloud/tran2.jpg" alt="tran2"></p>
+<h2 id="Ribbon"><a href="#Ribbon" class="headerlink" title="Ribbon"></a>Ribbon</h2><p>客户端负载均衡器@LoadBalanced注解</p>
+<ul>
+<li>服务发现</li>
+<li>服务选择规则</li>
+<li>服务监听</li>
+</ul>
+<p>主要组件：ServerList、IRule、ServerListFilter</p>
+<p>默认轮询规则，可以在yml文件中设置具体规则</p>
+<pre><code class="yml">serviceName: 
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+</code></pre>
+<h2 id="Feign"><a href="#Feign" class="headerlink" title="Feign"></a>Feign</h2><p>声明式Rest客户端（伪RPC）本质是个http客户端</p>
+<p>接口+注解方式</p>
+<ul>
+<li><p>加入Feign组件</p>
+</li>
+<li><p>@EnableFeignClients</p>
+</li>
+<li><p>创建接口</p>
+</li>
+</ul>
+<p>调用远程服务</p>
+<p><img src="/2019/05/25/springcloud/tran3.jpg" alt="tran3"></p>
+<p>service端</p>
+<p><img src="/2019/05/25/springcloud/tran4.jpg" alt="tran4"></p>
+<h2 id="同步-amp-异步"><a href="#同步-amp-异步" class="headerlink" title="同步&amp;异步"></a>同步&amp;异步</h2><p>逐步将必要的同步过程改为异步（后面详解）</p>
+<p>安装rabbitmq</p>
+<blockquote>
+<p>docker run -d –hostname my-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management</p>
+</blockquote>
+<h1 id="统一配置中心"><a href="#统一配置中心" class="headerlink" title="统一配置中心"></a>统一配置中心</h1><p>普通配置不方便维护、存在安全隐患、需要重启等问题</p>
+<h2 id="Config-Server"><a href="#Config-Server" class="headerlink" title="Config Server"></a>Config Server</h2><p><img src="/2019/05/25/springcloud/conf1.jpg" alt="conf1"></p>
+<p>将参数放在远程git上并配置</p>
+<p><img src="/2019/05/25/springcloud/conf3.jpg" alt="conf3"></p>
+<p><img src="/2019/05/25/springcloud/conf5.jpg" alt="conf5"></p>
+<p>basedir配置本地路径</p>
+<p>路由规则：</p>
+<p><img src="/2019/05/25/springcloud/conf2.jpg" alt="conf2"></p>
+<h2 id="Config-Client"><a href="#Config-Client" class="headerlink" title="Config Client"></a>Config Client</h2><p>创建bootstrap.yml配置文件</p>
+<p><img src="/2019/05/25/springcloud/conf4.jpg" alt="conf4"></p>
+<p>拿到相应配置</p>
+<p><img src="/2019/05/25/springcloud/conf6.jpg" alt="conf6"></p>
+<p>加载config-test.yml时，也会同时加载config.yml（如果存在），并合并两份配置，所以可以把通用配置存于config.yml</p>
+<h2 id="配置中心的高可用"><a href="#配置中心的高可用" class="headerlink" title="配置中心的高可用"></a>配置中心的高可用</h2><p>多起几个配置中心，配置中心本身就是一个微服务</p>
+<p><img src="/2019/05/25/springcloud/conf7.jpg" alt="conf7"></p>
+<h2 id="自动刷新配置"><a href="#自动刷新配置" class="headerlink" title="自动刷新配置"></a>自动刷新配置</h2><p><img src="/2019/05/25/springcloud/conf8.jpg" alt="conf8"></p>
+<p>引入依赖</p>
+<pre><code class="xml">&lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-bus-amqp&lt;/artifactId&gt;
+            &lt;version&gt;2.0.0.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><img src="/2019/05/25/springcloud/conf9.jpg" alt="conf9"></p>
+<p>使config server和client连通mq</p>
+<p><img src="/2019/05/25/springcloud/conf10.jpg" alt="conf10"></p>
+<p>需要在config server中暴露接口</p>
+<pre><code class="yml">management: 
+  endpoints: 
+    web:
+      expose: &quot;*&quot;
+</code></pre>
+<p><img src="/2019/05/25/springcloud/conf11.jpg" alt="conf11"></p>
+<p>更改controller注解，刷新配置</p>
+<p>做到git实时刷新</p>
+<p><img src="/2019/05/25/springcloud/conf12.jpg" alt="conf12"></p>
+<p>设置git WebHooks</p>
+<p><img src="/2019/05/25/springcloud/conf13.jpg" alt="conf13"></p>
+<h1 id="消息与异步"><a href="#消息与异步" class="headerlink" title="消息与异步"></a>消息与异步</h1><ul>
+<li><p>异步</p>
+<p>客户端请求不会阻塞进程</p>
+<p>服务端的响应是非及时的</p>
+</li>
+</ul>
+<p>异步的常见形式：通知、请求/异步响应、消息</p>
+<p>MQ常解决的问题：异步处理、流量削峰、日志处理（Kafka）、应用解耦</p>
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><pre><code class="yml">spring:
+  application:
+    name: config
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+</code></pre>
+<p>接受MQ消息</p>
+<p><img src="/2019/05/25/springcloud/conf14.jpg" alt="conf14"></p>
+<p>发送MQ，test</p>
+<p><img src="/2019/05/25/springcloud/conf15.jpg" alt="conf15"></p>
+<p>绑定queue和exchange</p>
+<p><img src="/2019/05/25/springcloud/conf16.jpg" alt="conf16"></p>
+<p>根据routing key转发到不同终端</p>
+<h2 id="Spring-Cloud-Stream"><a href="#Spring-Cloud-Stream" class="headerlink" title="Spring Cloud Stream"></a>Spring Cloud Stream</h2><p>对消息中间件进一步封装、做到中间件不可见（只适用rabbitmq、Kafka）</p>
+<p><img src="/2019/05/25/springcloud/conf17.jpg" alt="conf17"></p>
+<pre><code class="xml">&lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-starter-stream-rabbit&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>定义接口</p>
+<p><img src="/2019/05/25/springcloud/conf18.jpg" alt="conf18"></p>
+<p>实现接收端</p>
+<p><img src="/2019/05/25/springcloud/conf19.jpg" alt="conf19"></p>
+<p>定义发送端</p>
+<p><img src="/2019/05/25/springcloud/conf20.jpg" alt="conf20"></p>
+<p>多实例发送消息到mq，会多次接受，因而需要使用分组</p>
+<pre><code class="yml">spring:
+  cloud:
+    stream: 
+      bindings:
+        myMessage:
+          group: groupname
+</code></pre>
+<p>同组队列将合并</p>
+<p>在MQ面板，反序列化对象为json方便查看</p>
+<pre><code class="yml">spring:
+  cloud:
+    stream: 
+      bindings:
+        myMessage:
+          group: groupname
+          content-type: application/json
+</code></pre>
+<p>接受消息后再返回信息</p>
+<p><img src="/2019/05/25/springcloud/conf21.jpg" alt="conf21"></p>
+<h1 id="服务网关与Zuul"><a href="#服务网关与Zuul" class="headerlink" title="服务网关与Zuul"></a>服务网关与Zuul</h1><p>网关同一入口</p>
+<p><img src="/2019/05/25/springcloud/zuul1.jpg" alt="zuul1"></p>
+<ul>
+<li>稳定性、高可用</li>
+<li>安全性</li>
+<li>性能、并发性</li>
+<li>扩展性</li>
+</ul>
+<p>常见的网关方案</p>
+<ul>
+<li>Nginx + Lua</li>
+<li>Kong</li>
+<li>Tyk</li>
+<li>Spring Cloud Zuul</li>
+</ul>
+<p>Zuul特点</p>
+<p>Zuul=路由+过滤器</p>
+<p>四种过滤器API</p>
+<ul>
+<li>前置（Pre）</li>
+<li>后置（Post）</li>
+<li>路由（Route）</li>
+<li>错误（Error）</li>
+</ul>
+<p><img src="/2019/05/25/springcloud/zuul2.jpg" alt="zuul2"></p>
+<p><img src="/2019/05/25/springcloud/zuul3.jpg" alt="zuul3"></p>
+<h2 id="Zuul的使用"><a href="#Zuul的使用" class="headerlink" title="Zuul的使用"></a>Zuul的使用</h2><p>1、导入依赖</p>
+<p>2、添加enable注释@EnableZuulProxy</p>
+<p>3、修改配置文件</p>
+<p>通过路由得到对应服务</p>
+<p>localhost:9000/service-name/list</p>
+<p>添加规则路由</p>
+<p><img src="/2019/05/25/springcloud/zuul.jpg" alt="zuul"></p>
+<p>修改安全策略，查看路由详情</p>
+<p><img src="/2019/05/25/springcloud/zuul4.jpg" alt="zuul4"></p>
+<p><img src="/2019/05/25/springcloud/zuul5.jpg" alt="zuul5"></p>
+<p>或者简洁写法</p>
+<p><img src="/2019/05/25/springcloud/zuul6.jpg" alt="zuul6"></p>
+<p>可以添加忽视路由</p>
+<pre><code class="yml">ignored-patterns:
+  - /**/ignore/list
+</code></pre>
+<p>zuul会默认过滤cookie，加入敏感头过滤，设置为空</p>
+<pre><code class="yml">zuul:
+  routes: 
+    myProduct:
+      sensitiveHeaders:
+</code></pre>
+<h2 id="动态配置路由"><a href="#动态配置路由" class="headerlink" title="动态配置路由"></a>动态配置路由</h2><p><img src="/2019/05/25/springcloud/zuul7.jpg" alt="zuul7"></p>
+<p>在github webhook激活动态配置</p>
+<h2 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h2><p>部署多台Zuul避免单点故障</p>
+<p>直接作为微服务注册在Eureka Server上</p>
+<p>与Nginx混搭</p>
+<h2 id="Pre-amp-Post过滤器"><a href="#Pre-amp-Post过滤器" class="headerlink" title="Pre&amp;Post过滤器"></a>Pre&amp;Post过滤器</h2><p>Zuul在各个Service之前进行统一校验，避免多服务重复校验</p>
+<p><img src="/2019/05/25/springcloud/zuul8.png" alt="zuul8"></p>
+<ul>
+<li><p>prefilter</p>
+<p>设置必须包含token认证</p>
+</li>
+</ul>
+<pre><code class="java">@Component
+public class TokenFilter extends ZuulFilter {
+    @Override
+    public String filterType() {
+        return PRE_TYPE;
+    }
+
+    @Override
+    public int filterOrder() {
+        return PRE_DECORATION_FILTER_ORDER - 1;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return true;
+    }
+
+    @Override
+    public Object run() throws ZuulException {
+        RequestContext requestContext = RequestContext.getCurrentContext();
+        HttpServletRequest request = requestContext.getRequest();
+
+        String token = request.getParameter(&quot;token&quot;);
+        if(StringUtils.isEmpty(token)){
+            requestContext.setSendZuulResponse(false);
+            requestContext.setResponseStatusCode(HttpStatus.SC_UNAUTHORIZED);
+        }
+        return null;
+    }
+}
+</code></pre>
+<p>请求生命周期</p>
+<p><img src="/2019/05/25/springcloud/zuul9.jpg" alt="zuul9"></p>
+<p>pre-&gt;routing-&gt;post</p>
+<ul>
+<li>postfilter</li>
+</ul>
+<pre><code class="java">@Component
+public class AddResponseHeaderFilter extends ZuulFilter {
+
+    @Override
+    public String filterType() {
+        return POST_TYPE;
+    }
+
+    @Override
+    public int filterOrder() {
+        return SEND_RESPONSE_FILTER_ORDER - 1;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return true;
+    }
+
+    @Override
+    public Object run() {
+        RequestContext requestContext = new RequestContext();
+        HttpServletResponse response = requestContext.getResponse();
+        response.setHeader(&quot;X=Foo&quot;, UUID.randomUUID().toString());
+        return null;
+    }
+}
+</code></pre>
+<h2 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h2><p>请求被转发前调用</p>
+<p>令牌桶算法</p>
+<p><img src="/2019/05/25/springcloud/zuul10.jpg" alt="zuul10"></p>
+<pre><code class="java">@Component
+public class RateFilter extends ZuulFilter {
+    // 100 allowed per second
+    private static final RateLimiter RATE_LIMITER = RateLimiter.create(100);
+
+
+    @Override
+    public String filterType() {
+        return PRE_TYPE;
+    }
+
+    @Override
+    public int filterOrder() {
+        return SERVLET_DETECTION_FILTER_ORDER - 1;
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return true;
+    }
+
+    @Override
+    public Object run() {
+        // check if it has allowed
+        if (!RATE_LIMITER.tryAcquire()){
+            throw new RateLimitException();
+        }
+        return null;
+    }
+}
+</code></pre>
+<h2 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h2><ul>
+<li>在被调用的类或方法上增加@CrossOrigin注解</li>
+<li>在Zuul里增加CorsFilter过滤器</li>
+</ul>
+<p><img src="/2019/05/25/springcloud/zuul12.jpg" alt="zuul12"></p>
+<h1 id="服务容错与Hystrix"><a href="#服务容错与Hystrix" class="headerlink" title="服务容错与Hystrix"></a>服务容错与Hystrix</h1><h2 id="雪崩效应"><a href="#雪崩效应" class="headerlink" title="雪崩效应"></a>雪崩效应</h2><p>由于调用失败重复重试、导致整个系统不可用</p>
+<p><img src="/2019/05/25/springcloud/zuul13.jpg" alt="zuul13"></p>
+<h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><p>优先核心服务、非核心服务不可用或弱可用</p>
+<p>通过HystrixCommand注解指定</p>
+<p>fallbackMethod函数中（回退函数）具体实现降级逻辑</p>
+<p>引入依赖</p>
+<p><img src="/2019/05/25/springcloud/zuul14.jpg" alt="zuul14"></p>
+<p>添加注解@EnableCircuitBreaker</p>
+<p><img src="/2019/05/25/springcloud/zuul15.jpg" alt="zuul15"></p>
+<p>服务出错后执行回滚函数，如果出现异常，同样回滚，因而可以自己定制回滚情况</p>
+<p><img src="/2019/05/25/springcloud/zuul16.jpg" alt="zuul16"></p>
+<p>从而实现统一降级</p>
+<p>如果访问时间过长会自动触发降级，因而可以配置超时时间</p>
+<p><img src="/2019/05/25/springcloud/zuul17.jpg" alt="zuul17"></p>
+<pre><code class="java">@HystrixCommand(commandProperties = {
+            @HystrixProperty(name = &quot;default_executionTimeoutInMilliseconds&quot;,value = &quot;3000&quot;)
+    })
+</code></pre>
+<p>或者写在yml配置文件中</p>
+<p><img src="/2019/05/25/springcloud/zuul20.jpg" alt="zuul20"></p>
+<h2 id="服务熔断"><a href="#服务熔断" class="headerlink" title="服务熔断"></a>服务熔断</h2><p><img src="/2019/05/25/springcloud/zuul18.jpg" alt="zuul18"></p>
+<p><img src="/2019/05/25/springcloud/zuul19.jpg" alt="zuul19"></p>
+<p>时间窗口、最小请求数、断路阈值百分比</p>
+<p>Feign与Hystrix结合</p>
+<p>Feign中集成了Hystrix，需要配置可用</p>
+<pre><code class="yml">feign:
+  hystrix: 
+    enabled: true
+</code></pre>
+<p><img src="/2019/05/25/springcloud/zuul21.jpg" alt="zuul21"></p>
+<h2 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h2><p>@EnableHystrixDashboard</p>
+<p>引入依赖</p>
+<p><img src="/2019/05/25/springcloud/zuul22.jpg" alt="zuul22"></p>
+<p><img src="/2019/05/25/springcloud/zuul23.jpg" alt="zuul23"></p>
+<pre><code class="yml">management:
+  context-path: /
+</code></pre>
+<p><img src="/2019/05/25/springcloud/zuul24.jpg" alt="zuul24"></p>
+<h1 id="服务追踪"><a href="#服务追踪" class="headerlink" title="服务追踪"></a>服务追踪</h1><h2 id="Sleuth链路监控"><a href="#Sleuth链路监控" class="headerlink" title="Sleuth链路监控"></a>Sleuth链路监控</h2><p>引入依赖</p>
+<p><img src="/2019/05/25/springcloud/sl1.jpg" alt="sl1"></p>
+<p>配置日志级别</p>
+<pre><code class="yml">logging:
+  level:
+    org.springframework.cloud.netflix.feign: debug
+</code></pre>
+<p>执行后，查看日志</p>
+<p><img src="/2019/05/25/springcloud/sl2.jpg" alt="sl2"></p>
+<h2 id="opentrace标准"><a href="#opentrace标准" class="headerlink" title="opentrace标准"></a>opentrace标准</h2><p>划分为四种事件类型</p>
+<p><img src="/2019/05/25/springcloud/sl3.jpg" alt="sl3"></p>
+<h2 id="Zipkin"><a href="#Zipkin" class="headerlink" title="Zipkin"></a>Zipkin</h2><p><img src="/2019/05/25/springcloud/sl4.jpg" alt="sl4"></p>
+<p><img src="/2019/05/25/springcloud/sl5.jpg" alt="sl5"></p>
 ]]></content>
       <categories>
         <category>study note</category>
@@ -12659,6 +13159,162 @@ public class MergeSort2{
       <tags>
         <tag>Java</tag>
         <tag>Spring</tag>
+        <tag>Springcloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Java Synchronized</title>
+    <url>/2019/02/25/synchronized/</url>
+    <content><![CDATA[<h1 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h1><ul>
+<li>存在共享数据</li>
+<li>存在多条线程共同操作这些共享数据</li>
+</ul>
+<p><strong>同一时刻必须只有一个线程操作共享数据，其他线程必须等其处理完之后，再进行操作</strong></p>
+<h1 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h1><ul>
+<li>互斥性：同一时间只能有一个线程持有某个对象锁，从而实现多线程协调，从而同一时间只有一个线程对需要同步的代码块进行访问。</li>
+<li>可见性：获得锁时获得<strong>最新</strong>共享变量的值</li>
+</ul>
+<h2 id="对象锁与类锁"><a href="#对象锁与类锁" class="headerlink" title="对象锁与类锁"></a>对象锁与类锁</h2><ul>
+<li><p>获取对象锁的两种用法</p>
+<p>1、同步代码块：synchronized(this)</p>
+<p>2、同步非静态方法：synchronized method</p>
+</li>
+<li><p>获取类锁的两种方法</p>
+<p>1、同步代码块：synchronized(.class)</p>
+<p>2、同步静态方法：synchronized static method</p>
+</li>
+</ul>
+<pre><code class="java">package com.interview.javabasic.thread;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class SyncThread implements Runnable {
+
+    @Override
+    public void run() {
+        String threadName = Thread.currentThread().getName();
+        if (threadName.startsWith(&quot;A&quot;)) {
+            async();
+        } else if (threadName.startsWith(&quot;B&quot;)) {
+            syncObjectBlock1();
+        } else if (threadName.startsWith(&quot;C&quot;)) {
+            syncObjectMethod1();
+        } else if (threadName.startsWith(&quot;D&quot;)) {
+            syncClassBlock1();
+        } else if (threadName.startsWith(&quot;E&quot;)) {
+            syncClassMethod1();
+        }
+
+    }
+
+    /**
+     * 异步方法
+     */
+    private void async() {
+        try {
+            System.out.println(Thread.currentThread().getName() + &quot;_Async_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+            Thread.sleep(1000);
+            System.out.println(Thread.currentThread().getName() + &quot;_Async_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 方法中有 synchronized(this|object) {} 同步代码块
+     */
+    private void syncObjectBlock1() {
+        System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectBlock1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        synchronized (this) {
+            try {
+                System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectBlock1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+                Thread.sleep(1000);
+                System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectBlock1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * synchronized 修饰非静态方法
+     */
+    private synchronized void syncObjectMethod1() {
+        System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectMethod1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        try {
+            System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectMethod1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+            Thread.sleep(1000);
+            System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectMethod1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void syncClassBlock1() {
+        System.out.println(Thread.currentThread().getName() + &quot;_SyncClassBlock1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        synchronized (SyncThread.class) {
+            try {
+                System.out.println(Thread.currentThread().getName() + &quot;_SyncClassBlock1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+                Thread.sleep(1000);
+                System.out.println(Thread.currentThread().getName() + &quot;_SyncClassBlock1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private synchronized static void syncClassMethod1() {
+        System.out.println(Thread.currentThread().getName() + &quot;_SyncClassMethod1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        try {
+            System.out.println(Thread.currentThread().getName() + &quot;_SyncClassMethod1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+            Thread.sleep(1000);
+            System.out.println(Thread.currentThread().getName() + &quot;_SyncClassMethod1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<pre><code class="java">package com.interview.javabasic.thread;
+
+public class SyncDemo {
+    public static void main(String... args) {
+        SyncThread syncThread = new SyncThread();
+        Thread A_thread1 = new Thread(syncThread, &quot;A_thread1&quot;);
+        Thread A_thread2 = new Thread(syncThread, &quot;A_thread2&quot;);
+        Thread B_thread1 = new Thread(syncThread, &quot;B_thread1&quot;);
+        Thread B_thread2 = new Thread(syncThread, &quot;B_thread2&quot;);
+        Thread C_thread1 = new Thread(syncThread, &quot;C_thread1&quot;);
+        Thread C_thread2 = new Thread(syncThread, &quot;C_thread2&quot;);
+        Thread D_thread1 = new Thread(syncThread, &quot;D_thread1&quot;);
+        Thread D_thread2 = new Thread(syncThread, &quot;D_thread2&quot;);
+        Thread E_thread1 = new Thread(syncThread, &quot;E_thread1&quot;);
+        Thread E_thread2 = new Thread(syncThread, &quot;E_thread2&quot;);
+        A_thread1.start();
+        A_thread2.start();
+        B_thread1.start();
+        B_thread2.start();
+        C_thread1.start();
+        C_thread2.start();
+        D_thread1.start();
+        D_thread2.start();
+        E_thread1.start();
+        E_thread2.start();
+    }
+}
+</code></pre>
+<p><img src="/2019/02/25/synchronized/lock1.jpg" alt="lock1"></p>
+<p><img src="/2019/02/25/synchronized/lock2.jpg" alt="lock2"></p>
+<p>如果改为Thread A_thread1 = new Thread(new syncThread, “A_thread1”);</p>
+<p>将全部异步。</p>
+<p><img src="/2019/02/25/synchronized/sum.jpg" alt="sum"></p>
+]]></content>
+      <categories>
+        <category>study note</category>
+      </categories>
+      <tags>
+        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
@@ -13804,662 +14460,6 @@ public class RabbitmqReceiver {
         <tag>Java</tag>
         <tag>MQ</tag>
         <tag>Spring</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Springcloud Basic</title>
-    <url>/2019/05/25/springcloud/</url>
-    <content><![CDATA[<h1 id="架构演变"><a href="#架构演变" class="headerlink" title="架构演变"></a>架构演变</h1><h2 id="单体架构"><a href="#单体架构" class="headerlink" title="单体架构"></a>单体架构</h2><p><img src="/2019/05/25/springcloud/single.jpg" alt="single"></p>
-<ul>
-<li>容易测试，没有外部依赖</li>
-<li>容易运行</li>
-<li>开发效率低</li>
-<li>维护困难</li>
-<li>部署不灵活，整体部署</li>
-<li>稳定性不高</li>
-<li>拓展性不够</li>
-</ul>
-<h2 id="基于Ajax前后端分离"><a href="#基于Ajax前后端分离" class="headerlink" title="基于Ajax前后端分离"></a>基于Ajax前后端分离</h2><p><img src="/2019/05/25/springcloud/ajax.jpg" alt="ajax"></p>
-<p><img src="/2019/05/25/springcloud/ajax2.jpg" alt="ajax2"></p>
-<h2 id="分布式系统与集群"><a href="#分布式系统与集群" class="headerlink" title="分布式系统与集群"></a>分布式系统与集群</h2><ul>
-<li>分布式：不同工种</li>
-<li>集群：同一工种</li>
-</ul>
-<h2 id="简单的微服务架构"><a href="#简单的微服务架构" class="headerlink" title="简单的微服务架构"></a>简单的微服务架构</h2><p><img src="/2019/05/25/springcloud/micro.jpg" alt="micro"></p>
-<h1 id="微服务的架构和组件"><a href="#微服务的架构和组件" class="headerlink" title="微服务的架构和组件"></a>微服务的架构和组件</h1><h2 id="服务注册发现"><a href="#服务注册发现" class="headerlink" title="服务注册发现"></a>服务注册发现</h2><ul>
-<li>服务提供方的注册</li>
-<li>服务调用方的发现</li>
-</ul>
-<h2 id="服务网关"><a href="#服务网关" class="headerlink" title="服务网关"></a>服务网关</h2><ul>
-<li>将服务暴露给外部</li>
-<li>屏蔽后台服务细节</li>
-<li>路由功能</li>
-<li>限流、容错</li>
-</ul>
-<h2 id="后端通用服务（中间层服务）"><a href="#后端通用服务（中间层服务）" class="headerlink" title="后端通用服务（中间层服务）"></a>后端通用服务（中间层服务）</h2><h2 id="前端服务（边缘服务）"><a href="#前端服务（边缘服务）" class="headerlink" title="前端服务（边缘服务）"></a>前端服务（边缘服务）</h2><ul>
-<li>将后端服务聚合裁剪，从而暴露给外部</li>
-<li>聚合：多个API聚合为一个</li>
-<li>裁剪：将信息减少返回</li>
-</ul>
-<h1 id="Eureka"><a href="#Eureka" class="headerlink" title="Eureka"></a>Eureka</h1><ul>
-<li><p>Eureka Server</p>
-<p>注册中心</p>
-</li>
-<li><p>Eureka Client</p>
-<p>服务注册</p>
-</li>
-</ul>
-<p>心跳检测、健康检查、负载均衡</p>
-<h2 id="Eureka-Server"><a href="#Eureka-Server" class="headerlink" title="Eureka Server"></a>Eureka Server</h2><p>记录应用的信息和状态</p>
-<p>建立Eureka项目并配置</p>
-<p>注意@EnableEurekaServer</p>
-<pre><code class="yml">eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: false
-  server:
-    enable-self-preservation: false
-spring:
-  application:
-    name: eureka
-server:
-  port: 8761
-</code></pre>
-<p><img src="/2019/05/25/springcloud/eureka.jpg" alt="eureka"></p>
-<p>使用maven后台启动</p>
-<p>mvn clean package</p>
-<p>java -jar </p>
-<h2 id="Eureka-Client"><a href="#Eureka-Client" class="headerlink" title="Eureka Client"></a>Eureka Client</h2><p>注意@EnableDiscoveryClient</p>
-<p>配置</p>
-<pre><code class="yml">eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-#   instance:
-#     hostname: clientName
-spring:
-  application:
-    name: client
-</code></pre>
-<p>hostname可以diy此处的链接</p>
-<p><img src="/2019/05/25/springcloud/diyurl.jpg" alt="diyurl"></p>
-<h2 id="Eureka高可用"><a href="#Eureka高可用" class="headerlink" title="Eureka高可用"></a>Eureka高可用</h2><p>使两个Eureka互相注册</p>
-<p><img src="/2019/05/25/springcloud/eu2.jpg" alt="eu2"></p>
-<p>同时启动两个eureka在两个端口</p>
-<p><img src="/2019/05/25/springcloud/eu3.jpg" alt="eu3"></p>
-<p>使这两个交叉相互注册</p>
-<p>两个eureka信息同步（client只需要注册一个）</p>
-<p>为保险起见，应该在client中配置多个eureka注册</p>
-<p><img src="/2019/05/25/springcloud/eu4.jpg" alt="eu4"></p>
-<pre><code class="yml">eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/,http://localhost:8761/eureka/
-#    instance:
-#      hostname: clientName
-spring:
-  application:
-    name: client
-</code></pre>
-<p>结构：eureka两两注册，client注册所有eureka</p>
-<p><img src="/2019/05/25/springcloud/eu5.jpg" alt="eu5"></p>
-<h2 id="分布式系统中服务发现的作用"><a href="#分布式系统中服务发现的作用" class="headerlink" title="分布式系统中服务发现的作用"></a>分布式系统中服务发现的作用</h2><p>避免了动态配置和配置过多问题</p>
-<p>注册中心是分布式系统中最重要的部分</p>
-<p><img src="/2019/05/25/springcloud/eu6.jpg" alt="eu6"></p>
-<ul>
-<li><p>客户端发现</p>
-<p>A来挑选B从而完成服务或者负载均衡</p>
-<p>客户可以知道所有可用的服务地址</p>
-<p>Eureka</p>
-</li>
-<li><p>服务端发现</p>
-<p>代理替代A来挑选B，完成服务与负载均衡</p>
-<p>使得服务对A不可见</p>
-<p>Nginx</p>
-<p>Zookeeper</p>
-<p>K8S</p>
-</li>
-</ul>
-<p>微服务支持异构（不同语言、数据库），通过轻通讯（http&amp;RPC）</p>
-<h1 id="服务的拆分"><a href="#服务的拆分" class="headerlink" title="服务的拆分"></a>服务的拆分</h1><h2 id="康威定律"><a href="#康威定律" class="headerlink" title="康威定律"></a>康威定律</h2><p>交付结构与沟通结构一致</p>
-<h2 id="扩展立方模型"><a href="#扩展立方模型" class="headerlink" title="扩展立方模型"></a>扩展立方模型</h2><p><img src="/2019/05/25/springcloud/fu1.jpg" alt="fu1"></p>
-<ul>
-<li><p>拆功能</p>
-<p>单一职责（松耦合，高内聚）</p>
-<p>关注点分离：按职责、通用性、粒度级别</p>
-</li>
-<li><p>服务与数据</p>
-<p>优先考虑业务服务，再考虑数据</p>
-<p>无状态服务</p>
-</li>
-</ul>
-<h1 id="应用间通信"><a href="#应用间通信" class="headerlink" title="应用间通信"></a>应用间通信</h1><h2 id="RPC"><a href="#RPC" class="headerlink" title="RPC"></a>RPC</h2><ul>
-<li>Dubbo</li>
-</ul>
-<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><ul>
-<li><p>Springcloud</p>
-<p>1、RestTemplate</p>
-<p>2、Feign</p>
-</li>
-</ul>
-<p>RestTemplate三种方式</p>
-<p><img src="/2019/05/25/springcloud/tran.jpg" alt="tran"></p>
-<p>第三种，使用注解</p>
-<p><img src="/2019/05/25/springcloud/tran1.jpg" alt="tran1"></p>
-<p><img src="/2019/05/25/springcloud/tran2.jpg" alt="tran2"></p>
-<h2 id="Ribbon"><a href="#Ribbon" class="headerlink" title="Ribbon"></a>Ribbon</h2><p>客户端负载均衡器@LoadBalanced注解</p>
-<ul>
-<li>服务发现</li>
-<li>服务选择规则</li>
-<li>服务监听</li>
-</ul>
-<p>主要组件：ServerList、IRule、ServerListFilter</p>
-<p>默认轮询规则，可以在yml文件中设置具体规则</p>
-<pre><code class="yml">serviceName: 
-  ribbon:
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
-</code></pre>
-<h2 id="Feign"><a href="#Feign" class="headerlink" title="Feign"></a>Feign</h2><p>声明式Rest客户端（伪RPC）本质是个http客户端</p>
-<p>接口+注解方式</p>
-<ul>
-<li><p>加入Feign组件</p>
-</li>
-<li><p>@EnableFeignClients</p>
-</li>
-<li><p>创建接口</p>
-</li>
-</ul>
-<p>调用远程服务</p>
-<p><img src="/2019/05/25/springcloud/tran3.jpg" alt="tran3"></p>
-<p>service端</p>
-<p><img src="/2019/05/25/springcloud/tran4.jpg" alt="tran4"></p>
-<h2 id="同步-amp-异步"><a href="#同步-amp-异步" class="headerlink" title="同步&amp;异步"></a>同步&amp;异步</h2><p>逐步将必要的同步过程改为异步（后面详解）</p>
-<p>安装rabbitmq</p>
-<blockquote>
-<p>docker run -d –hostname my-rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:management</p>
-</blockquote>
-<h1 id="统一配置中心"><a href="#统一配置中心" class="headerlink" title="统一配置中心"></a>统一配置中心</h1><p>普通配置不方便维护、存在安全隐患、需要重启等问题</p>
-<h2 id="Config-Server"><a href="#Config-Server" class="headerlink" title="Config Server"></a>Config Server</h2><p><img src="/2019/05/25/springcloud/conf1.jpg" alt="conf1"></p>
-<p>将参数放在远程git上并配置</p>
-<p><img src="/2019/05/25/springcloud/conf3.jpg" alt="conf3"></p>
-<p><img src="/2019/05/25/springcloud/conf5.jpg" alt="conf5"></p>
-<p>basedir配置本地路径</p>
-<p>路由规则：</p>
-<p><img src="/2019/05/25/springcloud/conf2.jpg" alt="conf2"></p>
-<h2 id="Config-Client"><a href="#Config-Client" class="headerlink" title="Config Client"></a>Config Client</h2><p>创建bootstrap.yml配置文件</p>
-<p><img src="/2019/05/25/springcloud/conf4.jpg" alt="conf4"></p>
-<p>拿到相应配置</p>
-<p><img src="/2019/05/25/springcloud/conf6.jpg" alt="conf6"></p>
-<p>加载config-test.yml时，也会同时加载config.yml（如果存在），并合并两份配置，所以可以把通用配置存于config.yml</p>
-<h2 id="配置中心的高可用"><a href="#配置中心的高可用" class="headerlink" title="配置中心的高可用"></a>配置中心的高可用</h2><p>多起几个配置中心，配置中心本身就是一个微服务</p>
-<p><img src="/2019/05/25/springcloud/conf7.jpg" alt="conf7"></p>
-<h2 id="自动刷新配置"><a href="#自动刷新配置" class="headerlink" title="自动刷新配置"></a>自动刷新配置</h2><p><img src="/2019/05/25/springcloud/conf8.jpg" alt="conf8"></p>
-<p>引入依赖</p>
-<pre><code class="xml">&lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-bus-amqp&lt;/artifactId&gt;
-            &lt;version&gt;2.0.0.RELEASE&lt;/version&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p><img src="/2019/05/25/springcloud/conf9.jpg" alt="conf9"></p>
-<p>使config server和client连通mq</p>
-<p><img src="/2019/05/25/springcloud/conf10.jpg" alt="conf10"></p>
-<p>需要在config server中暴露接口</p>
-<pre><code class="yml">management: 
-  endpoints: 
-    web:
-      expose: &quot;*&quot;
-</code></pre>
-<p><img src="/2019/05/25/springcloud/conf11.jpg" alt="conf11"></p>
-<p>更改controller注解，刷新配置</p>
-<p>做到git实时刷新</p>
-<p><img src="/2019/05/25/springcloud/conf12.jpg" alt="conf12"></p>
-<p>设置git WebHooks</p>
-<p><img src="/2019/05/25/springcloud/conf13.jpg" alt="conf13"></p>
-<h1 id="消息与异步"><a href="#消息与异步" class="headerlink" title="消息与异步"></a>消息与异步</h1><ul>
-<li><p>异步</p>
-<p>客户端请求不会阻塞进程</p>
-<p>服务端的响应是非及时的</p>
-</li>
-</ul>
-<p>异步的常见形式：通知、请求/异步响应、消息</p>
-<p>MQ常解决的问题：异步处理、流量削峰、日志处理（Kafka）、应用解耦</p>
-<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a>RabbitMQ</h2><pre><code class="yml">spring:
-  application:
-    name: config
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka/
-</code></pre>
-<p>接受MQ消息</p>
-<p><img src="/2019/05/25/springcloud/conf14.jpg" alt="conf14"></p>
-<p>发送MQ，test</p>
-<p><img src="/2019/05/25/springcloud/conf15.jpg" alt="conf15"></p>
-<p>绑定queue和exchange</p>
-<p><img src="/2019/05/25/springcloud/conf16.jpg" alt="conf16"></p>
-<p>根据routing key转发到不同终端</p>
-<h2 id="Spring-Cloud-Stream"><a href="#Spring-Cloud-Stream" class="headerlink" title="Spring Cloud Stream"></a>Spring Cloud Stream</h2><p>对消息中间件进一步封装、做到中间件不可见（只适用rabbitmq、Kafka）</p>
-<p><img src="/2019/05/25/springcloud/conf17.jpg" alt="conf17"></p>
-<pre><code class="xml">&lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;
-&lt;/dependency&gt;
-&lt;dependency&gt;
-            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
-            &lt;artifactId&gt;spring-cloud-starter-stream-rabbit&lt;/artifactId&gt;
-&lt;/dependency&gt;
-</code></pre>
-<p>定义接口</p>
-<p><img src="/2019/05/25/springcloud/conf18.jpg" alt="conf18"></p>
-<p>实现接收端</p>
-<p><img src="/2019/05/25/springcloud/conf19.jpg" alt="conf19"></p>
-<p>定义发送端</p>
-<p><img src="/2019/05/25/springcloud/conf20.jpg" alt="conf20"></p>
-<p>多实例发送消息到mq，会多次接受，因而需要使用分组</p>
-<pre><code class="yml">spring:
-  cloud:
-    stream: 
-      bindings:
-        myMessage:
-          group: groupname
-</code></pre>
-<p>同组队列将合并</p>
-<p>在MQ面板，反序列化对象为json方便查看</p>
-<pre><code class="yml">spring:
-  cloud:
-    stream: 
-      bindings:
-        myMessage:
-          group: groupname
-          content-type: application/json
-</code></pre>
-<p>接受消息后再返回信息</p>
-<p><img src="/2019/05/25/springcloud/conf21.jpg" alt="conf21"></p>
-<h1 id="服务网关与Zuul"><a href="#服务网关与Zuul" class="headerlink" title="服务网关与Zuul"></a>服务网关与Zuul</h1><p>网关同一入口</p>
-<p><img src="/2019/05/25/springcloud/zuul1.jpg" alt="zuul1"></p>
-<ul>
-<li>稳定性、高可用</li>
-<li>安全性</li>
-<li>性能、并发性</li>
-<li>扩展性</li>
-</ul>
-<p>常见的网关方案</p>
-<ul>
-<li>Nginx + Lua</li>
-<li>Kong</li>
-<li>Tyk</li>
-<li>Spring Cloud Zuul</li>
-</ul>
-<p>Zuul特点</p>
-<p>Zuul=路由+过滤器</p>
-<p>四种过滤器API</p>
-<ul>
-<li>前置（Pre）</li>
-<li>后置（Post）</li>
-<li>路由（Route）</li>
-<li>错误（Error）</li>
-</ul>
-<p><img src="/2019/05/25/springcloud/zuul2.jpg" alt="zuul2"></p>
-<p><img src="/2019/05/25/springcloud/zuul3.jpg" alt="zuul3"></p>
-<h2 id="Zuul的使用"><a href="#Zuul的使用" class="headerlink" title="Zuul的使用"></a>Zuul的使用</h2><p>1、导入依赖</p>
-<p>2、添加enable注释@EnableZuulProxy</p>
-<p>3、修改配置文件</p>
-<p>通过路由得到对应服务</p>
-<p>localhost:9000/service-name/list</p>
-<p>添加规则路由</p>
-<p><img src="/2019/05/25/springcloud/zuul.jpg" alt="zuul"></p>
-<p>修改安全策略，查看路由详情</p>
-<p><img src="/2019/05/25/springcloud/zuul4.jpg" alt="zuul4"></p>
-<p><img src="/2019/05/25/springcloud/zuul5.jpg" alt="zuul5"></p>
-<p>或者简洁写法</p>
-<p><img src="/2019/05/25/springcloud/zuul6.jpg" alt="zuul6"></p>
-<p>可以添加忽视路由</p>
-<pre><code class="yml">ignored-patterns:
-  - /**/ignore/list
-</code></pre>
-<p>zuul会默认过滤cookie，加入敏感头过滤，设置为空</p>
-<pre><code class="yml">zuul:
-  routes: 
-    myProduct:
-      sensitiveHeaders:
-</code></pre>
-<h2 id="动态配置路由"><a href="#动态配置路由" class="headerlink" title="动态配置路由"></a>动态配置路由</h2><p><img src="/2019/05/25/springcloud/zuul7.jpg" alt="zuul7"></p>
-<p>在github webhook激活动态配置</p>
-<h2 id="高可用"><a href="#高可用" class="headerlink" title="高可用"></a>高可用</h2><p>部署多台Zuul避免单点故障</p>
-<p>直接作为微服务注册在Eureka Server上</p>
-<p>与Nginx混搭</p>
-<h2 id="Pre-amp-Post过滤器"><a href="#Pre-amp-Post过滤器" class="headerlink" title="Pre&amp;Post过滤器"></a>Pre&amp;Post过滤器</h2><p>Zuul在各个Service之前进行统一校验，避免多服务重复校验</p>
-<p><img src="/2019/05/25/springcloud/zuul8.png" alt="zuul8"></p>
-<ul>
-<li><p>prefilter</p>
-<p>设置必须包含token认证</p>
-</li>
-</ul>
-<pre><code class="java">@Component
-public class TokenFilter extends ZuulFilter {
-    @Override
-    public String filterType() {
-        return PRE_TYPE;
-    }
-
-    @Override
-    public int filterOrder() {
-        return PRE_DECORATION_FILTER_ORDER - 1;
-    }
-
-    @Override
-    public boolean shouldFilter() {
-        return true;
-    }
-
-    @Override
-    public Object run() throws ZuulException {
-        RequestContext requestContext = RequestContext.getCurrentContext();
-        HttpServletRequest request = requestContext.getRequest();
-
-        String token = request.getParameter(&quot;token&quot;);
-        if(StringUtils.isEmpty(token)){
-            requestContext.setSendZuulResponse(false);
-            requestContext.setResponseStatusCode(HttpStatus.SC_UNAUTHORIZED);
-        }
-        return null;
-    }
-}
-</code></pre>
-<p>请求生命周期</p>
-<p><img src="/2019/05/25/springcloud/zuul9.jpg" alt="zuul9"></p>
-<p>pre-&gt;routing-&gt;post</p>
-<ul>
-<li>postfilter</li>
-</ul>
-<pre><code class="java">@Component
-public class AddResponseHeaderFilter extends ZuulFilter {
-
-    @Override
-    public String filterType() {
-        return POST_TYPE;
-    }
-
-    @Override
-    public int filterOrder() {
-        return SEND_RESPONSE_FILTER_ORDER - 1;
-    }
-
-    @Override
-    public boolean shouldFilter() {
-        return true;
-    }
-
-    @Override
-    public Object run() {
-        RequestContext requestContext = new RequestContext();
-        HttpServletResponse response = requestContext.getResponse();
-        response.setHeader(&quot;X=Foo&quot;, UUID.randomUUID().toString());
-        return null;
-    }
-}
-</code></pre>
-<h2 id="限流"><a href="#限流" class="headerlink" title="限流"></a>限流</h2><p>请求被转发前调用</p>
-<p>令牌桶算法</p>
-<p><img src="/2019/05/25/springcloud/zuul10.jpg" alt="zuul10"></p>
-<pre><code class="java">@Component
-public class RateFilter extends ZuulFilter {
-    // 100 allowed per second
-    private static final RateLimiter RATE_LIMITER = RateLimiter.create(100);
-
-
-    @Override
-    public String filterType() {
-        return PRE_TYPE;
-    }
-
-    @Override
-    public int filterOrder() {
-        return SERVLET_DETECTION_FILTER_ORDER - 1;
-    }
-
-    @Override
-    public boolean shouldFilter() {
-        return true;
-    }
-
-    @Override
-    public Object run() {
-        // check if it has allowed
-        if (!RATE_LIMITER.tryAcquire()){
-            throw new RateLimitException();
-        }
-        return null;
-    }
-}
-</code></pre>
-<h2 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h2><ul>
-<li>在被调用的类或方法上增加@CrossOrigin注解</li>
-<li>在Zuul里增加CorsFilter过滤器</li>
-</ul>
-<p><img src="/2019/05/25/springcloud/zuul12.jpg" alt="zuul12"></p>
-<h1 id="服务容错与Hystrix"><a href="#服务容错与Hystrix" class="headerlink" title="服务容错与Hystrix"></a>服务容错与Hystrix</h1><h2 id="雪崩效应"><a href="#雪崩效应" class="headerlink" title="雪崩效应"></a>雪崩效应</h2><p>由于调用失败重复重试、导致整个系统不可用</p>
-<p><img src="/2019/05/25/springcloud/zuul13.jpg" alt="zuul13"></p>
-<h2 id="服务降级"><a href="#服务降级" class="headerlink" title="服务降级"></a>服务降级</h2><p>优先核心服务、非核心服务不可用或弱可用</p>
-<p>通过HystrixCommand注解指定</p>
-<p>fallbackMethod函数中（回退函数）具体实现降级逻辑</p>
-<p>引入依赖</p>
-<p><img src="/2019/05/25/springcloud/zuul14.jpg" alt="zuul14"></p>
-<p>添加注解@EnableCircuitBreaker</p>
-<p><img src="/2019/05/25/springcloud/zuul15.jpg" alt="zuul15"></p>
-<p>服务出错后执行回滚函数，如果出现异常，同样回滚，因而可以自己定制回滚情况</p>
-<p><img src="/2019/05/25/springcloud/zuul16.jpg" alt="zuul16"></p>
-<p>从而实现统一降级</p>
-<p>如果访问时间过长会自动触发降级，因而可以配置超时时间</p>
-<p><img src="/2019/05/25/springcloud/zuul17.jpg" alt="zuul17"></p>
-<pre><code class="java">@HystrixCommand(commandProperties = {
-            @HystrixProperty(name = &quot;default_executionTimeoutInMilliseconds&quot;,value = &quot;3000&quot;)
-    })
-</code></pre>
-<p>或者写在yml配置文件中</p>
-<p><img src="/2019/05/25/springcloud/zuul20.jpg" alt="zuul20"></p>
-<h2 id="服务熔断"><a href="#服务熔断" class="headerlink" title="服务熔断"></a>服务熔断</h2><p><img src="/2019/05/25/springcloud/zuul18.jpg" alt="zuul18"></p>
-<p><img src="/2019/05/25/springcloud/zuul19.jpg" alt="zuul19"></p>
-<p>时间窗口、最小请求数、断路阈值百分比</p>
-<p>Feign与Hystrix结合</p>
-<p>Feign中集成了Hystrix，需要配置可用</p>
-<pre><code class="yml">feign:
-  hystrix: 
-    enabled: true
-</code></pre>
-<p><img src="/2019/05/25/springcloud/zuul21.jpg" alt="zuul21"></p>
-<h2 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h2><p>@EnableHystrixDashboard</p>
-<p>引入依赖</p>
-<p><img src="/2019/05/25/springcloud/zuul22.jpg" alt="zuul22"></p>
-<p><img src="/2019/05/25/springcloud/zuul23.jpg" alt="zuul23"></p>
-<pre><code class="yml">management:
-  context-path: /
-</code></pre>
-<p><img src="/2019/05/25/springcloud/zuul24.jpg" alt="zuul24"></p>
-<h1 id="服务追踪"><a href="#服务追踪" class="headerlink" title="服务追踪"></a>服务追踪</h1><h2 id="Sleuth链路监控"><a href="#Sleuth链路监控" class="headerlink" title="Sleuth链路监控"></a>Sleuth链路监控</h2><p>引入依赖</p>
-<p><img src="/2019/05/25/springcloud/sl1.jpg" alt="sl1"></p>
-<p>配置日志级别</p>
-<pre><code class="yml">logging:
-  level:
-    org.springframework.cloud.netflix.feign: debug
-</code></pre>
-<p>执行后，查看日志</p>
-<p><img src="/2019/05/25/springcloud/sl2.jpg" alt="sl2"></p>
-<h2 id="opentrace标准"><a href="#opentrace标准" class="headerlink" title="opentrace标准"></a>opentrace标准</h2><p>划分为四种事件类型</p>
-<p><img src="/2019/05/25/springcloud/sl3.jpg" alt="sl3"></p>
-<h2 id="Zipkin"><a href="#Zipkin" class="headerlink" title="Zipkin"></a>Zipkin</h2><p><img src="/2019/05/25/springcloud/sl4.jpg" alt="sl4"></p>
-<p><img src="/2019/05/25/springcloud/sl5.jpg" alt="sl5"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
-        <tag>Spring</tag>
-        <tag>Springcloud</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Java Synchronized</title>
-    <url>/2019/02/25/synchronized/</url>
-    <content><![CDATA[<h1 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h1><ul>
-<li>存在共享数据</li>
-<li>存在多条线程共同操作这些共享数据</li>
-</ul>
-<p><strong>同一时刻必须只有一个线程操作共享数据，其他线程必须等其处理完之后，再进行操作</strong></p>
-<h1 id="互斥锁"><a href="#互斥锁" class="headerlink" title="互斥锁"></a>互斥锁</h1><ul>
-<li>互斥性：同一时间只能有一个线程持有某个对象锁，从而实现多线程协调，从而同一时间只有一个线程对需要同步的代码块进行访问。</li>
-<li>可见性：获得锁时获得<strong>最新</strong>共享变量的值</li>
-</ul>
-<h2 id="对象锁与类锁"><a href="#对象锁与类锁" class="headerlink" title="对象锁与类锁"></a>对象锁与类锁</h2><ul>
-<li><p>获取对象锁的两种用法</p>
-<p>1、同步代码块：synchronized(this)</p>
-<p>2、同步非静态方法：synchronized method</p>
-</li>
-<li><p>获取类锁的两种方法</p>
-<p>1、同步代码块：synchronized(.class)</p>
-<p>2、同步静态方法：synchronized static method</p>
-</li>
-</ul>
-<pre><code class="java">package com.interview.javabasic.thread;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class SyncThread implements Runnable {
-
-    @Override
-    public void run() {
-        String threadName = Thread.currentThread().getName();
-        if (threadName.startsWith(&quot;A&quot;)) {
-            async();
-        } else if (threadName.startsWith(&quot;B&quot;)) {
-            syncObjectBlock1();
-        } else if (threadName.startsWith(&quot;C&quot;)) {
-            syncObjectMethod1();
-        } else if (threadName.startsWith(&quot;D&quot;)) {
-            syncClassBlock1();
-        } else if (threadName.startsWith(&quot;E&quot;)) {
-            syncClassMethod1();
-        }
-
-    }
-
-    /**
-     * 异步方法
-     */
-    private void async() {
-        try {
-            System.out.println(Thread.currentThread().getName() + &quot;_Async_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-            Thread.sleep(1000);
-            System.out.println(Thread.currentThread().getName() + &quot;_Async_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 方法中有 synchronized(this|object) {} 同步代码块
-     */
-    private void syncObjectBlock1() {
-        System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectBlock1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        synchronized (this) {
-            try {
-                System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectBlock1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-                Thread.sleep(1000);
-                System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectBlock1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * synchronized 修饰非静态方法
-     */
-    private synchronized void syncObjectMethod1() {
-        System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectMethod1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        try {
-            System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectMethod1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-            Thread.sleep(1000);
-            System.out.println(Thread.currentThread().getName() + &quot;_SyncObjectMethod1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void syncClassBlock1() {
-        System.out.println(Thread.currentThread().getName() + &quot;_SyncClassBlock1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        synchronized (SyncThread.class) {
-            try {
-                System.out.println(Thread.currentThread().getName() + &quot;_SyncClassBlock1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-                Thread.sleep(1000);
-                System.out.println(Thread.currentThread().getName() + &quot;_SyncClassBlock1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private synchronized static void syncClassMethod1() {
-        System.out.println(Thread.currentThread().getName() + &quot;_SyncClassMethod1: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        try {
-            System.out.println(Thread.currentThread().getName() + &quot;_SyncClassMethod1_Start: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-            Thread.sleep(1000);
-            System.out.println(Thread.currentThread().getName() + &quot;_SyncClassMethod1_End: &quot; + new SimpleDateFormat(&quot;HH:mm:ss&quot;).format(new Date()));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre>
-<pre><code class="java">package com.interview.javabasic.thread;
-
-public class SyncDemo {
-    public static void main(String... args) {
-        SyncThread syncThread = new SyncThread();
-        Thread A_thread1 = new Thread(syncThread, &quot;A_thread1&quot;);
-        Thread A_thread2 = new Thread(syncThread, &quot;A_thread2&quot;);
-        Thread B_thread1 = new Thread(syncThread, &quot;B_thread1&quot;);
-        Thread B_thread2 = new Thread(syncThread, &quot;B_thread2&quot;);
-        Thread C_thread1 = new Thread(syncThread, &quot;C_thread1&quot;);
-        Thread C_thread2 = new Thread(syncThread, &quot;C_thread2&quot;);
-        Thread D_thread1 = new Thread(syncThread, &quot;D_thread1&quot;);
-        Thread D_thread2 = new Thread(syncThread, &quot;D_thread2&quot;);
-        Thread E_thread1 = new Thread(syncThread, &quot;E_thread1&quot;);
-        Thread E_thread2 = new Thread(syncThread, &quot;E_thread2&quot;);
-        A_thread1.start();
-        A_thread2.start();
-        B_thread1.start();
-        B_thread2.start();
-        C_thread1.start();
-        C_thread2.start();
-        D_thread1.start();
-        D_thread2.start();
-        E_thread1.start();
-        E_thread2.start();
-    }
-}
-</code></pre>
-<p><img src="/2019/02/25/synchronized/lock1.jpg" alt="lock1"></p>
-<p><img src="/2019/02/25/synchronized/lock2.jpg" alt="lock2"></p>
-<p>如果改为Thread A_thread1 = new Thread(new syncThread, “A_thread1”);</p>
-<p>将全部异步。</p>
-<p><img src="/2019/02/25/synchronized/sum.jpg" alt="sum"></p>
-]]></content>
-      <categories>
-        <category>study note</category>
-      </categories>
-      <tags>
-        <tag>Java</tag>
       </tags>
   </entry>
   <entry>
